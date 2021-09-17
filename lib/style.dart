@@ -40,3 +40,9 @@ TextStyle captureToolPreTaskTitle = TextStyle(
   fontFamily: 'IranSans',
   fontSize: 12,
 );
+
+TextStyle calendarMonthStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'IranSans',
+  fontSize: 20
+);

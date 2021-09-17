@@ -1,19 +1,44 @@
-import 'dart:developer';
+import '../../style.dart';
 
 import 'package:flutter/material.dart';
-import  'package:persian_number_utility/persian_number_utility.dart';
+import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:shamsi_date/shamsi_date.dart';
+import 'package:shamsi_date/extensions.dart';
+
+List<String> months = [
+  'فروردین',
+  'اردیبهشت',
+  'خرداد',
+  'تیر',
+  'مرداد',
+  'شهریور',
+  'مهر',
+  'آبان',
+  'آذر',
+  'دی',
+  'بهمن',
+  'اسفند',
+];
 
 class CalendarPage extends StatelessWidget {
   final DateTime startDate;
 
-  CalendarPage({required this.startDate});
+  CalendarPage({
+    required this.startDate,
+  });
 
   @override
   Widget build(BuildContext context) {
+    print(this.startDate.toJalali());
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('شهریور'),
+          backgroundColor: Colors.black,
+          title: Text(
+              this.startDate.toJalali().month != this.startDate.add(-Duration(days: 7)).toJalali().month ?
+                  '${months[this.startDate.toJalali().month + 1]} - ${months[this.startDate.add(Duration(days: 7)).toJalali().month]}'
+                  : '${months[this.startDate.toJalali().month + 1]}',
+          ),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
               child: SizedBox(
@@ -25,7 +50,7 @@ class CalendarPage extends StatelessWidget {
                       return Container();
                     } return Container(
                       child: Center(
-                        child: Text('$startDate')
+                        child: Text(this.startDate.add(Duration(days: -index - 1)).toJalali().day.toString(), style: TextStyle(color: Colors.white),)
                       ),
                     );
                   },
