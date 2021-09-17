@@ -23,15 +23,18 @@ void main() async {
   Hive.registerAdapter(PreTaskAdapter());
   await Hive.openBox('theme');
   await Hive.openBox('preTasks');
+  await Hive.openBox('weekTasks');
+  await Hive.openBox('monthTasks');
   await Hive.openBox('ID');
   await Hive.openBox('Calendar');
-  
+
   Hive.box('Calendar').put('duration', 30);
-  
+  Hive.box('ID').put('id', 0);
+
   runApp(MaterialApp(
     theme: light,
     darkTheme: dark,
-    themeMode: ThemeMode.system,
+    themeMode: ThemeMode.light,
     debugShowCheckedModeBanner: false,
     // themeMode: Hive.box('theme').get('isDark', defaultValue: false),
     home: App(),
@@ -45,7 +48,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   @override
-  int _index = 0;
+  int _index = 1;
   List<String> names = [
     'تقویم',
     'لیست کارها',
@@ -113,7 +116,8 @@ class _AppState extends State<App> {
   BottomNavyBarItem BottomNavyItem(var icon, String title) {
     return BottomNavyBarItem(
       icon: Icon(icon),
-      title: FittedBox(child: Padding(
+      title: FittedBox(
+          child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(title, style: NavBarTextStyle),
       )),

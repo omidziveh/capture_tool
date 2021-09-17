@@ -38,5 +38,5 @@ Icon deactiveImportanceIcon = Icon(
 TextStyle captureToolPreTaskTitle = TextStyle(
   color: Colors.black,
   fontFamily: 'IranSans',
-  fontSize: 12,
+  fontSize: 17,
 );

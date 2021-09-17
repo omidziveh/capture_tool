@@ -28,7 +28,7 @@ class CaptureTool extends StatelessWidget {
             return ListView.builder(
               itemCount: Hive.box('ID').get('id'),
               itemBuilder: (BuildContext context, int index) {
-                return Hive.box('preTasks').getAt(index).showTile();
+                return Hive.box('preTasks').getAt(index).showTile(context);
               },
             );
           },

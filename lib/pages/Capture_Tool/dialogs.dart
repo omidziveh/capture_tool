@@ -173,3 +173,7 @@ Widget captureToolDialog(context) {
     ),
   );
 }
+
+Widget editTaskDialog(context) {
+  return captureToolDialog(context).createElement().widget;
+}
