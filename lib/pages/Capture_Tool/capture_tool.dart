@@ -4,8 +4,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'dialogs.dart';
 
-class CaptureTool extends StatelessWidget {
-  const CaptureTool({Key? key}) : super(key: key);
+class CaptureTool extends StatefulWidget {
+
+  @override
+  State<CaptureTool> createState() => _CaptureToolState();
+}
+
+class _CaptureToolState extends State<CaptureTool> {
 
   @override
   Widget build(BuildContext context) {

@@ -90,40 +90,36 @@ class _AppState extends State<App> {
               ),
             )
           : null,
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 15, top: 5),
-        child: BottomNavyBar(
-          selectedIndex: _index,
-          showElevation: false,
-          containerHeight: MediaQuery.of(context).size.height * 0.075,
-          onItemSelected: (int _selectedIndex) {
-            setState(() {
-              _index = _selectedIndex;
-            });
-          },
-          items: [
-            BottomNavyItem(Icons.calendar_today, 'تقویم'),
-            BottomNavyItem(Icons.list, 'لیست کارها'),
-            BottomNavyItem(Icons.pending_actions_sharp, 'بازگشت هفتگی'),
-            BottomNavyItem(Icons.archive_outlined, 'بازگشت ماهانه'),
-            BottomNavyItem(Icons.person, 'ناحیه کاربری')
-          ],
-        ),
+      bottomNavigationBar: BottomNavyBar(
+        animationDuration: Duration(milliseconds: 200),
+        selectedIndex: _index,
+        showElevation: true,
+        containerHeight: MediaQuery.of(context).size.height * 0.085,
+        onItemSelected: (int _selectedIndex) {
+          setState(() {
+            _index = _selectedIndex;
+          });
+        },
+        items: [
+          bottomNavyItem(Icons.calendar_today, '   تقویم   '),
+          bottomNavyItem(Icons.list, 'لیست کارها'),
+          bottomNavyItem(Icons.pending_actions_sharp, '   بازگشت هفتگی'),
+          bottomNavyItem(Icons.archive_outlined, 'بازگشت ماهانه'),
+          bottomNavyItem(Icons.person, 'ناحیه کاربری')
+        ],
       ),
     );
   }
 
-  BottomNavyBarItem BottomNavyItem(var icon, String title) {
-    return BottomNavyBarItem(
-      icon: Icon(icon),
+  BottomNavyBarItem bottomNavyItem(var icon, String title) {
+    return  BottomNavyBarItem(
+      icon: Icon(icon, size: MediaQuery.of(context).size.height * 0.035),
       title: FittedBox(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(title, style: NavBarTextStyle),
-      )),
+        fit: BoxFit.fill,
+          child: Text(title, style: NavBarTextStyle)),
       textAlign: TextAlign.right,
       activeColor: Color.fromRGBO(0, 0, 0, 1),
-      inactiveColor: Color.fromRGBO(0, 0, 0, 0.7),
+      inactiveColor: Color.fromRGBO(0, 0, 0, 0.5),
     );
   }
 }

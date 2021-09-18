@@ -18,6 +18,44 @@ Widget captureToolDialog(context) {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25),
       ),
+      actions: [
+        ElevatedButton(
+        onPressed: () {
+  print(Hive.box('ID').get('id'));
+  if (_formKey.currentState!.validate()) {
+  Hive.box('preTasks').put(
+  Hive.box('ID').get('id'),
+  PreTask(
+  name: _nameController.text,
+  description: _descriptionController.text,
+  importance: importance,
+  ),
+  );
+  Hive.box('ID').put(
+  'id',
+  Hive.box('ID').get('id') + 1,
+  );
+  Navigator.pop(context);
+  }
+  },
+    child: Text(
+      'اضافه کن',
+      style: addTaskDialogButton,
+    ),
+    style: ElevatedButton.styleFrom(
+      shadowColor: Colors.transparent,
+      elevation: 0,
+      primary: Colors.white,
+      onPrimary: Colors.black,
+    ),
+  ),
+        ElevatedButton(
+          child: Text('بستن', style: addTaskDialogButton,),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
       content: Form(
         key: _formKey,
         child: Column(
@@ -126,47 +164,6 @@ Widget captureToolDialog(context) {
               ),
             ),
 
-            /// submit button for adding task
-            Padding(
-              padding: EdgeInsets.all(7),
-              child: Container(
-                padding: EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black),
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    print(Hive.box('ID').get('id'));
-                    if (_formKey.currentState!.validate()) {
-                      Hive.box('preTasks').put(
-                        Hive.box('ID').get('id'),
-                        PreTask(
-                          name: _nameController.text,
-                          description: _descriptionController.text,
-                          importance: importance,
-                        ),
-                      );
-                      Hive.box('ID').put(
-                        'id',
-                        Hive.box('ID').get('id') + 1,
-                      );
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text(
-                    'اضافه کن',
-                    style: addTaskDialogButton,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shadowColor: Colors.transparent,
-                    elevation: 0,
-                    primary: Colors.white,
-                    onPrimary: Colors.black,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
