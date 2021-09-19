@@ -57,3 +57,7 @@ TextStyle calendarTimeStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'IranSans',
 );
+
+TextStyle hintStyle = TextStyle(
+  fontFamily: 'IranSans',
+);

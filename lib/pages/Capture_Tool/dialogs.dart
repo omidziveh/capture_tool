@@ -243,6 +243,9 @@
 
 import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import '../../glass/glass_button.dart';
 
 void showMyBottomSheet(
   BuildContext context,
@@ -250,49 +253,139 @@ void showMyBottomSheet(
   String initialDescription,
   int initialImportance,
 ) {
-  TextEditingController _nameController = TextEditingController();
-  GlobalKey _formKey = GlobalKey<FormState>();
+  TextEditingController _nameController =
+      TextEditingController(text: initialName);
+  TextEditingController _descriptionController =
+      TextEditingController(text: initialDescription);
+  final _formKey = GlobalKey<FormState>();
+  FocusNode _nameFocusNode = FocusNode();
+  FocusNode _descriptionFocusNode = FocusNode();
+  _nameFocusNode.requestFocus();
   showModalBottomSheet(
-    backgroundColor: Colors.transparent,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
-    ),
+    isScrollControlled: true,
     context: context,
     builder: (BuildContext context) {
       return Padding(
-        padding: const EdgeInsets.all(28.0),
+        padding: MediaQuery.of(context).viewInsets,
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.55,
+          height: MediaQuery.of(context).size.height * 0.5,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
           child: Form(
             key: _formKey,
             child: Center(
-              child: Column(
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15, bottom: 10),
-                      child: Text(
-                        'اضافه کردن کار',
-                        style: addTaskDialogTitle,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5, bottom: 10),
+                        child: Text(
+                          'اضافه کردن کار',
+                          style: addTaskDialogTitle,
+                        ),
                       ),
                     ),
-                  ),
-                  Divider(
-                    color: Colors.black,
-                    thickness: 1,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: _nameController,
-                      cursorColor: Colors.black,
+                    Divider(
+                      color: Colors.black,
+                      thickness: 1,
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        onFieldSubmitted: (_) {
+                          _nameFocusNode.unfocus();
+                          _descriptionFocusNode.requestFocus();
+                        },
+                        focusNode: _nameFocusNode,
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.right,
+                        controller: _nameController,
+                        cursorColor: Colors.black,
+                        validator: (String? value) {
+                          if (value!.isEmpty) {
+                            return 'لطفا عنوانی انتخاب کنید';
+                          }
+                        },
+                        style: addTaskDialogTextField,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusColor: Colors.black,
+                          hintStyle: hintStyle,
+                          hintText: 'عنوان',
+                          errorStyle: addTaskDialogError,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        focusNode: _descriptionFocusNode,
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.right,
+                        controller: _descriptionController,
+                        cursorColor: Colors.black,
+                        maxLines: 5,
+                        style: addTaskDialogTextField,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          focusColor: Colors.black,
+                          hintStyle: hintStyle,
+                          hintText: 'توضیحات',
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RatingBar(
+                          allowHalfRating: false,
+                          direction: Axis.horizontal,
+                          glow: false,
+                          itemCount: 3,
+                          ratingWidget: RatingWidget(
+                            empty:
+                                Icon(Icons.star_rounded, color: Colors.black38),
+                            full: Icon(Icons.star_rounded, color: Colors.black),
+                            half: Container(),
+                          ),
+                          onRatingUpdate: (double val) {
+                            print(val);
+                          },
+                        ),
+                        GlassButton(
+                          width: 70,
+                          height: 70,
+                          child: IconButton(
+                            icon: Icon(Icons.send),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                Navigator.pop(context);
+                              }
+                            },
+                            splashColor: Colors.transparent,
+                          ),
+                          borderRadius: 15,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
