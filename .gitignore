@@ -45,6 +45,7 @@ lib/generated_plugin_registrant.dart
 #pubspec.lock
 
 # Android related
+/android
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/
@@ -53,7 +54,7 @@ lib/generated_plugin_registrant.dart
 **/android/key.properties
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
-
+**/android/gradle.properties
 # iOS/XCode related
 **/ios/**/*.mode1v3
 **/ios/**/*.mode2v3
