@@ -1,3 +1,4 @@
+import 'package:capture_tool/pages/Capture_Tool/dialogs.dart';
 import 'package:flutter/services.dart';
 
 import 'theme.dart';
@@ -8,6 +9,9 @@ import 'pages/Capture_Tool/capture_tool.dart';
 import 'pages/week_return.dart';
 import 'pages/month_return.dart';
 import 'pages/profile.dart';
+
+import 'glass/glass_bottom_menu.dart';
+import 'glass/glass_button.dart';
 
 import 'models/pretask.dart';
 
@@ -66,6 +70,55 @@ class _AppState extends State<App> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GlassBottomMenu(
+            startIndex: 1,
+            borderRadius: 20,
+            width: MediaQuery.of(context).size.width * 0.7,
+            height: 70,
+            unselectedColor: Colors.black38,
+            selectedColor: Colors.black,
+            titles: [
+              'تقویم',
+              'لیست کارها',
+              'بازگشت هفتگی',
+              'بازگشت ماهانه',
+              'ناحیه کاربری',
+            ],
+            icons: [
+              Icons.calendar_today_outlined,
+              Icons.menu,
+              Icons.pending_actions_rounded,
+              Icons.archive_outlined,
+              Icons.person_outline_rounded,
+            ],
+            onChange: (int index) {
+              setState(() {
+                _index = index;
+              });
+            },
+          ),
+          Padding(padding: EdgeInsets.only(left: 5)),
+          GlassButton(
+            width: 70,
+            height: 70,
+            child: IconButton(
+              splashColor: Colors.transparent,
+              icon: Icon(
+                Icons.add_rounded,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                _index == 0 ? null : showMyBottomSheet(context, '', '', 1);
+              },
+            ),
+            borderRadius: 20,
+          )
+        ],
+      ),
       body: pages[_index],
       appBar: (_index != 0)
           ? AppBar(
@@ -90,33 +143,32 @@ class _AppState extends State<App> {
               ),
             )
           : null,
-      bottomNavigationBar: BottomNavyBar(
-        animationDuration: Duration(milliseconds: 200),
-        selectedIndex: _index,
-        showElevation: true,
-        containerHeight: MediaQuery.of(context).size.height * 0.085,
-        onItemSelected: (int _selectedIndex) {
-          setState(() {
-            _index = _selectedIndex;
-          });
-        },
-        items: [
-          bottomNavyItem(Icons.calendar_today, '   تقویم   '),
-          bottomNavyItem(Icons.list, 'لیست کارها'),
-          bottomNavyItem(Icons.pending_actions_sharp, '   بازگشت هفتگی'),
-          bottomNavyItem(Icons.archive_outlined, 'بازگشت ماهانه'),
-          bottomNavyItem(Icons.person, 'ناحیه کاربری')
-        ],
-      ),
+      // bottomNavigationBar: BottomNavyBar(
+      //   animationDuration: Duration(milliseconds: 200),
+      //   selectedIndex: _index,
+      //   showElevation: true,
+      //   containerHeight: MediaQuery.of(context).size.height * 0.085,
+      //   onItemSelected: (int _selectedIndex) {
+      //     setState(() {
+      //       _index = _selectedIndex;
+      //     });
+      //   },
+      //   items: [
+      //     bottomNavyItem(Icons.calendar_today, '   تقویم   '),
+      //     bottomNavyItem(Icons.list, 'لیست کارها'),
+      //     bottomNavyItem(Icons.pending_actions_sharp, '   بازگشت هفتگی'),
+      //     bottomNavyItem(Icons.archive_outlined, 'بازگشت ماهانه'),
+      //     bottomNavyItem(Icons.person, 'ناحیه کاربری')
+      //   ],
+      // ),
     );
   }
 
   BottomNavyBarItem bottomNavyItem(var icon, String title) {
-    return  BottomNavyBarItem(
+    return BottomNavyBarItem(
       icon: Icon(icon, size: MediaQuery.of(context).size.height * 0.035),
       title: FittedBox(
-        fit: BoxFit.fill,
-          child: Text(title, style: NavBarTextStyle)),
+          fit: BoxFit.fill, child: Text(title, style: NavBarTextStyle)),
       textAlign: TextAlign.right,
       activeColor: Color.fromRGBO(0, 0, 0, 1),
       inactiveColor: Color.fromRGBO(0, 0, 0, 0.5),

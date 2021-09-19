@@ -5,27 +5,23 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'dialogs.dart';
 
 class CaptureTool extends StatefulWidget {
-
   @override
   State<CaptureTool> createState() => _CaptureToolState();
 }
 
 class _CaptureToolState extends State<CaptureTool> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  FocusNode myFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add, color: Colors.black),
-        backgroundColor: Colors.white,
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return captureToolDialog(context);
-              });
-        },
-      ),
       body: Center(
         child: ValueListenableBuilder(
           valueListenable: Hive.box('preTasks').listenable(),

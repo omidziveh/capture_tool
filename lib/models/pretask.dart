@@ -10,6 +10,7 @@ part 'pretask.g.dart';
 
 @HiveType(typeId: 0)
 class PreTask {
+
   @HiveField(0)
   String name;
 
@@ -34,34 +35,32 @@ class PreTask {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Slidable(
+          actionExtentRatio: 1/6,
           actions: [
             IconSlideAction(
-              caption: 'حذف',
               color: Colors.red,
-              icon: Icons.remove,
+              icon: Icons.delete,
             ),
           ],
           secondaryActions: [
             IconSlideAction(
-              caption: 'هفتگی',
               color: Colors.green,
               icon: Icons.pending_actions_sharp,
             ),
             IconSlideAction(
-              caption: 'ماهانه',
               color: Colors.blue,
-              icon: Icons.calendar_today,
+              icon: Icons.archive_outlined,
             ),
           ],
           actionPane: SlidableBehindActionPane(),
           child: GestureDetector(
             onTap: () {
-              showDialog(
-                context: buildContext,
-                builder: (BuildContext context) {
-                  return editTaskDialog(context);
-                },
-              );
+              // showDialog(
+              //   context: buildContext,
+              //   builder: (BuildContext context) {
+              //     return editTaskDialog(context);
+              //   },
+              // );
             },
             child: Container(
               height: 80,
