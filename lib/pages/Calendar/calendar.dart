@@ -12,17 +12,17 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
+
     return PageView.builder(
       allowImplicitScrolling: true,
       controller: controller,
       itemBuilder: (BuildContext context, int index) {
         int todayWeekDay = Jalali.fromDateTime(DateTime.now()).weekDay;
-        print(todayWeekDay);
-        DateTime startDate = DateTime.now().subtract(Duration(days: todayWeekDay % 7 - 1));
+        DateTime startDate = DateTime.now().subtract(Duration(days: todayWeekDay % 3));
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
           child: CalendarPage(
-            startDate: startDate.add(-Duration(days: 7 * (index-8))),
+            startDate: startDate.add(-Duration(days: 3 * (index-4))),
           ),
         );
       },

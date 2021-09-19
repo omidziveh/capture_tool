@@ -84,15 +84,15 @@ class _AppState extends State<App> {
             titles: [
               'تقویم',
               'لیست کارها',
-              'بازگشت هفتگی',
-              'بازگشت ماهانه',
+              // 'بازگشت هفتگی',
+              // 'بازگشت ماهانه',
               'ناحیه کاربری',
             ],
             icons: [
               Icons.calendar_today_outlined,
               Icons.menu,
-              Icons.pending_actions_rounded,
-              Icons.archive_outlined,
+              // Icons.pending_actions_rounded,
+              // Icons.archive_outlined,
               Icons.person_outline_rounded,
             ],
             onChange: (int index) {
@@ -123,6 +123,7 @@ class _AppState extends State<App> {
       appBar: (_index != 0)
           ? AppBar(
               centerTitle: false,
+
               elevation: 0,
               backgroundColor: Colors.transparent,
               bottom: PreferredSize(
