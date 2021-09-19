@@ -357,6 +357,7 @@ void showMyBottomSheet(
                           allowHalfRating: false,
                           direction: Axis.horizontal,
                           glow: false,
+                          initialRating: initialImportance.toDouble(),
                           itemCount: 3,
                           ratingWidget: RatingWidget(
                             empty:
