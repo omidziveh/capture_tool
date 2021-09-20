@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:capture_tool/pages/Capture_Tool/dialogs.dart';
 import 'package:flutter/services.dart';
 
-
 import 'theme.dart';
 import 'style.dart';
 
@@ -37,7 +36,6 @@ void main() async {
 
   Hive.box('Calendar').put('duration', 30);
   Hive.box('ID').put('id', 0);
-
 
   runApp(MaterialApp(
     theme: light,
@@ -74,10 +72,21 @@ class _AppState extends State<App> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          GlassButton(
+            height: _index != 1 ? 0 : 70,
+            width: _index != 1 ? 0 : 70,
+            borderRadius: 20,
+            child: IconButton(
+              icon: Icon(Icons.more_vert),
+              splashColor: Colors.transparent,
+              onPressed: () {},
+            ),
+          ),
           GlassBottomMenu(
             startIndex: 1,
             borderRadius: 20,
@@ -106,21 +115,24 @@ class _AppState extends State<App> {
               });
             },
           ),
-          Padding(padding: EdgeInsets.only(left: 5)),
-          GlassButton(
-            width: 70,
-            height: 70,
-            child: IconButton(
-              splashColor: Colors.transparent,
-              icon: Icon(
-                Icons.add_rounded,
-                color: Colors.black,
+          // Padding(padding: EdgeInsets.only(left: 5)),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 1000),
+            child: GlassButton(
+              width: _index != 1 ? 0 : 70,
+              height: _index != 1 ? 0 : 70,
+              child: IconButton(
+                splashColor: Colors.transparent,
+                icon: Icon(
+                  Icons.add_rounded,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  _index == 0 ? null : showMyBottomSheet(context, '', '', 1);
+                },
               ),
-              onPressed: () {
-                _index == 0 ? null : showMyBottomSheet(context, '', '', 1);
-              },
+              borderRadius: 20,
             ),
-            borderRadius: 20,
           )
         ],
       ),
@@ -128,7 +140,6 @@ class _AppState extends State<App> {
       appBar: (_index != 0)
           ? AppBar(
               centerTitle: false,
-
               elevation: 0,
               backgroundColor: Colors.transparent,
               bottom: PreferredSize(

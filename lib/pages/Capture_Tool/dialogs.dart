@@ -281,11 +281,13 @@ void showMyBottomSheet(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 5, bottom: 10),
-                        child: Text(
-                          'اضافه کردن کار',
-                          style: addTaskDialogTitle,
+                      child: FittedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5, bottom: 10),
+                          child: Text(
+                            'اضافه کردن کار',
+                            style: addTaskDialogTitle,
+                          ),
                         ),
                       ),
                     ),
@@ -295,34 +297,37 @@ void showMyBottomSheet(
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        onFieldSubmitted: (_) {
-                          _nameFocusNode.unfocus();
-                          _descriptionFocusNode.requestFocus();
-                        },
-                        focusNode: _nameFocusNode,
+                      child: Directionality(
                         textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.right,
-                        controller: _nameController,
-                        cursorColor: Colors.black,
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            return 'لطفا عنوانی انتخاب کنید';
-                          }
-                        },
-                        style: addTaskDialogTextField,
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Colors.black),
+                        child: TextFormField(
+                          onFieldSubmitted: (_) {
+                            _nameFocusNode.unfocus();
+                            _descriptionFocusNode.requestFocus();
+                          },
+                          focusNode: _nameFocusNode,
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          controller: _nameController,
+                          cursorColor: Colors.black,
+                          validator: (String? value) {
+                            if (value!.isEmpty) {
+                              return 'لطفا عنوانی انتخاب کنید';
+                            }
+                          },
+                          style: addTaskDialogTextField,
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: Colors.black),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            focusColor: Colors.black,
+                            hintStyle: hintStyle,
+                            hintText: 'عنوان',
+                            errorStyle: addTaskDialogError,
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          focusColor: Colors.black,
-                          hintStyle: hintStyle,
-                          hintText: 'عنوان',
-                          errorStyle: addTaskDialogError,
                         ),
                       ),
                     ),
@@ -353,35 +358,42 @@ void showMyBottomSheet(
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        RatingBar(
-                          allowHalfRating: false,
-                          direction: Axis.horizontal,
-                          glow: false,
-                          initialRating: initialImportance.toDouble(),
-                          itemCount: 3,
-                          ratingWidget: RatingWidget(
-                            empty:
-                                Icon(Icons.star_rounded, color: Colors.black38),
-                            full: Icon(Icons.star_rounded, color: Colors.black),
-                            half: Container(),
-                          ),
-                          onRatingUpdate: (double val) {
-                            print(val);
-                          },
-                        ),
-                        GlassButton(
-                          width: 70,
-                          height: 70,
-                          child: IconButton(
-                            icon: Icon(Icons.send),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                Navigator.pop(context);
-                              }
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          child: RatingBar(
+                            allowHalfRating: false,
+                            direction: Axis.horizontal,
+                            glow: false,
+                            initialRating: initialImportance.toDouble(),
+                            itemCount: 3,
+                            ratingWidget: RatingWidget(
+                              empty: Icon(Icons.star_rounded,
+                                  color: Colors.black38),
+                              full:
+                                  Icon(Icons.star_rounded, color: Colors.black),
+                              half: Container(),
+                            ),
+                            onRatingUpdate: (double val) {
+                              print(val);
                             },
-                            splashColor: Colors.transparent,
                           ),
-                          borderRadius: 15,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GlassButton(
+                            width: 70,
+                            height: 70,
+                            child: IconButton(
+                              icon: Icon(Icons.send),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  Navigator.pop(context);
+                                }
+                              },
+                              splashColor: Colors.transparent,
+                            ),
+                            borderRadius: 15,
+                          ),
                         ),
                       ],
                     )
