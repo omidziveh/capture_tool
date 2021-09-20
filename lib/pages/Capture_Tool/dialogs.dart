@@ -241,9 +241,11 @@
 //   }
 // }
 
+import 'package:capture_tool/models/pretask.dart';
 import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hive/hive.dart';
 
 import '../../glass/glass_button.dart';
 
@@ -251,8 +253,11 @@ void showMyBottomSheet(
   BuildContext context,
   String initialName,
   String initialDescription,
+  String title,
   int initialImportance,
-) {
+  String job, {
+  String? id,
+}) {
   TextEditingController _nameController =
       TextEditingController(text: initialName);
   TextEditingController _descriptionController =
@@ -265,144 +270,168 @@ void showMyBottomSheet(
     isScrollControlled: true,
     context: context,
     builder: (BuildContext context) {
-      return Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.5,
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Form(
-            key: _formKey,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Center(
-                      child: FittedBox(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5, bottom: 10),
-                          child: Text(
-                            'اضافه کردن کار',
-                            style: addTaskDialogTitle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: TextFormField(
-                          onFieldSubmitted: (_) {
-                            _nameFocusNode.unfocus();
-                            _descriptionFocusNode.requestFocus();
-                          },
-                          focusNode: _nameFocusNode,
-                          textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.right,
-                          controller: _nameController,
-                          cursorColor: Colors.black,
-                          validator: (String? value) {
-                            if (value!.isEmpty) {
-                              return 'لطفا عنوانی انتخاب کنید';
-                            }
-                          },
-                          style: addTaskDialogTextField,
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            focusColor: Colors.black,
-                            hintStyle: hintStyle,
-                            hintText: 'عنوان',
-                            errorStyle: addTaskDialogError,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        focusNode: _descriptionFocusNode,
-                        textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.right,
-                        controller: _descriptionController,
-                        cursorColor: Colors.black,
-                        maxLines: 5,
-                        style: addTaskDialogTextField,
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          focusColor: Colors.black,
-                          hintStyle: hintStyle,
-                          hintText: 'توضیحات',
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return StatefulBuilder(
+        builder: (BuildContext context, setState) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: RatingBar(
-                            allowHalfRating: false,
-                            direction: Axis.horizontal,
-                            glow: false,
-                            initialRating: initialImportance.toDouble(),
-                            itemCount: 3,
-                            ratingWidget: RatingWidget(
-                              empty: Icon(Icons.star_rounded,
-                                  color: Colors.black38),
-                              full:
-                                  Icon(Icons.star_rounded, color: Colors.black),
-                              half: Container(),
+                        Center(
+                          child: FittedBox(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 5, bottom: 10),
+                              child: Text(
+                                title,
+                                style: addTaskDialogTitle,
+                              ),
                             ),
-                            onRatingUpdate: (double val) {
-                              print(val);
-                            },
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.black,
+                          thickness: 1,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              onFieldSubmitted: (_) {
+                                _nameFocusNode.unfocus();
+                                _descriptionFocusNode.requestFocus();
+                              },
+                              focusNode: _nameFocusNode,
+                              textDirection: TextDirection.rtl,
+                              textAlign: TextAlign.right,
+                              controller: _nameController,
+                              cursorColor: Colors.black,
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return 'لطفا عنوانی انتخاب کنید';
+                                }
+                              },
+                              style: addTaskDialogTextField,
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                focusColor: Colors.black,
+                                hintStyle: hintStyle,
+                                hintText: 'عنوان',
+                                errorStyle: addTaskDialogError,
+                              ),
+                            ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: GlassButton(
-                            width: 70,
-                            height: 70,
-                            child: IconButton(
-                              icon: Icon(Icons.send),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  Navigator.pop(context);
-                                }
-                              },
-                              splashColor: Colors.transparent,
+                          child: TextFormField(
+                            focusNode: _descriptionFocusNode,
+                            textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.right,
+                            controller: _descriptionController,
+                            cursorColor: Colors.black,
+                            maxLines: 5,
+                            style: addTaskDialogTextField,
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              focusColor: Colors.black,
+                              hintStyle: hintStyle,
+                              hintText: 'توضیحات',
                             ),
-                            borderRadius: 15,
                           ),
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                              child: RatingBar(
+                                allowHalfRating: false,
+                                direction: Axis.horizontal,
+                                glow: false,
+                                initialRating: initialImportance.toDouble(),
+                                itemCount: 3,
+                                ratingWidget: RatingWidget(
+                                  empty: Icon(Icons.star_rounded,
+                                      color: Colors.black38),
+                                  full: Icon(Icons.star_rounded,
+                                      color: Colors.black),
+                                  half: Container(),
+                                ),
+                                onRatingUpdate: (double val) {
+                                  setState(() {
+                                    initialImportance = val.round();
+                                  });
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GlassButton(
+                                width: 70,
+                                height: 70,
+                                child: IconButton(
+                                  icon: Icon(Icons.send),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      DateTime time = DateTime.now();
+                                      if (job == 'update') {
+                                        Hive.box('ID').put(
+                                            'id', Hive.box('ID').get('id') - 1);
+                                        Hive.box('preTasks').delete(id);
+                                      }
+                                      Hive.box('preTasks').put(
+                                          time.toString(),
+                                          PreTask(
+                                            id: time.toString(),
+                                            name: _nameController.text,
+                                            description:
+                                                _descriptionController.text,
+                                            importance: initialImportance,
+                                          ));
+                                      Hive.box('ID').put(
+                                          'id', Hive.box('ID').get('id') + 1);
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  splashColor: Colors.transparent,
+                                ),
+                                borderRadius: 15,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       );
     },
   );

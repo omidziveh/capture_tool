@@ -10,7 +10,6 @@ part 'pretask.g.dart';
 
 @HiveType(typeId: 0)
 class PreTask {
-
   @HiveField(0)
   String name;
 
@@ -20,10 +19,14 @@ class PreTask {
   @HiveField(2)
   int importance;
 
+  @HiveField(3)
+  String id;
+
   PreTask({
     required this.name,
     required this.description,
     required this.importance,
+    required this.id,
   });
 
   Widget showTile(BuildContext buildContext) {
@@ -35,11 +38,15 @@ class PreTask {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Slidable(
-          actionExtentRatio: 1/6,
+          actionExtentRatio: 1 / 6,
           actions: [
             IconSlideAction(
               color: Colors.red,
               icon: Icons.delete,
+              onTap: () {
+                Hive.box('preTasks').delete(id);
+                Hive.box('ID').put('id', Hive.box('ID').get('id') - 1);
+              },
             ),
           ],
           secondaryActions: [
@@ -55,12 +62,15 @@ class PreTask {
           actionPane: SlidableBehindActionPane(),
           child: GestureDetector(
             onTap: () {
-              // showDialog(
-              //   context: buildContext,
-              //   builder: (BuildContext context) {
-              //     return editTaskDialog(context);
-              //   },
-              // );
+              showMyBottomSheet(
+                buildContext,
+                this.name,
+                this.description,
+                'تعویض کار',
+                this.importance,
+                'update',
+                id: this.id,
+              );
             },
             child: Container(
               height: 80,

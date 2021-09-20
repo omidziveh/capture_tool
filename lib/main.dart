@@ -1,7 +1,5 @@
-import 'dart:io';
-
+import 'package:capture_tool/glass/glass_widget.dart';
 import 'package:capture_tool/pages/Capture_Tool/dialogs.dart';
-import 'package:flutter/services.dart';
 
 import 'theme.dart';
 import 'style.dart';
@@ -20,7 +18,6 @@ import 'models/pretask.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -128,7 +125,16 @@ class _AppState extends State<App> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  _index == 0 ? null : showMyBottomSheet(context, '', '', 1);
+                  _index == 0
+                      ? null
+                      : showMyBottomSheet(
+                          context,
+                          '',
+                          '',
+                          'اضافه کردن کار',
+                          0,
+                          'add',
+                        );
                 },
               ),
               borderRadius: 20,
@@ -141,7 +147,7 @@ class _AppState extends State<App> {
           ? AppBar(
               centerTitle: false,
               elevation: 0,
-              backgroundColor: Colors.transparent,
+              backgroundColor: Color.fromRGBO(255, 255, 255, 0.9),
               bottom: PreferredSize(
                 preferredSize:
                     Size.fromHeight(MediaQuery.of(context).size.height * 0.08),
@@ -160,35 +166,6 @@ class _AppState extends State<App> {
               ),
             )
           : null,
-      // bottomNavigationBar: BottomNavyBar(
-      //   animationDuration: Duration(milliseconds: 200),
-      //   selectedIndex: _index,
-      //   showElevation: true,
-      //   containerHeight: MediaQuery.of(context).size.height * 0.085,
-      //   onItemSelected: (int _selectedIndex) {
-      //     setState(() {
-      //       _index = _selectedIndex;
-      //     });
-      //   },
-      //   items: [
-      //     bottomNavyItem(Icons.calendar_today, '   تقویم   '),
-      //     bottomNavyItem(Icons.list, 'لیست کارها'),
-      //     bottomNavyItem(Icons.pending_actions_sharp, '   بازگشت هفتگی'),
-      //     bottomNavyItem(Icons.archive_outlined, 'بازگشت ماهانه'),
-      //     bottomNavyItem(Icons.person, 'ناحیه کاربری')
-      //   ],
-      // ),
-    );
-  }
-
-  BottomNavyBarItem bottomNavyItem(var icon, String title) {
-    return BottomNavyBarItem(
-      icon: Icon(icon, size: MediaQuery.of(context).size.height * 0.035),
-      title: FittedBox(
-          fit: BoxFit.fill, child: Text(title, style: NavBarTextStyle)),
-      textAlign: TextAlign.right,
-      activeColor: Color.fromRGBO(0, 0, 0, 1),
-      inactiveColor: Color.fromRGBO(0, 0, 0, 0.5),
     );
   }
 }

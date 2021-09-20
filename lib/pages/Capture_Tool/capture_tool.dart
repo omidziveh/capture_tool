@@ -26,9 +26,16 @@ class _CaptureToolState extends State<CaptureTool> {
         child: ValueListenableBuilder(
           valueListenable: Hive.box('preTasks').listenable(),
           builder: (context, val, _) {
+            print(Hive.box('preTasks').length);
             return ListView.builder(
-              itemCount: Hive.box('ID').get('id'),
+              physics: BouncingScrollPhysics(),
+              itemCount: Hive.box('ID').get('id') + 1,
               itemBuilder: (BuildContext context, int index) {
+                if (index == Hive.box('ID').get('id')) {
+                  return Container(
+                    height: 100,
+                  );
+                }
                 return Hive.box('preTasks').getAt(index).showTile(context);
               },
             );
