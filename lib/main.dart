@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:capture_tool/pages/Capture_Tool/dialogs.dart';
 import 'package:flutter/services.dart';
+
 
 import 'theme.dart';
 import 'style.dart';
@@ -34,6 +37,7 @@ void main() async {
 
   Hive.box('Calendar').put('duration', 30);
   Hive.box('ID').put('id', 0);
+
 
   runApp(MaterialApp(
     theme: light,

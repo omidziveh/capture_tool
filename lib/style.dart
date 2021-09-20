@@ -44,7 +44,6 @@ TextStyle captureToolPreTaskTitle = TextStyle(
 TextStyle calendarWeekStyle = TextStyle(
   color: Colors.white,
   fontFamily: 'IranSans',
-  fontSize: 18,
 );
 
 TextStyle calendarMonthStyle = TextStyle(
