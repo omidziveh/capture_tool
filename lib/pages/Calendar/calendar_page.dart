@@ -66,9 +66,9 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         bottom: PreferredSize(
           preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.06),
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.01),
           child: SizedBox(
-            height: 50,
+            height: 40,
             child: GestureDetector(
               onTap: () {
                 print('Tapped on top bar');
@@ -85,36 +85,47 @@ class _CalendarPageState extends State<CalendarPage> {
                     padding:
                         EdgeInsets.only(bottom: 4, top: 3, right: 3, left: 3),
                     margin: EdgeInsets.all(3),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4.0),
-                          child: FittedBox(
-                            child: Text(
-                              weekDays[this
+
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Container(
+                        color:
+                        (true)
+                        //(_compareDates(this.widget.startDate.subtract(Duration(days: index + 1))))
+                            ? Color.fromARGB(100, 255, 255, 255)
+                            : Colors.transparent,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: FittedBox(
+                                child: Text(
+                                  weekDays[this
+                                          .widget
+                                          .startDate
+                                          .add(Duration(days: -index - 1))
+                                          .toJalali()
+                                          .weekDay -
+                                      1],
+                                  style: calendarWeekStyle,
+                                ),
+                              ),
+                            ),
+                            FittedBox(
+                              child: Text(
+                                  this
                                       .widget
                                       .startDate
                                       .add(Duration(days: -index - 1))
                                       .toJalali()
-                                      .weekDay -
-                                  1],
-                              style: calendarWeekStyle,
+                                      .day
+                                      .toString()
+                                      .toPersianDigit(),
+                                  style: calendarWeekStyle),
                             ),
-                          ),
+                          ],
                         ),
-                        FittedBox(
-                          child: Text(
-                              this
-                                  .widget
-                                  .startDate
-                                  .add(Duration(days: -index - 1))
-                                  .toJalali()
-                                  .day
-                                  .toString()
-                                  .toPersianDigit(),
-                              style: calendarWeekStyle),
-                        ),
-                      ],
+                      ),
                     ),
                   );
                 },
@@ -169,17 +180,23 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   monthName() {
-    return FittedBox(
-      child: Text(
-        this.widget.startDate.toJalali().month !=
-                this.widget.startDate.add(-Duration(days: 3)).toJalali().month
-            ? '${months[this.widget.startDate.toJalali().month - 2]} - ${months[this.widget.startDate.add(Duration(days: 3)).toJalali().month - 1]}'
-            : '${months[this.widget.startDate.toJalali().month - 1]}',
-        textDirection: TextDirection.rtl,
+    Jalali startDate =
+        this.widget.startDate.subtract(Duration(days: 3)).toJalali();
+    Jalali finishDate =
+        this.widget.startDate.subtract(Duration(days: 1)).toJalali();
+
+    if (startDate.month == finishDate.month) {
+      return Text(
+        '${months[startDate.month - 1]} ${startDate.year.toString().toPersianDigit()}',
         style: calendarMonthStyle,
-        textAlign: TextAlign.right,
-      ),
-    );
+      );
+    } else {
+      return Text(
+        '${months[finishDate.month - 1]} ${finishDate.year.toString().toPersianDigit()} - '
+        '${months[startDate.month - 1]} ${startDate.year.toString().toPersianDigit()}',
+        style: calendarMonthStyle,
+      );
+    }
   }
 
   time(index) {
@@ -197,6 +214,19 @@ class _CalendarPageState extends State<CalendarPage> {
 
   _addMode(index) {
     eventCreateBottomSheet(context, index, this.widget.startDate);
+  }
+
+  _compareDates(DateTime date1) {
+    DateTime date2 = DateTime.now();
+    if (date1.year == date2.year) {
+      if (date1.month == date2.month) {
+        if (date1.day == date2.day) {
+          return true;
+        }else {
+          return false;
+        }
+      }
+    }
   }
 }
 

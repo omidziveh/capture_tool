@@ -49,7 +49,7 @@ TextStyle calendarWeekStyle = TextStyle(
 TextStyle calendarMonthStyle = TextStyle(
   color: Colors.white,
   fontFamily: 'IranSans',
-  fontSize: 30,
+  fontSize: 20,
 );
 
 TextStyle calendarTimeStyle = TextStyle(

@@ -81,7 +81,8 @@ class _AppState extends State<App> {
           GlassBottomMenu(
             startIndex: 1,
             borderRadius: 20,
-            width: MediaQuery.of(context).size.width * 0.7,
+            //width: MediaQuery.of(context).size.width * 0.7,
+            width: 180,
             height: 70,
             unselectedColor: Colors.black38,
             selectedColor: Colors.black,
