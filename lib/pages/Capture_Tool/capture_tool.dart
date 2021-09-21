@@ -32,12 +32,13 @@ class _CaptureToolState extends State<CaptureTool> {
               physics: BouncingScrollPhysics(),
               itemCount: Hive.box('preTasks').length,
               itemBuilder: (BuildContext context, int index) {
-
                 /// Get all pre tasks with 'Capture tool' state:
                 var item = Hive.box('preTasks').getAt(index);
-                if (item.state == 1){
+                if (item.state == 1) {
                   return showTile(context, item);
-                } else {return Container();}
+                } else {
+                  return Container();
+                }
               },
             );
           },

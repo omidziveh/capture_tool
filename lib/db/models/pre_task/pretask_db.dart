@@ -1,4 +1,3 @@
-
 import 'pretask.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
@@ -25,20 +24,27 @@ void go_to_monthly(String id) {
   Hive.box('monthlyReturn').put(item.id, item);
 }
 
-void add_pretask(String title, double importance, {description = '', state = 1}) {
+void add_pretask(String title, double importance,
+    {String description = '', state = 1}) {
   var uuid = Uuid();
   String id = uuid.v1();
   DateTime timeStamp = DateTime.now();
-  PreTask preTask = PreTask(id: id, title: title, description: description, importance: importance, timeStamp: timeStamp, state: state);
+  PreTask preTask = PreTask(
+      id: id,
+      title: title,
+      description: description,
+      importance: importance,
+      timeStamp: timeStamp,
+      state: state);
   Hive.box('preTasks').put(id, preTask);
 }
 
 void update_pretask(String id, {title, description, importance}) {
-  var preTask  = Hive.box('preTasks').get(id);
-    if (title != null) {
-      print(title);
-      preTask.title = title;
-    }
+  var preTask = Hive.box('preTasks').get(id);
+  if (title != null) {
+    print(title);
+    preTask.title = title;
+  }
   if (description != null) {
     preTask.description = description;
   }
@@ -49,9 +55,10 @@ void update_pretask(String id, {title, description, importance}) {
   Hive.box('preTasks').delete('omid is noob');
 }
 
-List<dynamic> all_pre_tasks(){
+List<dynamic> all_pre_tasks() {
   return Hive.box('preTasks')
       .values
       .toList()
-      .where((item) => item.state == 1).toList();
+      .where((item) => item.state == 1)
+      .toList();
 }

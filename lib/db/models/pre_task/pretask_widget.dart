@@ -46,10 +46,7 @@ Widget showTile(BuildContext buildContext, var preTask) {
         showAllActionsThreshold: 0.6,
         child: GestureDetector(
           onTap: () {
-            showPreTaskBottomSheet(
-              buildContext,
-              preTask : preTask
-            );
+            showPreTaskBottomSheet(buildContext, preTask: preTask);
           },
           child: Container(
             height: 80,
@@ -82,12 +79,4 @@ Widget showTile(BuildContext buildContext, var preTask) {
       ),
     ),
   );
-}
-
-
-allpreTasks(BuildContext context){
-  var pre_tasks = all_pre_tasks();
-  for (int i = 0; i< pre_tasks.length; i ++){
-
-  }
 }
