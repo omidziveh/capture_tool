@@ -22,15 +22,18 @@ class _CalendarState extends State<Calendar> {
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                ),
+                onPressed: () {
                   setState(() {
                     controller.animateToPage(5, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                   });
                 },
                 child: Icon(
                   Icons.today,
-                  size: 26.0,
+                  size: 20,
                 ),
               )
           ),

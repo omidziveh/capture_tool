@@ -17,25 +17,31 @@ class PreTaskAdapter extends TypeAdapter<PreTask> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PreTask(
-      name: fields[0] as String,
-      description: fields[1] as String,
-      importance: fields[2] as int,
-      id: fields[3] as String,
+      id: fields[0] as String,
+      title: fields[1] as String,
+      description: fields[2] as String,
+      importance: fields[3] as double,
+      timeStamp: fields[4] as DateTime,
+      state: fields[5] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, PreTask obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.description)
+      ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.importance)
+      ..write(obj.description)
       ..writeByte(3)
-      ..write(obj.id);
+      ..write(obj.importance)
+      ..writeByte(4)
+      ..write(obj.timeStamp)
+      ..writeByte(5)
+      ..write(obj.state);
   }
 
   @override

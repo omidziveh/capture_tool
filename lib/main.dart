@@ -13,7 +13,9 @@ import 'pages/profile.dart';
 import 'glass/glass_bottom_menu.dart';
 import 'glass/glass_button.dart';
 
-import 'models/pretask.dart';
+import 'db/db.dart';
+
+import 'pages/Capture_Tool/dialogs.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -22,14 +24,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Hive.initFlutter();
-  Hive.registerAdapter(PreTaskAdapter());
-  await Hive.openBox('theme');
-  await Hive.openBox('preTasks');
-  await Hive.openBox('weekTasks');
-  await Hive.openBox('monthTasks');
-  await Hive.openBox('ID');
-  await Hive.openBox('Calendar');
+  await init_db();
 
   Hive.box('Calendar').put('duration', 30);
   Hive.box('ID').put('id', 0);
@@ -72,7 +67,7 @@ class _AppState extends State<App> {
       extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GlassButton(
             height: _index != 1 ? 0 : 70,
@@ -84,33 +79,32 @@ class _AppState extends State<App> {
               onPressed: () {},
             ),
           ),
-          GlassBottomMenu(
-            startIndex: 1,
-            borderRadius: 20,
-            //width: MediaQuery.of(context).size.width * 0.7,
-            width: 180,
-            height: 70,
-            unselectedColor: Colors.black38,
-            selectedColor: Colors.black,
-            titles: [
-              'تقویم',
-              'لیست کارها',
-              // 'بازگشت هفتگی',
-              // 'بازگشت ماهانه',
-              'ناحیه کاربری',
-            ],
-            icons: [
-              Icons.calendar_today_outlined,
-              Icons.menu,
-              // Icons.pending_actions_rounded,
-              // Icons.archive_outlined,
-              Icons.person_outline_rounded,
-            ],
-            onChange: (int index) {
-              setState(() {
-                _index = index;
-              });
-            },
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GlassBottomMenu(
+              startIndex: 1,
+              borderRadius: 20,
+              //width: MediaQuery.of(context).size.width * 0.7,
+              width: 180,
+              height: 70,
+              unselectedColor: Colors.black38,
+              selectedColor: Colors.black,
+              titles: [
+                'تقویم',
+                'لیست کارها',
+                'ناحیه کاربری',
+              ],
+              icons: [
+                Icons.calendar_today_outlined,
+                Icons.menu,
+                Icons.person_outline_rounded,
+              ],
+              onChange: (int index) {
+                setState(() {
+                  _index = index;
+                });
+              },
+            ),
           ),
           // Padding(padding: EdgeInsets.only(left: 5)),
           AnimatedContainer(
@@ -125,16 +119,7 @@ class _AppState extends State<App> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  _index == 0
-                      ? null
-                      : showMyBottomSheet(
-                          context,
-                          '',
-                          '',
-                          'اضافه کردن کار',
-                          0,
-                          'add',
-                        );
+                  _index == 0 ? null : showPreTaskBottomSheet(context, mode: 1);
                 },
               ),
               borderRadius: 20,

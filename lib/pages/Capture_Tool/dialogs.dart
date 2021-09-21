@@ -241,31 +241,71 @@
 //   }
 // }
 
-import 'package:capture_tool/models/pretask.dart';
 import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hive/hive.dart';
 
 import '../../glass/glass_button.dart';
+import '../../db/models/pre_task/pretask.dart';
+import '../../db/models/pre_task/pretask_db.dart';
 
-void showMyBottomSheet(
-  BuildContext context,
-  String initialName,
-  String initialDescription,
-  String title,
-  int initialImportance,
-  String job, {
-  String? id,
-}) {
+final formKey = GlobalKey<FormState>();
+
+void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
   TextEditingController _nameController =
-      TextEditingController(text: initialName);
-  TextEditingController _descriptionController =
-      TextEditingController(text: initialDescription);
-  final _formKey = GlobalKey<FormState>();
+      TextEditingController(text: (preTask != null) ? preTask.title : null);
+  TextEditingController _descriptionController = TextEditingController(
+      text: (preTask != null) ? preTask.description : null);
+
   FocusNode _nameFocusNode = FocusNode();
   FocusNode _descriptionFocusNode = FocusNode();
-  _nameFocusNode.requestFocus();
+  double importance = 0;
+
+
+  /// 0 : deleting,
+  /// 1: adding,
+  /// 2: viewing,
+  /// 3: updating,
+  /// 4: week return view,
+  /// 5: month return view
+
+  if (preTask != null) {
+    switch (preTask.state) {
+      case 0:
+        {
+          mode = 2;
+
+          /// from Deleted, Open Viewing mode
+        }
+        break;
+      case 1:
+        {
+          mode = 2;
+
+          /// from Cpture tool, Open Viewing mode
+        }
+        break;
+      case 2:
+        {
+          mode = 4;
+
+          /// from Weekly return, open Week return menu
+        }
+        break;
+      case 3:
+        {
+          mode = 5;
+
+          /// from Monthly return, open Month return menu
+        }
+        break;
+    }
+  }
+
+  /// Activate keyboard only if Adding mode is active:
+  (mode == 1) ? _nameFocusNode.requestFocus() : null;
+
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -275,79 +315,72 @@ void showMyBottomSheet(
           return Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.6,
               decoration: BoxDecoration(
                 color: Colors.white,
               ),
               child: Form(
-                key: _formKey,
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Center(
-                          child: FittedBox(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 5, bottom: 10),
-                              child: Text(
-                                title,
-                                style: addTaskDialogTitle,
-                              ),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                key: formKey,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 5, top: 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: FittedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5, bottom: 10),
+                            child: Text(
+                              (preTask == null) ? 'اضافه کردن کار' : 'کار',
+                              style: addTaskDialogTitle,
                             ),
                           ),
                         ),
-                        Divider(
-                          color: Colors.black,
-                          thickness: 1,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: TextFormField(
-                              onFieldSubmitted: (_) {
-                                _nameFocusNode.unfocus();
-                                _descriptionFocusNode.requestFocus();
-                              },
-                              focusNode: _nameFocusNode,
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              controller: _nameController,
-                              cursorColor: Colors.black,
-                              validator: (String? value) {
-                                if (value!.isEmpty) {
-                                  return 'لطفا عنوانی انتخاب کنید';
-                                }
-                              },
-                              style: addTaskDialogTextField,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusColor: Colors.black,
-                                hintStyle: hintStyle,
-                                hintText: 'عنوان',
-                                errorStyle: addTaskDialogError,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
+                      ),
+                      Divider(
+                        color: Colors.black,
+                        thickness: 1,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
                           child: TextFormField(
-                            focusNode: _descriptionFocusNode,
+                            maxLength: 35,
+                            enabled: (mode == 0) ? false : true,
+
+                            /// disabled on deleted pretasks
+                            onFieldSubmitted: (_) {
+                              _nameFocusNode.unfocus();
+                              _descriptionFocusNode.requestFocus();
+                            },
+                            onChanged: (String val) {
+                              setState(() {
+                                if (preTask != null) {
+                                  if (val != preTask.title) {
+                                    mode = 3;
+
+                                    /// Switch to updating state
+                                  }
+                                  if (val == preTask.title) {
+                                    mode = 2;
+
+                                    /// Switch to viewing state
+                                  }
+                                }
+                              });
+                            },
+                            focusNode: _nameFocusNode,
                             textDirection: TextDirection.rtl,
                             textAlign: TextAlign.right,
-                            controller: _descriptionController,
+                            controller: _nameController,
                             cursorColor: Colors.black,
-                            maxLines: 5,
+                            validator: (var value) {
+                              if (value == '') {
+                                return 'لطفا عنوان را وارد کنید.';
+                              }
+                            },
                             style: addTaskDialogTextField,
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
@@ -359,73 +392,91 @@ void showMyBottomSheet(
                               ),
                               focusColor: Colors.black,
                               hintStyle: hintStyle,
-                              hintText: 'توضیحات',
+                              hintText: 'عنوان',
+                              errorStyle: addTaskDialogError,
                             ),
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                              child: RatingBar(
-                                allowHalfRating: false,
-                                direction: Axis.horizontal,
-                                glow: false,
-                                initialRating: initialImportance.toDouble(),
-                                itemCount: 3,
-                                ratingWidget: RatingWidget(
-                                  empty: Icon(Icons.star_rounded,
-                                      color: Colors.black38),
-                                  full: Icon(Icons.star_rounded,
-                                      color: Colors.black),
-                                  half: Container(),
-                                ),
-                                onRatingUpdate: (double val) {
-                                  setState(() {
-                                    initialImportance = val.round();
-                                  });
-                                },
-                              ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          enabled: (mode == 0) ? false : true,
+
+                          /// disabled on deleted pretasks
+
+                          focusNode: _descriptionFocusNode,
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          controller: _descriptionController,
+                          cursorColor: Colors.black,
+                          maxLines: 5,
+                          onChanged: (String val) {
+                            setState(() {
+                              if (preTask != null) {
+                                if (val != preTask.description) {
+                                  mode = 3;
+                                }
+                                if (val == preTask.description) {
+                                  mode = 2;
+                                }
+                              }
+                            });
+                          },
+                          style: addTaskDialogTextField,
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: Colors.black),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GlassButton(
-                                width: 70,
-                                height: 70,
-                                child: IconButton(
-                                  icon: Icon(Icons.send),
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      DateTime time = DateTime.now();
-                                      if (job == 'update') {
-                                        Hive.box('ID').put(
-                                            'id', Hive.box('ID').get('id') - 1);
-                                        Hive.box('preTasks').delete(id);
-                                      }
-                                      Hive.box('preTasks').put(
-                                          time.toString(),
-                                          PreTask(
-                                            id: time.toString(),
-                                            name: _nameController.text,
-                                            description:
-                                                _descriptionController.text,
-                                            importance: initialImportance,
-                                          ));
-                                      Hive.box('ID').put(
-                                          'id', Hive.box('ID').get('id') + 1);
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  splashColor: Colors.transparent,
-                                ),
-                                borderRadius: 15,
-                              ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                            focusColor: Colors.black,
+                            hintStyle: hintStyle,
+                            hintText: 'توضیحات',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: RatingBar(
+                          allowHalfRating: false,
+                          direction: Axis.horizontal,
+                          glow: false,
+                          initialRating:
+                              (preTask == null) ? 0.0 : preTask.importance,
+                          itemCount: 3,
+                          ratingWidget: RatingWidget(
+                            empty:
+                                Icon(Icons.star_rounded, color: Colors.black38),
+                            full: Icon(Icons.star_rounded, color: Colors.black),
+                            half: Container(),
+                          ),
+                          onRatingUpdate: (double val) {
+                            if (preTask != null){
+                              if (preTask.importance != val){
+                                mode = 3;
+                              }
+                              if (preTask.importance == val){
+                                mode = 2;
+                              }
+                            }
+                            setState(() {
+                              importance = val;
+                            });
+                          },
+                        ),
+                      ),
+                      bottomHandler(
+                        context,
+                        mode,
+                        preTask: preTask,
+                        title: _nameController.text,
+                        importance: importance,
+                        description: _descriptionController.text,
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -434,5 +485,174 @@ void showMyBottomSheet(
         },
       );
     },
+  );
+}
+
+/// 0 : deleting,  /// NOT IN USE
+/// 1: adding,
+/// 2: viewing,
+/// 3: updating,
+/// 4: week return view,
+/// 5: month return view
+
+Widget bottomHandler(
+  BuildContext context,
+  int mode, {
+  var preTask,
+  var title,
+  var description,
+  var importance,
+}) {
+  /// Adding mode  /// Case 1
+  if (preTask == null) {
+    return addBottom(context, title, description, importance);
+  } else {
+    switch (mode) {
+      case 2:
+        {
+          return viewBottom(context, preTask);
+        }
+      case 3:
+        {
+          return updateBottom(context, preTask,
+              title: title, description: description, importance: importance);
+        }
+      default:
+        {
+          return Container(
+            color: Colors.black,
+            height: 100,
+          );
+        }
+    }
+  }
+}
+
+Widget addBottom(
+    BuildContext context, String title, String description, double importance) {
+  return Row(
+    children: [
+      GlassButton(
+          width: 40,
+          height: 40,
+          child: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          borderRadius: 15),
+      Spacer(),
+      GlassButton(
+          width: 40,
+          height: 40,
+          child: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.send_rounded),
+            onPressed: () {
+              if (formKey.currentState!.validate()){
+                print('Added');
+                add_pretask(title, importance, description: description);
+                Navigator.pop(context);
+              }
+            },
+          ),
+          borderRadius: 15),
+    ],
+  );
+}
+
+Widget viewBottom(
+  BuildContext context,
+  PreTask preTask,
+) {
+  return Row(
+    children: [
+      GlassButton(
+          width: 40,
+          height: 40,
+          child: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              delete_pretask(preTask.id);
+              Navigator.pop(context);
+            },
+          ),
+          borderRadius: 15),
+      Spacer(),
+      GlassButton(
+          width: 40,
+          height: 40,
+          child: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.pending_actions_outlined),
+            onPressed: () {
+              go_to_weekly(preTask.id);
+              Navigator.pop(context);
+            },
+          ),
+          borderRadius: 15),
+      GlassButton(
+          width: 40,
+          height: 40,
+          child: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.archive_outlined),
+            onPressed: () {
+              go_to_monthly(preTask.id);
+              Navigator.pop(context);
+            },
+          ),
+          borderRadius: 15),
+      GlassButton(
+          width: 40,
+          height: 40,
+          child: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.assistant_photo),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          borderRadius: 15),
+    ],
+  );
+}
+
+Widget updateBottom(BuildContext context, PreTask preTask,
+    {title, description, importance}) {
+  return Row(
+    children: [
+      GlassButton(
+          width: 40,
+          height: 40,
+          child: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          borderRadius: 15),
+      Spacer(),
+      GlassButton(
+          width: 40,
+          height: 40,
+          child: IconButton(
+            splashColor: Colors.transparent,
+            icon: Icon(Icons.done),
+            onPressed: () {
+              print("Update");
+              update_pretask(preTask.id,
+                  title: title,
+                  description: description,
+                  importance: importance);
+              Navigator.pop(context);
+            },
+          ),
+          borderRadius: 15),
+    ],
   );
 }

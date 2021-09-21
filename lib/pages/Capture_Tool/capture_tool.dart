@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../db/models/pre_task/pretask_widget.dart';
 import 'dialogs.dart';
 
 class CaptureTool extends StatefulWidget {
@@ -26,17 +27,17 @@ class _CaptureToolState extends State<CaptureTool> {
         child: ValueListenableBuilder(
           valueListenable: Hive.box('preTasks').listenable(),
           builder: (context, val, _) {
-            print(Hive.box('preTasks').length);
+            print('Number of Pretasks: ${Hive.box('preTasks').length}');
             return ListView.builder(
               physics: BouncingScrollPhysics(),
-              itemCount: Hive.box('ID').get('id') + 1,
+              itemCount: Hive.box('preTasks').length,
               itemBuilder: (BuildContext context, int index) {
-                if (index == Hive.box('ID').get('id')) {
-                  return Container(
-                    height: 100,
-                  );
-                }
-                return Hive.box('preTasks').getAt(index).showTile(context);
+
+                /// Get all pre tasks with 'Capture tool' state:
+                var item = Hive.box('preTasks').getAt(index);
+                if (item.state == 1){
+                  return showTile(context, item);
+                } else {return Container();}
               },
             );
           },

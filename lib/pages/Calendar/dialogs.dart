@@ -274,17 +274,10 @@ void eventCreateBottomSheet(
             child: ListView(
               controller: controller,
               children: [
-                DropdownButton(
-                    items:  <String>['A', 'B', 'C', 'D'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  onChanged: (_) {},
-                ),
+
+                Text('ایجاد فرصت'),
                 Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
+                    height: MediaQuery.of(context).size.height * 0.08,
                     decoration: BoxDecoration(
                       color: Colors.white,
                     ),
