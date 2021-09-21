@@ -50,8 +50,6 @@ class _AppState extends State<App> {
   List<String> names = [
     'تقویم',
     'لیست کارها',
-    'بازگشت هفتگی',
-    'بازگشت ماهانه',
     'ناحیه کاربری',
   ];
   List<Widget?> pages = [

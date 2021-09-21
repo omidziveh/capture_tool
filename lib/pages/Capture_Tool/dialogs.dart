@@ -625,34 +625,43 @@ Widget updateBottom(BuildContext context, PreTask preTask,
     {title, description, importance}) {
   return Row(
     children: [
-      GlassButton(
-          width: 40,
-          height: 40,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.close),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          borderRadius: 15),
+      Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: GlassButton(
+            width: 50,
+            height: 50,
+            child: IconButton(
+              splashColor: Colors.transparent,
+              icon: Icon(Icons.close),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            borderRadius: 15,
+        ),
+      ),
       Spacer(),
-      GlassButton(
-          width: 40,
-          height: 40,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.done),
-            onPressed: () {
-              print("Update");
-              update_pretask(preTask.id,
-                  title: title,
-                  description: description,
-                  importance: importance);
-              Navigator.pop(context);
-            },
-          ),
-          borderRadius: 15),
+      Padding(
+        padding: const EdgeInsets.only(right: 20.0),
+        child: GlassButton(
+            width: 50,
+            height: 50,
+            child: IconButton(
+              splashColor: Colors.transparent,
+              icon: Icon(Icons.done),
+              onPressed: () {
+                print("Update");
+                update_pretask(preTask.id,
+                    title: title,
+                    description: description,
+                    importance: importance);
+                Navigator.pop(context);
+              },
+            ),
+            borderRadius: 15),
+      ),
     ],
   );
 }
+
+
