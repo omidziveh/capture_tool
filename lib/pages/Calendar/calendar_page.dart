@@ -37,9 +37,11 @@ List<String> weekDays = [
 
 class CalendarPage extends StatefulWidget {
   final DateTime startDate;
+  bool today;
   double cellAspectRatio = 1.8;
 
   CalendarPage({
+    required this.today,
     required this.startDate,
   });
 
@@ -60,15 +62,18 @@ class _CalendarPageState extends State<CalendarPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Container(
-          child: monthName(),
-          alignment: Alignment.centerRight,
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0, right: 5),
+          child: Container(
+            child: monthName(),
+            alignment: Alignment.centerRight,
+          ),
         ),
         bottom: PreferredSize(
           preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.01),
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.02),
           child: SizedBox(
-            height: 40,
+            height: 45,
             child: GestureDetector(
               onTap: () {
                 print('Tapped on top bar');
@@ -90,14 +95,14 @@ class _CalendarPageState extends State<CalendarPage> {
                       borderRadius: BorderRadius.circular(15.0),
                       child: Container(
                         color:
-                        (true)
-                        //(_compareDates(this.widget.startDate.subtract(Duration(days: index + 1))))
+                        (this.widget.today &&
+                        _compareDates(this.widget.startDate.subtract(Duration(days: index + 1))))
                             ? Color.fromARGB(100, 255, 255, 255)
                             : Colors.transparent,
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 4.0),
+                              padding: const EdgeInsets.only(bottom: 2),
                               child: FittedBox(
                                 child: Text(
                                   weekDays[this
@@ -107,21 +112,26 @@ class _CalendarPageState extends State<CalendarPage> {
                                           .toJalali()
                                           .weekDay -
                                       1],
+                                  textDirection: TextDirection.rtl,
                                   style: calendarWeekStyle,
                                 ),
                               ),
                             ),
-                            FittedBox(
-                              child: Text(
-                                  this
-                                      .widget
-                                      .startDate
-                                      .add(Duration(days: -index - 1))
-                                      .toJalali()
-                                      .day
-                                      .toString()
-                                      .toPersianDigit(),
-                                  style: calendarWeekStyle),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: FittedBox(
+                                child: Text(
+                                    this
+                                        .widget
+                                        .startDate
+                                        .add(Duration(days: -index - 1))
+                                        .toJalali()
+                                        .day
+                                        .toString()
+                                        .toPersianDigit(),
+                                    textDirection: TextDirection.rtl,
+                                    style: calendarWeekStyle),
+                              ),
                             ),
                           ],
                         ),
@@ -135,47 +145,47 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
       ),
       body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4, childAspectRatio: widget.cellAspectRatio),
-        itemCount: tableItemCount,
-        itemBuilder: (BuildContext context, int index) {
-          if (index >= tableItemCount - 4 * (60 ~/ timeStep)) {
-            return Container(
-              color: Colors.transparent,
-            );
-          } // انتهای جدول برای خالی کردن فضا
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4, childAspectRatio: widget.cellAspectRatio),
+          itemCount: tableItemCount,
+          itemBuilder: (BuildContext context, int index) {
+            if (index >= tableItemCount - 4 * (60 ~/ timeStep)) {
+              return Container(
+                color: Colors.transparent,
+              );
+            } // انتهای جدول برای خالی کردن فضا
 
-          if (index % 4 == 3) {
-            return Container(
-              alignment: Alignment(0.0, -10.0),
-              decoration: BoxDecoration(
-                border: (((index - 3) ~/ 4 + 1) % (60 ~/ timeStep) == 0)
-                    ? Border(
-                        bottom: BorderSide(width: 0.6, color: Colors.black))
-                    : null,
-              ),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: time(index),
+            if (index % 4 == 3) {
+              return Container(
+                alignment: Alignment(0.0, -10.0),
+                decoration: BoxDecoration(
+                  border: (((index - 3) ~/ 4 + 1) % (60 ~/ timeStep) == 0)
+                      ? Border(
+                          bottom: BorderSide(width: 0.6, color: Colors.black))
+                      : null,
+                ),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: time(index),
+                ),
+              );
+            } // ستون مربوط به زمان ها
+
+            return GestureDetector(
+              onTap: () => _addMode(index),
+              onLongPress: () {
+                print('Long Pressed.');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                  color: Colors.black45,
+                  width: 0.3,
+                )),
               ),
             );
-          } // ستون مربوط به زمان ها
-
-          return GestureDetector(
-            onTap: () => _addMode(index),
-            onLongPress: () {
-              print('Long Pressed.');
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                color: Colors.black45,
-                width: 0.3,
-              )),
-            ),
-          );
-        },
-      ),
+          },
+        ),
     );
   }
 
@@ -192,8 +202,8 @@ class _CalendarPageState extends State<CalendarPage> {
       );
     } else {
       return Text(
-        '${months[finishDate.month - 1]} ${finishDate.year.toString().toPersianDigit()} - '
-        '${months[startDate.month - 1]} ${startDate.year.toString().toPersianDigit()}',
+        '${months[startDate.month - 1]} ${startDate.year.toString().toPersianDigit()} - '
+        '${months[finishDate.month - 1]} ${finishDate.year.toString().toPersianDigit()}',
         style: calendarMonthStyle,
       );
     }

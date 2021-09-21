@@ -50,12 +50,10 @@ class _CalendarState extends State<Calendar> {
         reverse: true,
         controller: controller,
         itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            child: CalendarPage(
-              startDate: startDate.add(Duration(days: 3 * (index-4))),
-            ),
-          );
+          return (index == 5)? CalendarPage(
+            startDate: startDate.add(Duration(days: 3 * (index-4))), today: true):
+          CalendarPage(
+            startDate: startDate.add(Duration(days: 3 * (index-4))), today: false);
         },
       ),
     );

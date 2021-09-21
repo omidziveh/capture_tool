@@ -241,6 +241,7 @@
 //   }
 // }
 
+import 'package:capture_tool/db/models/pre_task/pretask_db.dart';
 import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -250,6 +251,8 @@ import 'package:shamsi_date/shamsi_date.dart';
 import 'package:shamsi_date/extensions.dart';
 
 import '../../glass/glass_button.dart';
+
+final formKey = GlobalKey<FormState>();
 
 void eventCreateBottomSheet(
   BuildContext context,
@@ -274,18 +277,18 @@ void eventCreateBottomSheet(
             child: ListView(
               controller: controller,
               children: [
-
                 Text('ایجاد فرصت'),
-                Container(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: Container(
-                      color: Colors.white,
-                      child: Center(
-                          child: Text('${date}, ${startTime}, ${finishTime}')),
-                    )),
+                Form(key: formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          DropdownButton(items: pretasks_titles())
+                        ],
+                      ),
+                      Container(color: Colors.black,height: 40,)
+                    ],
+                  ),)
               ],
             ),
           );
@@ -294,4 +297,3 @@ void eventCreateBottomSheet(
     },
   );
 }
-
