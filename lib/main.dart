@@ -1,5 +1,6 @@
 import 'package:capture_tool/glass/glass_widget.dart';
 import 'package:capture_tool/pages/Capture_Tool/dialogs.dart';
+import 'package:capture_tool/pages/Capture_Tool/popup_menu.dart';
 
 import 'theme.dart';
 import 'style.dart';
@@ -44,9 +45,23 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with TickerProviderStateMixin {
+  late AnimationController _bottom_menu_controller;
+  bool _isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _bottom_menu_controller = AnimationController(
+      duration: Duration(milliseconds: 200),
+      vsync: this,
+    );
+  }
+
   @override
   int _index = 1;
+  int bottom_button_width = 70;
+  double popup_menu_height = 0;
   List<String> names = [
     'تقویم',
     'لیست کارها',
@@ -61,94 +76,185 @@ class _AppState extends State<App> {
   ];
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GlassButton(
-            height: _index != 1 ? 0 : 70,
-            width: _index != 1 ? 0 : 70,
-            borderRadius: 20,
-            child: IconButton(
-              icon: Icon(Icons.more_vert),
-              splashColor: Colors.transparent,
-              onPressed: () {},
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GlassBottomMenu(
-              startIndex: 1,
-              borderRadius: 20,
-              //width: MediaQuery.of(context).size.width * 0.7,
-              width: 180,
-              height: 70,
-              unselectedColor: Colors.black38,
-              selectedColor: Colors.black,
-              titles: [
-                'تقویم',
-                'لیست کارها',
-                'ناحیه کاربری',
-              ],
-              icons: [
-                Icons.calendar_today_outlined,
-                Icons.menu,
-                Icons.person_outline_rounded,
-              ],
-              onChange: (int index) {
-                setState(() {
-                  _index = index;
-                });
-              },
-            ),
-          ),
-          // Padding(padding: EdgeInsets.only(left: 5)),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 1000),
-            child: GlassButton(
-              width: _index != 1 ? 0 : 70,
-              height: _index != 1 ? 0 : 70,
-              child: IconButton(
-                splashColor: Colors.transparent,
-                icon: Icon(
-                  Icons.add_rounded,
-                  color: Colors.black,
+    return WillPopScope(
+      onWillPop: () async {
+        if (popup_menu_height == 100) {
+          setState(() {
+            _bottom_menu_controller.reverse();
+            _isPlaying = false;
+            popup_menu_height = 0;
+          });
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            PopupMenu(
+              height: popup_menu_height,
+              children: [
+                GlassButton(
+                  width: 50,
+                  height: 50,
+                  borderRadius: 10,
+                  child: IconButton(
+                    icon: Icon(Icons.pending_actions_rounded),
+                    onPressed: () {
+                      setState(() {
+                        popup_menu_height = 0;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => WeekReturn()),
+                        );
+                      });
+                    },
+                    splashColor: Colors.transparent,
+                  ),
                 ),
-                onPressed: () {
-                  _index == 0 ? null : showPreTaskBottomSheet(context, mode: 1);
-                },
-              ),
-              borderRadius: 20,
+                Padding(padding: EdgeInsets.only(left: 10)),
+                GlassButton(
+                  width: 50,
+                  height: 50,
+                  borderRadius: 10,
+                  child: IconButton(
+                    icon: Icon(Icons.archive_outlined),
+                    onPressed: () {
+                      setState(() {
+                        popup_menu_height = 0;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MonthReturn()),
+                        );
+                      });
+                    },
+                    splashColor: Colors.transparent,
+                  ),
+                ),
+              ],
             ),
-          )
-        ],
+            Padding(padding: EdgeInsets.only(top: 10)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  width: bottom_button_width.toDouble(),
+                  child: GlassButton(
+                    height: 70,
+                    width: 70,
+                    borderRadius: 20,
+                    child: IconButton(
+                      icon: AnimatedIcon(
+                        icon: AnimatedIcons.menu_close,
+                        progress: _bottom_menu_controller,
+                      ),
+                      splashColor: Colors.transparent,
+                      onPressed: () {
+                        setState(() {
+                          _isPlaying = !_isPlaying;
+                          _isPlaying
+                              ? _bottom_menu_controller.forward()
+                              : _bottom_menu_controller.reverse();
+                          popup_menu_height = popup_menu_height == 0 ? 100 : 0;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AnimatedContainer(
+                    duration: Duration(seconds: 1),
+                    child: GlassBottomMenu(
+                      startIndex: 1,
+                      borderRadius: 20,
+                      //width: MediaQuery.of(context).size.width * 0.7,
+                      width: 180,
+                      height: 70,
+                      unselectedColor: Colors.black38,
+                      selectedColor: Colors.black,
+                      titles: [
+                        'تقویم',
+                        'لیست کارها',
+                        'ناحیه کاربری',
+                      ],
+                      icons: [
+                        Icons.calendar_today_outlined,
+                        Icons.menu,
+                        Icons.person_outline_rounded,
+                      ],
+                      onChange: (int index) {
+                        setState(() {
+                          _index = index;
+                          if (index == 0 || index == 2) {
+                            bottom_button_width = 0;
+                            popup_menu_height = 0;
+                            _isPlaying = false;
+                            _bottom_menu_controller.reverse();
+                          } else {
+                            bottom_button_width = 70;
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                // Padding(padding: EdgeInsets.only(left: 5)),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  width: bottom_button_width.toDouble(),
+                  child: GlassButton(
+                    width: 70,
+                    height: 70,
+                    child: IconButton(
+                      splashColor: Colors.transparent,
+                      icon: Icon(
+                        Icons.add_rounded,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        _index == 0
+                            ? null
+                            : showPreTaskBottomSheet(context, mode: 1);
+                      },
+                    ),
+                    borderRadius: 20,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+        body: pages[_index],
+        appBar: (_index != 0)
+            ? AppBar(
+                centerTitle: false,
+                elevation: 0,
+                backgroundColor: Color.fromRGBO(255, 255, 255, 0.9),
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(
+                      MediaQuery.of(context).size.height * 0.08),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10, top: 10),
+                        child: Text(names[_index], style: AppBarTextStyle),
+                      ),
+                      Container(
+                        height: 5,
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : null,
       ),
-      body: pages[_index],
-      appBar: (_index != 0)
-          ? AppBar(
-              centerTitle: false,
-              elevation: 0,
-              backgroundColor: Color.fromRGBO(255, 255, 255, 0.9),
-              bottom: PreferredSize(
-                preferredSize:
-                    Size.fromHeight(MediaQuery.of(context).size.height * 0.08),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10, top: 10),
-                      child: Text(names[_index], style: AppBarTextStyle),
-                    ),
-                    Container(
-                      height: 5,
-                      color: Colors.black,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          : null,
     );
   }
 }
