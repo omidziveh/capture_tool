@@ -4,6 +4,7 @@ import 'package:capture_tool/pages/Capture_Tool/popup_menu.dart';
 
 import 'theme.dart';
 import 'style.dart';
+import 'default_appbar.dart';
 
 import 'pages/Calendar/calendar.dart';
 import 'pages/Capture_Tool/capture_tool.dart';
@@ -232,26 +233,13 @@ class _AppState extends State<App> with TickerProviderStateMixin {
         ),
         body: pages[_index],
         appBar: (_index != 0)
-            ? AppBar(
-                centerTitle: false,
-                elevation: 0,
-                backgroundColor: Color.fromRGBO(255, 255, 255, 0.9),
-                bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(
-                      MediaQuery.of(context).size.height * 0.08),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10, top: 10),
-                        child: Text(names[_index], style: AppBarTextStyle),
-                      ),
-                      Container(
-                        height: 5,
-                        color: Colors.black,
-                      ),
-                    ],
-                  ),
-                ),
+            ? defaultAppBar(
+                names[_index],
+
+                /// appbar title
+                context,
+
+                /// BuildContext
               )
             : null,
       ),

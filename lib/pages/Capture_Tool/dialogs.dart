@@ -8,6 +8,7 @@ import '../../db/models/pre_task/pretask.dart';
 import '../../db/models/pre_task/pretask_db.dart';
 
 final formKey = GlobalKey<FormState>();
+double button_size = 50;
 
 void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
   TextEditingController _nameController =
@@ -71,7 +72,7 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
           return Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: 400,
               decoration: BoxDecoration(
                 color: Colors.white,
               ),
@@ -79,7 +80,7 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: formKey,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 5, top: 10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -289,8 +290,8 @@ Widget addBottom(
   return Row(
     children: [
       GlassButton(
-          width: 40,
-          height: 40,
+          width: button_size,
+          height: button_size,
           child: IconButton(
             splashColor: Colors.transparent,
             icon: Icon(Icons.close),
@@ -301,8 +302,8 @@ Widget addBottom(
           borderRadius: 15),
       Spacer(),
       GlassButton(
-          width: 40,
-          height: 40,
+          width: button_size,
+          height: button_size,
           child: IconButton(
             splashColor: Colors.transparent,
             icon: Icon(Icons.send_rounded),
@@ -326,21 +327,22 @@ Widget viewBottom(
   return Row(
     children: [
       GlassButton(
-          width: 40,
-          height: 40,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              delete_pretask(preTask.id);
-              Navigator.pop(context);
-            },
-          ),
-          borderRadius: 15),
+        width: button_size,
+        height: button_size,
+        child: IconButton(
+          splashColor: Colors.transparent,
+          icon: Icon(Icons.delete),
+          onPressed: () {
+            delete_pretask(preTask.id);
+            Navigator.pop(context);
+          },
+        ),
+        borderRadius: 15,
+      ),
       Spacer(),
       GlassButton(
-          width: 40,
-          height: 40,
+          width: button_size,
+          height: button_size,
           child: IconButton(
             splashColor: Colors.transparent,
             icon: Icon(Icons.pending_actions_outlined),
@@ -351,8 +353,8 @@ Widget viewBottom(
           ),
           borderRadius: 15),
       GlassButton(
-          width: 40,
-          height: 40,
+          width: button_size,
+          height: button_size,
           child: IconButton(
             splashColor: Colors.transparent,
             icon: Icon(Icons.archive_outlined),
@@ -363,8 +365,8 @@ Widget viewBottom(
           ),
           borderRadius: 15),
       GlassButton(
-          width: 40,
-          height: 40,
+          width: button_size,
+          height: button_size,
           child: IconButton(
             splashColor: Colors.transparent,
             icon: Icon(Icons.assistant_photo),
@@ -384,8 +386,8 @@ Widget updateBottom(BuildContext context, PreTask preTask,
       Padding(
         padding: const EdgeInsets.only(left: 20.0),
         child: GlassButton(
-          width: 50,
-          height: 50,
+          width: button_size,
+          height: button_size,
           child: IconButton(
             splashColor: Colors.transparent,
             icon: Icon(Icons.close),
@@ -400,8 +402,8 @@ Widget updateBottom(BuildContext context, PreTask preTask,
       Padding(
         padding: const EdgeInsets.only(right: 20.0),
         child: GlassButton(
-            width: 50,
-            height: 50,
+            width: button_size,
+            height: button_size,
             child: IconButton(
               splashColor: Colors.transparent,
               icon: Icon(Icons.done),

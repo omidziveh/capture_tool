@@ -32,13 +32,12 @@ Icon activeImportanceIcon = Icon(
 
 Icon deactiveImportanceIcon = Icon(
   Icons.star_rounded,
-  color: Colors.black38,
+  color: Colors.black26,
 );
 
 TextStyle captureToolPreTaskTitle = TextStyle(
   color: Colors.black,
   fontFamily: 'IranSans',
-  fontSize: 17,
 );
 
 TextStyle calendarWeekStyle = TextStyle(

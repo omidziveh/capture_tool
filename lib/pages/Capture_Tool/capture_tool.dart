@@ -37,7 +37,9 @@ class _CaptureToolState extends State<CaptureTool> {
                 if (item.state == 1) {
                   return showTile(context, item);
                 } else {
-                  return Container();
+                  return Container(
+                    height: 100,
+                  );
                 }
               },
             );
