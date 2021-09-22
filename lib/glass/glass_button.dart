@@ -23,7 +23,6 @@ class _GlassButtonState extends State<GlassButton> {
   @override
   Widget build(BuildContext context) {
     return GlassmorphicContainer(
-
       width: widget.width,
       height: widget.height,
       borderRadius: widget.borderRadius,
@@ -31,8 +30,8 @@ class _GlassButtonState extends State<GlassButton> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color.fromARGB(50, 200, 200, 200),
-            Color.fromRGBO(200, 200, 200, 0.2),
+            Color.fromRGBO(200, 200, 200, 0.3),
+            Color.fromRGBO(200, 200, 200, 0.3),
           ],
           stops: [
             0.1,
@@ -44,8 +43,8 @@ class _GlassButtonState extends State<GlassButton> {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Color(0xFFffffff).withOpacity(0.7),
-          Color((0xFFFFFFFF)).withOpacity(0.2),
+          Color(0xFFffffff).withOpacity(0.5),
+          Color((0xFFFFFFFF)).withOpacity(0.5),
         ],
       ),
       child: Center(

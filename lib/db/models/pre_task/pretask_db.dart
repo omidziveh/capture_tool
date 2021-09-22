@@ -14,14 +14,30 @@ void go_to_weekly(String id) {
   /// Remove item from preTasks box and Add the item to weeklyReturn box
   var item = Hive.box('preTasks').get(id);
   Hive.box('preTasks').delete(id);
-  Hive.box('weeklyReturn').put(item.id, item);
+  Hive.box('weeklyReturn').put(
+      item.id,
+      PreTask(
+          id: id,
+          title: item.title,
+          description: item.description,
+          importance: item.importance,
+          timeStamp: item.timeStamp,
+          state: 3));
 }
 
 void go_to_monthly(String id) {
   /// Remove item from preTasks box and Add the item to monthlyReturn box
   var item = Hive.box('preTasks').get(id);
   Hive.box('preTasks').delete(id);
-  Hive.box('monthlyReturn').put(item.id, item);
+  Hive.box('monthlyReturn').put(
+      item.id,
+      PreTask(
+          id: id,
+          title: item.title,
+          description: item.description,
+          importance: item.importance,
+          timeStamp: item.timeStamp,
+          state: 3));
 }
 
 void add_pretask(String title, double importance,

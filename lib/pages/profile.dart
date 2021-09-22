@@ -5,6 +5,9 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    print('profile');
+    return Container(
+      height: 100,
+    );
   }
 }

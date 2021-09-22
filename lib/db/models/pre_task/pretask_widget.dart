@@ -8,7 +8,7 @@ import '../../../pages/Capture_Tool/dialogs.dart';
 
 Widget showTile(BuildContext context, var preTask) {
   double tile_height = 70;
-  print(tile_height);
+  SlidableController _slidableController = SlidableController();
   return StatefulBuilder(builder: (context, setState) {
     return Padding(
       padding: EdgeInsets.all(10),
@@ -26,13 +26,15 @@ Widget showTile(BuildContext context, var preTask) {
         ),
         height: tile_height,
         child: Slidable(
+          controller: _slidableController,
+          movementDuration: Duration(milliseconds: 100),
           actionPane: SlidableBehindActionPane(),
+          closeOnScroll: true,
           actions: [
             slideAction(Icons.delete, Colors.red, () {
               setState(() {
                 tile_height = 0;
               });
-              // delete_pretask(preTask.id);
             })
           ],
           secondaryActions: [
@@ -82,78 +84,6 @@ Widget showTile(BuildContext context, var preTask) {
       ),
     );
   });
-  // return Padding(
-  //   padding: const EdgeInsets.all(8.0),
-  //   child: Card(
-  //     elevation: 0,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(20),
-  //     ),
-  //     child: Slidable(
-  //       actionExtentRatio: 1 / 6,
-  //       actions: [
-  //         IconSlideAction(
-  //           color: Colors.red,
-  //           icon: Icons.delete,
-  //           onTap: () {
-  //             delete_pretask(preTask.id);
-  //           },
-  //         ),
-  //       ],
-  //       secondaryActions: [
-  //         IconSlideAction(
-  //           color: Colors.green,
-  //           icon: Icons.pending_actions_sharp,
-  //           onTap: () {
-  //             go_to_weekly(preTask.id);
-  //           },
-  //         ),
-  //         IconSlideAction(
-  //           color: Colors.blue,
-  //           icon: Icons.archive_outlined,
-  //           onTap: () {
-  //             go_to_monthly(preTask.id);
-  //           },
-  //         ),
-  //       ],
-  //       actionPane: SlidableBehindActionPane(),
-  //       closeOnScroll: true,
-  //       showAllActionsThreshold: 0.6,
-  //       child: GestureDetector(
-  //         onTap: () {
-  //           showPreTaskBottomSheet(buildContext, preTask: preTask);
-  //         },
-  //         child: Container(
-  //           height: 80,
-  //           decoration: BoxDecoration(
-  //             color: Colors.white,
-  //           ),
-  //           child: Row(
-  //             children: [
-  //               preTask?.importance > 0
-  //                   ? activeImportanceIcon
-  //                   : deactiveImportanceIcon,
-  //               preTask?.importance > 1
-  //                   ? activeImportanceIcon
-  //                   : deactiveImportanceIcon,
-  //               preTask?.importance > 2
-  //                   ? activeImportanceIcon
-  //                   : deactiveImportanceIcon,
-  //               Spacer(),
-  //               Padding(
-  //                 padding: const EdgeInsets.all(8.0),
-  //                 child: Text(
-  //                   preTask?.title,
-  //                   style: captureToolPreTaskTitle,
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   ),
-  // );
 }
 
 Widget slideAction(icon, color, onTap) {

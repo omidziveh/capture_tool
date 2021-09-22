@@ -11,7 +11,6 @@ final formKey = GlobalKey<FormState>();
 double button_size = 40;
 
 void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
-
   TextEditingController _nameController =
       TextEditingController(text: (preTask != null) ? preTask.title : null);
   TextEditingController _descriptionController = TextEditingController(
@@ -74,14 +73,17 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
           return Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: Container(
-              height: 500,
+              // height: 500,
               decoration: BoxDecoration(
                 color: Colors.transparent,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Container(
-                  color: Colors.white,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.white,
+                  ),
                   child: Form(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     key: formKey,
@@ -93,7 +95,8 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
                           Center(
                             child: FittedBox(
                               child: Padding(
-                                padding: const EdgeInsets.only(top: 5, bottom: 10),
+                                padding:
+                                    const EdgeInsets.only(top: 5, bottom: 10),
                                 child: Text(
                                   (preTask == null) ? 'اضافه کردن کار' : 'کار',
                                   style: addTaskDialogTitle,
@@ -211,9 +214,10 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
                                   (preTask == null) ? 0.0 : preTask.importance,
                               itemCount: 3,
                               ratingWidget: RatingWidget(
-                                empty:
-                                    Icon(Icons.star_rounded, color: Colors.black38),
-                                full: Icon(Icons.star_rounded, color: Colors.black),
+                                empty: Icon(Icons.star_rounded,
+                                    color: Colors.black38),
+                                full: Icon(Icons.star_rounded,
+                                    color: Colors.black),
                                 half: Container(),
                               ),
                               onRatingUpdate: (double val) {

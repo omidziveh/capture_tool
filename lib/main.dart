@@ -1,4 +1,5 @@
 import 'package:capture_tool/glass/glass_widget.dart';
+import 'package:capture_tool/pages/Capture_Tool/capture_tool.dart';
 import 'package:capture_tool/pages/Capture_Tool/dialogs.dart';
 import 'package:capture_tool/pages/Capture_Tool/popup_menu.dart';
 
@@ -7,7 +8,6 @@ import 'style.dart';
 import 'default_appbar.dart';
 
 import 'pages/Calendar/calendar.dart';
-import 'pages/Capture_Tool/capture_tool.dart';
 import 'pages/week_return.dart';
 import 'pages/month_return.dart';
 import 'pages/profile.dart';
@@ -71,9 +71,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
   List<Widget?> pages = [
     Calendar(),
     CaptureTool(),
-    WeekReturn(),
-    MonthReturn(),
-    Profile()
+    Profile(),
   ];
 
   Widget build(BuildContext context) {
@@ -91,6 +89,8 @@ class _AppState extends State<App> with TickerProviderStateMixin {
       },
       child: Scaffold(
         extendBodyBehindAppBar: true,
+
+        /// you can see the preTasks behind the appbar
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -107,6 +107,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                     onPressed: () {
                       setState(() {
                         popup_menu_height = 0;
+                        _bottom_menu_controller.reverse();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => WeekReturn()),
@@ -125,6 +126,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                     icon: Icon(Icons.archive_outlined),
                     onPressed: () {
                       setState(() {
+                        _bottom_menu_controller.reverse();
                         popup_menu_height = 0;
                         Navigator.push(
                           context,
@@ -191,6 +193,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                       ],
                       onChange: (int index) {
                         setState(() {
+                          print(index);
                           _index = index;
                           if (index == 0 || index == 2) {
                             bottom_button_width = 0;
