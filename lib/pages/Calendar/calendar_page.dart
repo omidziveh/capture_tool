@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:capture_tool/pages/Calendar/calendar.dart';
+
 import '../../style.dart';
 
 import 'package:flutter/material.dart';
@@ -7,6 +11,7 @@ import 'package:shamsi_date/extensions.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 
 import 'dialogs.dart';
 
@@ -39,8 +44,10 @@ class CalendarPage extends StatefulWidget {
   final DateTime startDate;
   bool today;
   double cellAspectRatio = 1.8;
+  ListenerScrollController controller;
 
   CalendarPage({
+    required this.controller,
     required this.today,
     required this.startDate,
   });
@@ -55,6 +62,21 @@ class _CalendarPageState extends State<CalendarPage> {
   bool addMoreMode = false;
   var addState =
       List.filled(25 * 4 * (60 ~/ Hive.box('Calendar').get('duration')), false);
+  Timer? timer;
+  int _index = 0;
+  //ScrollController _controller = ScrollController(initialScrollOffset: 300);
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 1), (t) {setState(() {_index = _now(); print(_index);});});
+  }
+
+  @override
+  void dispose() {
+    timer!.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +101,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 print('Tapped on top bar');
               },
               child: GridView.builder(
+                restorationId: 'TimeTable',
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4),
                 itemBuilder: (BuildContext context, int index) {
@@ -144,48 +167,60 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
       ),
-      body: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4, childAspectRatio: widget.cellAspectRatio),
-          itemCount: tableItemCount,
-          itemBuilder: (BuildContext context, int index) {
-            if (index >= tableItemCount - 4 * (60 ~/ timeStep)) {
-              return Container(
-                color: Colors.transparent,
-              );
-            } // انتهای جدول برای خالی کردن فضا
 
-            if (index % 4 == 3) {
-              return Container(
-                alignment: Alignment(0.0, -10.0),
-                decoration: BoxDecoration(
-                  border: (((index - 3) ~/ 4 + 1) % (60 ~/ timeStep) == 0)
-                      ? Border(
-                          bottom: BorderSide(width: 0.6, color: Colors.black))
-                      : null,
-                ),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: time(index),
+      body: NotificationListener<ScrollEndNotification>(
+        onNotification: (notification){
+          setState(() {
+            widget.controller.offset = 1000;
+          });
+          return true;
+        },
+        child: GridView.builder(
+          restorationId: 'TimeTable',
+          controller: this.widget.controller,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4, childAspectRatio: widget.cellAspectRatio),
+            itemCount: tableItemCount,
+            itemBuilder: (BuildContext context, int index) {
+              if (index >= tableItemCount - 4 * (60 ~/ timeStep)) {
+                return Container(
+                  color: Colors.transparent,
+                );
+              } // انتهای جدول برای خالی کردن فضا
+
+              if (index % 4 == 3) {
+                return Container(
+                  alignment: Alignment(0.0, -10.0),
+                  decoration: BoxDecoration(
+                    color: _index == index ? Colors.red : Colors.white,
+                    border: (((index - 3) ~/ 4 + 1) % (60 ~/ timeStep) == 0)
+                        ? Border(
+                            bottom: BorderSide(width: 0.6, color: Colors.black))
+                        : null,
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: time(index),
+                  ),
+                );
+              } // ستون مربوط به زمان ها
+
+              return GestureDetector(
+                onTap: () => _addMode(index),
+                onLongPress: () {
+                  print('Long Pressed.');
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                    color: Colors.black45,
+                    width: 0.3,
+                  )),
                 ),
               );
-            } // ستون مربوط به زمان ها
-
-            return GestureDetector(
-              onTap: () => _addMode(index),
-              onLongPress: () {
-                print('Long Pressed.');
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                  color: Colors.black45,
-                  width: 0.3,
-                )),
-              ),
-            );
-          },
-        ),
+            },
+          ),
+      ),
     );
   }
 
@@ -237,6 +272,13 @@ class _CalendarPageState extends State<CalendarPage> {
         }
       }
     }
+  }
+
+  _now() {
+    var hour = DateTime.now().hour;
+    var minute = DateTime.now().minute;
+    var duration = hour * 60 + minute;
+    return (duration ~/ timeStep + 1) * 4 - 1;
   }
 }
 
