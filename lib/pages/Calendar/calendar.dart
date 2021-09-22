@@ -10,11 +10,10 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-
+  ListenerScrollController _controller = ListenerScrollController();
   DateTime startDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -24,23 +23,26 @@ class _CalendarState extends State<Calendar> {
               padding: EdgeInsets.only(right: 20.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.black,
+                  primary: Colors.black,
                 ),
                 onPressed: () {
                   setState(() {
-                    controller.animateToPage(5, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                    controller.animateToPage(5,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeIn);
                   });
                 },
                 child: Icon(
                   Icons.today,
                   size: 20,
                 ),
-              )
-          ),
+              )),
         ],
       ),
       drawer: Drawer(
-        child: Container(color: Colors.black,),
+        child: Container(
+          color: Colors.black,
+        ),
       ),
       body: PageView.builder(
         onPageChanged: (int index) {
@@ -50,17 +52,30 @@ class _CalendarState extends State<Calendar> {
         reverse: true,
         controller: controller,
         itemBuilder: (BuildContext context, int index) {
-          return (index == 5)? CalendarPage(
-            startDate: startDate.add(Duration(days: 3 * (index-4))), today: true):
-          CalendarPage(
-            startDate: startDate.add(Duration(days: 3 * (index-4))), today: false);
+          return (index == 5)
+              ? CalendarPage(
+                  controller: _controller,
+                  startDate: startDate.add(Duration(days: 3 * (index - 4))),
+                  today: true)
+              : CalendarPage(
+                  controller: _controller,
+                  startDate: startDate.add(Duration(days: 3 * (index - 4))),
+                  today: false);
         },
       ),
     );
   }
+
   final PageController controller = PageController(
     initialPage: 5,
   );
 
 }
 
+
+class ListenerScrollController extends ScrollController {
+
+  void set offset (double new_offset) {
+    offset = new_offset;
+  }
+}
