@@ -3,45 +3,48 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-void delete_pretask(String id) {
+void done_pretask(String id, [Box? startBox]) {
+  /// this line set a default value for startBox:
+  startBox ??= Hive.box('preTasks');
+
+  /// Remove item from startBox and add it to donePreTasks box
+  var item = startBox.get(id);
+  startBox.delete(id);
+  Hive.box('donePreTasks').put(item.id, item);
+}
+
+void delete_pretask(String id, [Box? startBox]) {
+  startBox ??= Hive.box('preTasks');
+
   /// Remove item from preTasks box and Add the item to preTasksTrash box
-  var item = Hive.box('preTasks').get(id);
-  Hive.box('preTasks').delete(id);
+  var item = startBox.get(id);
+  startBox.delete(id);
   Hive.box('preTasksTrash').put(item.id, item);
 }
 
-void go_to_weekly(String id) {
+void go_to_weekly(String id, [Box? startBox]) {
+  startBox ??= Hive.box('preTasks');
+
   /// Remove item from preTasks box and Add the item to weeklyReturn box
-  var item = Hive.box('preTasks').get(id);
-  Hive.box('preTasks').delete(id);
-  Hive.box('weeklyReturn').put(
-      item.id,
-      PreTask(
-          id: id,
-          title: item.title,
-          description: item.description,
-          importance: item.importance,
-          timeStamp: item.timeStamp,
-          state: 3));
+  var item = startBox.get(id);
+  startBox.delete(id);
+  Hive.box('weeklyReturn').put(item.id, item);
 }
 
-void go_to_monthly(String id) {
+void go_to_monthly(String id, [Box? startBox]) {
+  startBox ??= Hive.box('preTasks');
+
   /// Remove item from preTasks box and Add the item to monthlyReturn box
-  var item = Hive.box('preTasks').get(id);
-  Hive.box('preTasks').delete(id);
-  Hive.box('monthlyReturn').put(
-      item.id,
-      PreTask(
-          id: id,
-          title: item.title,
-          description: item.description,
-          importance: item.importance,
-          timeStamp: item.timeStamp,
-          state: 3));
+  var item = startBox.get(id);
+  startBox.delete(id);
+  Hive.box('monthlyReturn').put(item.id, item);
 }
 
 void add_pretask(String title, double importance,
     {String description = '', state = 1}) {
+  /// get title, importance, description and state then create a uuid and add
+  /// them to preTasks box
+
   var uuid = Uuid();
   String id = uuid.v1();
   DateTime timeStamp = DateTime.now();
@@ -55,10 +58,15 @@ void add_pretask(String title, double importance,
   Hive.box('preTasks').put(id, preTask);
 }
 
-void update_pretask(String id, {title, description, importance}) {
-  var preTask = Hive.box('preTasks').get(id);
+void update_pretask(String id,
+    {title, description, importance, Box? startBox}) {
+  /// get id and title, description and importance and change the task with
+  /// <id> of id and change the values that changed
+
+  startBox ??= Hive.box('preTasks');
+
+  var preTask = startBox.get(id);
   if (title != null) {
-    print(title);
     preTask.title = title;
   }
   if (description != null) {
@@ -67,14 +75,8 @@ void update_pretask(String id, {title, description, importance}) {
   if (importance != null) {
     preTask.importance = importance;
   }
-  Hive.box('preTasks').put('omid is noob', 'amir is pro');
-  Hive.box('preTasks').delete('omid is noob');
 }
 
 List<dynamic> all_pre_tasks() {
-  return Hive.box('preTasks')
-      .values
-      .toList()
-      .where((item) => item.state == 1)
-      .toList();
+  return Hive.box('preTasks').values.toList();
 }

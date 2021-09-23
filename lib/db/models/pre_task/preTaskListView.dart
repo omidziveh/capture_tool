@@ -7,8 +7,7 @@ import '../../../pages/Capture_Tool/dialogs.dart';
 
 class PreTaskListView extends StatefulWidget {
   Box box;
-  int mode;
-  PreTaskListView(this.box, [this.mode = 1]);
+  PreTaskListView(this.box);
 
   @override
   State<PreTaskListView> createState() => _PreTaskListViewState();
@@ -42,12 +41,7 @@ class _PreTaskListViewState extends State<PreTaskListView> {
                   );
                 }
                 var item = widget.box.getAt(index);
-                print('${item.state} ?= ${widget.mode}');
-                if (item.state == widget.mode) {
-                  return showTile(context, item);
-                } else {
-                  return Container();
-                }
+                return showTile(context, item, widget.box);
               },
             );
           },

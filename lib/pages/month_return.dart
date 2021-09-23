@@ -14,10 +14,7 @@ class MonthReturn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar('بازگشت ماهانه', context),
-      body: PreTaskListView(
-        Hive.box('monthlyReturn'),
-        3,
-      ),
+      body: PreTaskListView(Hive.box('monthlyReturn')),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.center,
