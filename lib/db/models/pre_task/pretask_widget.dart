@@ -22,31 +22,36 @@ Widget showTile(BuildContext context, var preTask, [Box? startBox]) {
             } else if (direction.index == 2) {
               done_pretask(preTask.id);
             }
+
           });
         },
-        background: Container(
-          color: Colors.transparent,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.all(5),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.red[900]),
-                width: 50,
-                child: IconButton(
-                  splashColor: Colors.transparent,
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    delete_pretask(preTask.id);
-                  },
+        background: Row(
+          children: [
+            Container(
+              color: Colors.transparent,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.red[900]),
+                    width: 50,
+                    child: IconButton(
+                      splashColor: Colors.transparent,
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        delete_pretask(preTask.id);
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
-        key: ValueKey('dismissible'),
+        key: UniqueKey(),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
