@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'calendar_page.dart';
-import 'package:shamsi_date/shamsi_date.dart';
-import 'package:persian_number_utility/persian_number_utility.dart';
-import 'package:preload_page_view/preload_page_view.dart';
 
 class Calendar extends StatefulWidget {
   @override
@@ -10,72 +8,60 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  ListenerScrollController _controller = ListenerScrollController();
-  DateTime startDate = DateTime.now();
+  late LinkedScrollControllerGroup controllers;
+  late ScrollController time;
+
+  @override
+  void initState() {
+    super.initState();
+    controllers = LinkedScrollControllerGroup();
+    time = controllers.addAndGet();
+  }
+
+  @override
+  void dispose() {
+    time.dispose();
+    super.dispose();
+  }
+
+  double height = 100;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.black,
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.black,
-                ),
-                onPressed: () {
-                  setState(() {
-                    controller.animateToPage(5,
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                  });
-                },
-                child: Icon(
-                  Icons.today,
-                  size: 20,
-                ),
-              )),
-        ],
-      ),
-      drawer: Drawer(
-        child: Container(
-          color: Colors.black,
+    return Row(
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: PageView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return CalendarPage(time, controllers);
+              },
+            ),
+          ),
         ),
-      ),
-      body: PageView.builder(
-        onPageChanged: (int index) {
-          print(index);
-        },
-        allowImplicitScrolling: true,
-        reverse: true,
-        controller: controller,
-        itemBuilder: (BuildContext context, int index) {
-          return (index == 5)
-              ? CalendarPage(
-                  controller: _controller,
-                  startDate: startDate.add(Duration(days: 3 * (index - 4))),
-                  today: true)
-              : CalendarPage(
-                  controller: _controller,
-                  startDate: startDate.add(Duration(days: 3 * (index - 4))),
-                  today: false);
-        },
-      ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width * 0.2,
+          child: ListView.builder(
+            itemExtent: 20,
+            controller: time,
+            itemBuilder: (context, index) {
+              return Container(
+                height: height,
+                color: Colors.red[(index * 100) % 900],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
-
-  final PageController controller = PageController(
-    initialPage: 5,
-  );
-
 }
 
-
-class ListenerScrollController extends ScrollController {
-
-  void set offset (double new_offset) {
-    offset = new_offset;
-  }
-}
+/// 1 / 2
+/// 100
+/// 
+///
