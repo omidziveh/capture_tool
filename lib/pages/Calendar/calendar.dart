@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'calendar_page.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
-import 'package:preload_page_view/preload_page_view.dart';
+import 'package:linked_scroll_controller/linked_scroll_controller.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+int timeStep = Hive.box('Calendar').get('duration');
 
 class Calendar extends StatefulWidget {
   @override
@@ -10,72 +13,81 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  ListenerScrollController _controller = ListenerScrollController();
-  DateTime startDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.black,
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.black,
-                ),
-                onPressed: () {
-                  setState(() {
-                    controller.animateToPage(5,
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn);
-                  });
-                },
-                child: Icon(
-                  Icons.today,
-                  size: 20,
-                ),
-              )),
-        ],
-      ),
-      drawer: Drawer(
-        child: Container(
-          color: Colors.black,
-        ),
-      ),
-      body: PageView.builder(
-        onPageChanged: (int index) {
-          print(index);
-        },
-        allowImplicitScrolling: true,
-        reverse: true,
-        controller: controller,
-        itemBuilder: (BuildContext context, int index) {
-          return (index == 5)
-              ? CalendarPage(
-                  controller: _controller,
-                  startDate: startDate.add(Duration(days: 3 * (index - 4))),
-                  today: true)
-              : CalendarPage(
-                  controller: _controller,
-                  startDate: startDate.add(Duration(days: 3 * (index - 4))),
-                  today: false);
-        },
-      ),
+    return PageView.builder(
+      itemCount: 2000,
+      controller: controller,
+      itemBuilder: (BuildContext context, int index) {
+        DateTime startDate =
+            DateTime.now().subtract(Duration(days: (1000 - index)));
+        return CalendarPage(startDate: startDate);
+      },
     );
   }
 
-  final PageController controller = PageController(
-    initialPage: 5,
+  PageController controller = PageController(
+    initialPage: 1000,
   );
-
 }
 
+/// Calendar Page: Each page has 3 days in it.
+class CalendarPage extends StatefulWidget {
+  final DateTime startDate;
 
-class ListenerScrollController extends ScrollController {
+  const CalendarPage({
+    required this.startDate,
+  });
 
-  void set offset (double new_offset) {
-    offset = new_offset;
+  @override
+  _CalendarPageState createState() => _CalendarPageState();
+}
+
+class _CalendarPageState extends State<CalendarPage> {
+  late LinkedScrollControllerGroup _controllerGroup;
+  late ScrollController _timeController;
+  late ScrollController _tableController;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllerGroup = LinkedScrollControllerGroup();
+    _timeController = _controllerGroup.addAndGet();
+    _tableController = _controllerGroup.addAndGet();
+  }
+
+  @override
+  void dispose() {
+    _timeController.dispose();
+    _tableController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.centerRight,
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.1,
+          child: ListView.builder(
+              controller: _timeController,
+              itemCount: 24 * 60 ~/ timeStep,
+              itemBuilder: (BuildContext context, int index) {
+                return Text(index.toString());
+              }),
+        ),
+        GridView.builder(
+          controller: _tableController,
+          itemCount: 2 * 24 * 60 ~/ timeStep,
+          gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          itemBuilder: (BuildContext context, int index) {
+            return SizedBox(
+                width: 10, height: 30, child: Text(index.toString()));
+          },
+        )
+      ],
+    );
   }
 }
