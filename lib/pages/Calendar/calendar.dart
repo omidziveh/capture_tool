@@ -34,12 +34,15 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Stack(children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.88,
+          ),
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width * 0.88,
@@ -49,24 +52,24 @@ class _CalendarState extends State<Calendar> {
               },
             ),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width * 0.12,
-            child: ListView.builder(
-              itemCount: 26 * 60 ~/ timeStep,
-              controller: time,
-              itemBuilder: (context, index) {
-                return TimeCell(index: index);
-              },
-            ),
+        ]),
+        SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width * 0.12,
+          child: ListView.builder(
+            itemCount: 26 * 60 ~/ timeStep,
+            controller: time,
+            itemBuilder: (context, index) {
+              return TimeCell(index: index);
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 /// 1 / 2
 /// 100
-/// 
+///
 ///
