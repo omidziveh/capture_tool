@@ -28,7 +28,7 @@ void main() async {
 
   await init_db();
 
-  Hive.box('Calendar').put('duration', 15);
+  Hive.box('Calendar').put('timeStep', 30);
   Hive.box('ID').put('id', 0);
 
   runApp(MaterialApp(

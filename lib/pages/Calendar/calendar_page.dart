@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
+import 'package:hive/hive.dart';
+
+import 'event_placeholder.dart';
 
 double lastPos = 0;
+int timeStep = Hive.box('Calendar').get('timeStep');
 
 class CalendarPage extends StatefulWidget {
   ScrollController time;
@@ -24,13 +28,16 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      controller: controller,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, childAspectRatio: 1 / 2),
-      itemBuilder: (BuildContext context, int index) {
-        return Card();
-      },
+    return GestureDetector(
+      child: GridView.builder(
+        controller: controller,
+        itemCount: 3 * 26 * 60 ~/ timeStep,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, mainAxisExtent: 50),
+        itemBuilder: (BuildContext context, int index) {
+          return EventPlaceHolder(index: index, pageStartDate: DateTime.now().add(Duration(days: index)),);
+        },
+      ),
     );
   }
 }
