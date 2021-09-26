@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:persian_number_utility/persian_number_utility.dart';
 
 int timeStep = Hive.box('Calendar').get('timeStep');
 
@@ -36,6 +37,6 @@ class _TimeCellState extends State<TimeCell> {
     String hour = duration[0];
     String minute = duration[1];
 
-    return("$hour:$minute");
+    return("${hour.toPersianDigit()}:${minute.toPersianDigit()}");
   }
 }

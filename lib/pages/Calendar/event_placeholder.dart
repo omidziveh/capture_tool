@@ -23,7 +23,8 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
     } else {
       return GestureDetector(
         onTap: () {
-          print(this.widget.index);
+          print(widget.index);
+          print(widget.pageStartDate);
         },
         child: Container(
           decoration: BoxDecoration(

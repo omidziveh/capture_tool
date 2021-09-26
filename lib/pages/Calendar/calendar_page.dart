@@ -92,7 +92,7 @@ class _CalendarPageState extends State<CalendarPage> {
               itemBuilder: (BuildContext context, int index) {
                 return EventPlaceHolder(
                   index: index,
-                  pageStartDate: DateTime.now().add(Duration(days: index)),
+                  pageStartDate: DateTime.now().add(Duration(days: widget.index - 1000)),
                 );
               },
             ),
