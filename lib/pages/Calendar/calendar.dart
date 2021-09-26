@@ -16,8 +16,8 @@ class _CalendarState extends State<Calendar> {
   late LinkedScrollControllerGroup controllers;
   late ScrollController time;
   DateTime startDate = DateTime.now();
-  PageController cellsController = PageController(initialPage: 0);
-  PageController daysController = PageController(initialPage: 0);
+  PageController cellsController = PageController(initialPage: 1000);
+  PageController daysController = PageController(initialPage: 1000);
 
 
   @override
@@ -43,6 +43,8 @@ class _CalendarState extends State<Calendar> {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width * 0.88,
             child: PageView.builder(
+              itemCount: 2000,
+              reverse: true,
               controller: this.cellsController,
               itemBuilder: (BuildContext context, int index) {
                 return CalendarPage(time, controllers, index);
@@ -53,10 +55,10 @@ class _CalendarState extends State<Calendar> {
           children: [
             Container(
               color: Colors.white,
-              height: MediaQuery.of(context).size.height * 0.1 - 8,
+              height: MediaQuery.of(context).size.height * 0.2 - 8,
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.9,
+              height: MediaQuery.of(context).size.height * 0.8,
               width: MediaQuery.of(context).size.width * 0.12,
               child: ListView.builder(
                 itemCount: 25 * 60 ~/ timeStep,
