@@ -16,6 +16,9 @@ class _CalendarState extends State<Calendar> {
   late LinkedScrollControllerGroup controllers;
   late ScrollController time;
   DateTime startDate = DateTime.now();
+  PageController cellsController = PageController(initialPage: 0);
+  PageController daysController = PageController(initialPage: 0);
+
 
   @override
   void initState() {
@@ -35,41 +38,37 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Stack(children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.1,
-            width: MediaQuery.of(context).size.width * 0.88,
-          ),
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width * 0.88,
             child: PageView.builder(
+              controller: this.cellsController,
               itemBuilder: (BuildContext context, int index) {
-                return CalendarPage(time, controllers);
+                return CalendarPage(time, controllers, index);
               },
             ),
           ),
-        ]),
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width * 0.12,
-          child: ListView.builder(
-            itemCount: 26 * 60 ~/ timeStep,
-            controller: time,
-            itemBuilder: (context, index) {
-              return TimeCell(index: index);
-            },
-          ),
+        Column(
+          children: [
+            Container(
+              color: Colors.white,
+              height: MediaQuery.of(context).size.height * 0.1 - 8,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.9,
+              width: MediaQuery.of(context).size.width * 0.12,
+              child: ListView.builder(
+                itemCount: 25 * 60 ~/ timeStep,
+                controller: time,
+                itemBuilder: (context, index) {
+                  return TimeCell(index: index);
+                },
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 }
-
-/// 1 / 2
-/// 100
-///
-///
