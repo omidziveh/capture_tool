@@ -40,10 +40,10 @@ Widget tile({
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
     child: Slidable(
-      actionExtentRatio: 1 / 6,
+      //actionExtentRatio: 1 / 6,
       actionPane: SlidableBehindActionPane(),
       actions: actions,
-      secondaryActions: secondActions,
+      //secondaryActions: secondActions,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -97,6 +97,7 @@ Widget deleteOption(PreTask preTask, Box startBox) {
     Colors.red,
     Icon(Icons.delete),
     () {
+      print('deleted');
       delete_pretask(preTask.id, startBox);
     },
   );
@@ -108,6 +109,7 @@ Widget monthOption(PreTask preTask, Box startBox) {
     Colors.blue,
     Icon(Icons.archive_outlined),
     () {
+      print('go to monthly');
       go_to_monthly(preTask.id, startBox);
     },
   );
@@ -119,6 +121,7 @@ Widget weekOption(PreTask preTask, Box startBox) {
     Colors.green,
     Icon(Icons.pending_actions_rounded),
     () {
+      print('go to weekly');
       go_to_weekly(preTask.id, startBox);
     },
   );
