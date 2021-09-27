@@ -46,9 +46,9 @@ TextStyle calendarWeekStyle = TextStyle(
 );
 
 TextStyle calendarMonthStyle = TextStyle(
-  color: Colors.white,
+  color: Colors.black,
   fontFamily: 'IranSans',
-  fontSize: 20,
+
 );
 
 TextStyle calendarTimeStyle = TextStyle(

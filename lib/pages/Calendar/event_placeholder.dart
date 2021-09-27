@@ -6,6 +6,7 @@ int timeStep = Hive.box('Calendar').get('timeStep');
 class EventPlaceHolder extends StatefulWidget {
   int index;
   DateTime pageStartDate;
+  DateTime now = DateTime.now();
   EventPlaceHolder({
     required this.pageStartDate,
     required this.index,
@@ -29,7 +30,6 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
         child: Container(
           decoration: BoxDecoration(
               border: Border.all(color: Colors.black12, width: 0.5)),
-          //margin: EdgeInsets.all(4),
         ),
       );
     }

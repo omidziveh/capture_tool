@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:hive/hive.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:shamsi_date/extensions.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 
 import 'event_placeholder.dart';
+import 'package:capture_tool/style.dart';
+import 'LinkedScrollController.dart';
+import 'calendar.dart';
 
 double lastPos = 0;
 int timeStep = Hive.box('Calendar').get('timeStep');
@@ -38,46 +40,50 @@ class _CalendarPageState extends State<CalendarPage> {
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.2 * 0.6,
           width: MediaQuery.of(context).size.width,
-          child: Align(
-            child: Text(month()),
-            alignment: Alignment.bottomRight,
+          child: Container(
+            child: Align(
+              child: Text(month(), style: calendarMonthStyle),
+              alignment: Alignment.bottomRight,
+            ),
           ),
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.2 * 0.4,
           width: MediaQuery.of(context).size.width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                width: 70,
-                child: Column(
-                  children: [
-                    Text('${weekDays[JDate(2).weekDay]}', textAlign: TextAlign.center),
-                    Text('${day(JDate(2))}', textAlign: TextAlign.center),
-                  ],
-                )
-              ),
-              Container(
-                width: 70,
-                child: Column(
-                  children: [
-                    Text('${weekDays[JDate(1).weekDay]}', textAlign: TextAlign.center),
-                    Text('${day(JDate(1))}', textAlign: TextAlign.center),
-                  ],
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  width: 70,
+                  child: Column(
+                    children: [
+                      Text('${weekDays[JDate(2).weekDay]}', textAlign: TextAlign.center),
+                      Text('${day(JDate(2))}', textAlign: TextAlign.center),
+                    ],
+                  )
                 ),
-              ),
-              Container(
-                width: 70,
-                color: (JDate(0) == Jalali.now())?Colors.red:Colors.transparent,
-                child: Column(
-                  children: [
-                    Text('${weekDays[JDate(0).weekDay]}', textAlign: TextAlign.center),
-                    Text('${day(JDate(0))}', textAlign: TextAlign.center),
-                  ],
+                Container(
+                  width: 70,
+                  child: Column(
+                    children: [
+                      Text('${weekDays[JDate(1).weekDay]}', textAlign: TextAlign.center),
+                      Text('${day(JDate(1))}', textAlign: TextAlign.center),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Container(
+                  width: 70,
+                  color: (JDate(0) == Jalali.now())?Colors.red:Colors.transparent,
+                  child: Column(
+                    children: [
+                      Text('${weekDays[JDate(0).weekDay]}', textAlign: TextAlign.center),
+                      Text('${day(JDate(0))}', textAlign: TextAlign.center),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(

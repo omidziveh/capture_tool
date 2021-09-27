@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
+import 'package:flutter/rendering.dart';
+//import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'calendar_page.dart';
 import 'package:hive/hive.dart';
 
+import 'LinkedScrollController.dart';
 import 'time_column.dart';
 
 int timeStep = Hive.box('Calendar').get('timeStep');
@@ -13,7 +15,7 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  late LinkedScrollControllerGroup controllers;
+  late LinkedScrollControllerGroup _controllers;
   late ScrollController time;
   DateTime startDate = DateTime.now();
   PageController cellsController = PageController(initialPage: 1000);
@@ -23,8 +25,8 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
-    controllers = LinkedScrollControllerGroup();
-    time = controllers.addAndGet();
+    _controllers = LinkedScrollControllerGroup();
+    time = _controllers.addAndGet();
   }
 
   @override
@@ -37,6 +39,7 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
+    print('jump to');
     return Row(
       children: [
           SizedBox(
@@ -47,15 +50,15 @@ class _CalendarState extends State<Calendar> {
               reverse: true,
               controller: this.cellsController,
               itemBuilder: (BuildContext context, int index) {
-                return CalendarPage(time, controllers, index);
+                return CalendarPage(time, _controllers, index);
               },
             ),
           ),
         Column(
           children: [
             Container(
-              color: Colors.white,
-              height: MediaQuery.of(context).size.height * 0.2 - 8,
+              height: MediaQuery.of(context).size.height * 0.2 - 12,
+              width: MediaQuery.of(context).size.width * 0.12,
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.8,
@@ -64,7 +67,7 @@ class _CalendarState extends State<Calendar> {
                 itemCount: 25 * 60 ~/ timeStep,
                 controller: time,
                 itemBuilder: (context, index) {
-                  return TimeCell(index: index);
+                  return TimeCell(index: index, controllers: _controllers,);
                 },
               ),
             ),
@@ -73,4 +76,9 @@ class _CalendarState extends State<Calendar> {
       ],
     );
   }
+
+
 }
+
+
+
