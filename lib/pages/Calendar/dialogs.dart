@@ -259,7 +259,7 @@ void eventCreateBottomSheet(
   int index,
   DateTime startDate,
 ) {
-  int timeStep = Hive.box('Calendar').get('duration');
+  int timeStep = Hive.box('Calendar').get('timeStep');
   var startTime = Duration(minutes: timeStep * (index ~/ 4));
   var finishTime = Duration(minutes: timeStep * (index ~/ 4 + 1));
   Jalali date = startDate.subtract(Duration(days: index % 4 + 1)).toJalali();
