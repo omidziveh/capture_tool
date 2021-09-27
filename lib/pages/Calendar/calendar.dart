@@ -43,7 +43,7 @@ class _CalendarState extends State<Calendar> {
       children: [
           SizedBox(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width * 0.88,
+            width: MediaQuery.of(context).size.width * 0.85,
             child: PageView.builder(
               itemCount: 2000,
               reverse: true,
@@ -57,11 +57,11 @@ class _CalendarState extends State<Calendar> {
           children: [
             Container(
               height: MediaQuery.of(context).size.height * 0.2 - 12,
-              width: MediaQuery.of(context).size.width * 0.12,
+              width: MediaQuery.of(context).size.width * 0.15,
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.8,
-              width: MediaQuery.of(context).size.width * 0.12,
+              width: MediaQuery.of(context).size.width * 0.15,
               child: ListView.builder(
                 itemCount: 25 * 60 ~/ timeStep,
                 controller: time,

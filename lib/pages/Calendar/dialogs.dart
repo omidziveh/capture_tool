@@ -242,6 +242,7 @@
 // }
 
 import 'package:capture_tool/db/models/pre_task/pretask_db.dart';
+import 'package:capture_tool/pages/Calendar/calendar.dart';
 import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -249,6 +250,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:shamsi_date/extensions.dart';
+import 'package:persian_number_utility/persian_number_utility.dart';
 
 import '../../glass/glass_button.dart';
 
@@ -256,42 +258,138 @@ final formKey = GlobalKey<FormState>();
 
 void eventCreateBottomSheet(
   BuildContext context,
-  int index,
-  DateTime startDate,
+  DateTime eventStartTime,
+  DateTime eventFinishTime,
 ) {
-  int timeStep = Hive.box('Calendar').get('timeStep');
-  var startTime = Duration(minutes: timeStep * (index ~/ 4));
-  var finishTime = Duration(minutes: timeStep * (index ~/ 4 + 1));
-  Jalali date = startDate.subtract(Duration(days: index % 4 + 1)).toJalali();
+
+  String eventTitle;
+  String eventDescription;
+  //List<String> eventGoals = [];
 
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
     builder: (context) {
       return DraggableScrollableSheet(
-        initialChildSize: 0.25,
-        minChildSize: 0.0,
+        initialChildSize: 0.4,
+        minChildSize: 0.1,
         expand: false,
         builder: (context, controller) {
-          return Container(
-            child: ListView(
-              controller: controller,
-              children: [
-                Text('ایجاد فرصت'),
-                Form(key: formKey,
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          //DropdownButton(items: pretasks_titles())
-                        ],
+          return StatefulBuilder(builder: (context, setState) {
+            return ListView(children: [
+              SizedBox(
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      eventStartTime.toPersianDateStr(),
+                      textDirection: TextDirection.rtl,
+                    ),
+                    Text('روز'),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GlassButton(
+                      width: 60,
+                      height: 60,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            eventStartTime = eventStartTime
+                                .subtract(Duration(minutes: timeStep));
+                          });
+                        },
+                        icon: Icon(Icons.remove),
+                        splashColor: Colors.transparent,
                       ),
-                      Container(color: Colors.black,height: 40,)
-                    ],
-                  ),)
-              ],
-            ),
-          );
+                      borderRadius: 15,
+                    ),
+                    Row(
+                      children: [
+                        Text(eventStartTime.hour.toString().toPersianDigit()),
+                        Text(":"),
+                        Text(eventStartTime.minute.toString().toPersianDigit())
+                      ],
+                    ),
+                    GlassButton(
+                      width: 60,
+                      height: 60,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            DateTime newStartTime =
+                                eventStartTime.add(Duration(minutes: timeStep));
+                            if (newStartTime.isBefore(eventFinishTime)) {
+                              eventStartTime = newStartTime;
+                            }
+                          });
+                        },
+                        icon: Icon(Icons.add),
+                        splashColor: Colors.transparent,
+                      ),
+                      borderRadius: 15,
+                    ),
+                    Text('زمان شروع'),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GlassButton(
+                      width: 60,
+                      height: 60,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            DateTime newFinishTime = eventFinishTime
+                                .subtract(Duration(minutes: timeStep));
+                            if (newFinishTime.isAfter(eventStartTime)) {
+                              eventFinishTime = newFinishTime;
+                            }
+                          });
+                        },
+                        icon: Icon(Icons.remove),
+                        splashColor: Colors.transparent,
+                      ),
+                      borderRadius: 15,
+                    ),
+                    Row(
+                      children: [
+                        Text(eventFinishTime.hour.toString().toPersianDigit()),
+                        Text(":"),
+                        Text(eventFinishTime.minute.toString().toPersianDigit())
+                      ],
+                    ),
+                    GlassButton(
+                      width: 60,
+                      height: 60,
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            eventFinishTime = eventFinishTime
+                                .add(Duration(minutes: timeStep));
+                          });
+                        },
+                        icon: Icon(Icons.add),
+                        splashColor: Colors.transparent,
+                      ),
+                      borderRadius: 15,
+                    ),
+                    Text('زمان پایان'),
+                  ],
+                ),
+              ),
+            ]);
+          });
         },
       );
     },

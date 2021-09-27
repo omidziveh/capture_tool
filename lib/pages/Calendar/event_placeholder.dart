@@ -1,5 +1,8 @@
+import 'package:capture_tool/pages/Calendar/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:shamsi_date/extensions.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 int timeStep = Hive.box('Calendar').get('timeStep');
 
@@ -24,8 +27,8 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
     } else {
       return GestureDetector(
         onTap: () {
-          print(widget.index);
-          print(widget.pageStartDate);
+          DateTime _date = widget.pageStartDate.add(Duration(days: 2 - widget.index % 3));
+          createShortEvent(context, _date, widget.index);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -34,4 +37,22 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
       );
     }
   }
+}
+
+void createShortEvent(BuildContext context, DateTime date, int index) {
+
+  int dateYear = date.year;
+  int dateMonth = date.month;
+  int dateDay = date.day;
+
+  List<String> _startDuration = Duration(minutes: timeStep * (index ~/ 3)).toString().split(':');
+  List<int> startTime = [int.parse(_startDuration[0]), int.parse(_startDuration[1])];
+
+  List<String> _finishDuration = Duration(minutes: timeStep * (index ~/ 3) + timeStep).toString().split(':');
+  List<int> finishTime = [int.parse(_finishDuration[0]), int.parse(_finishDuration[1])];
+
+  DateTime eventStartTime = DateTime(dateYear, dateMonth, dateDay, startTime[0], startTime[1]);
+  DateTime eventFinishTime = DateTime(dateYear, dateMonth, dateDay, finishTime[0], finishTime[1]);
+
+  eventCreateBottomSheet(context, eventStartTime, eventFinishTime);
 }

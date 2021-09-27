@@ -54,6 +54,7 @@ TextStyle calendarMonthStyle = TextStyle(
 TextStyle calendarTimeStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'IranSans',
+  fontSize: 13,
 );
 
 TextStyle hintStyle = TextStyle(

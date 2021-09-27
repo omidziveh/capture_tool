@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 
 import 'LinkedScrollController.dart';
+import 'package:capture_tool/style.dart';
 
 int timeStep = Hive.box('Calendar').get('timeStep');
 
@@ -48,16 +49,15 @@ class _TimeCellState extends State<TimeCell> with TickerProviderStateMixin{
             ? Container(color: Colors.transparent)
             : Container(
                 //color: Colors.black38,
-                margin: EdgeInsets.only(left: 5),
+                margin: EdgeInsets.only(left: 5, right: 10),
                 child: Stack(
                   children: [
-                    Text(time(this.widget.index),),
                     SizedBox(
                       height: 50,
                       child: Column(
                         children: [
                           Container(
-                            height: (widget.now.minute % timeStep).toDouble() * (50 / timeStep) + 9,
+                            height: (widget.now.minute % timeStep).toDouble() * (50 / timeStep) + 7,
                             color: Colors.transparent,
                           ),
                           Container(
@@ -65,10 +65,9 @@ class _TimeCellState extends State<TimeCell> with TickerProviderStateMixin{
                             height: 3,
                           ),
                         ],
-
-
                       ),
                     ),
+                    FittedBox(child: Text(time(this.widget.index),style: calendarTimeStyle,)),
                   ],
                 ),
               ),
