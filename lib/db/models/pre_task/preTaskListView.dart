@@ -1,52 +1,36 @@
+import 'package:capture_tool/db/models/pre_task/pretask_widget.dart';
+import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'pretask_widget.dart';
-import '../../../pages/Capture_Tool/dialogs.dart';
-
-class PreTaskListView extends StatefulWidget {
+class PreTaskListView extends StatelessWidget {
   Box box;
-  PreTaskListView(this.box);
-
-  @override
-  State<PreTaskListView> createState() => _PreTaskListViewState();
-}
-
-class _PreTaskListViewState extends State<PreTaskListView> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  FocusNode myFocusNode = FocusNode();
-
-  @override
-  void dispose() {
-    myFocusNode.dispose();
-    super.dispose();
-  }
-
-  @override
+  PreTaskListView(
+    this.box,
+  );
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ValueListenableBuilder(
-          valueListenable: widget.box.listenable(),
-          builder: (context, val, _) {
-            return ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: widget.box.length + 1,
+    return ValueListenableBuilder(
+        valueListenable: this.box.listenable(),
+        builder: (context, val, _) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.separated(
               itemBuilder: (BuildContext context, int index) {
-                /// Get all pre tasks with 'Capture tool' state:
-                if (index == widget.box.length) {
-                  return Container(
-                    height: 100,
-                  );
-                }
-                var item = widget.box.getAt(index);
-                return showTile(context, item, widget.box);
+                return ShowTile(
+                  this.box.getAt(index),
+                  this.box,
+                );
               },
-            );
-          },
-        ),
-      ),
-    );
+              separatorBuilder: (BuildContext context, int index) {
+                return Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                );
+              },
+              itemCount: this.box.length,
+            ),
+          );
+        });
   }
 }
