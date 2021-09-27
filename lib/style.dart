@@ -48,7 +48,6 @@ TextStyle calendarWeekStyle = TextStyle(
 TextStyle calendarMonthStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'IranSans',
-
 );
 
 TextStyle calendarTimeStyle = TextStyle(
@@ -58,5 +57,10 @@ TextStyle calendarTimeStyle = TextStyle(
 );
 
 TextStyle hintStyle = TextStyle(
+  fontFamily: 'IranSans',
+);
+
+TextStyle preTaskButtonStyle = TextStyle(
+  color: Colors.black,
   fontFamily: 'IranSans',
 );

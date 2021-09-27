@@ -15,7 +15,6 @@ class WeekReturn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: defaultAppBar('بازگشت هفتگی', context),
-      body: PreTaskListView(Hive.box('weeklyReturn')),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.center,
