@@ -77,6 +77,7 @@ void update_pretask(String id,
   }
 }
 
-List<dynamic> all_pre_tasks() {
-  return Hive.box('preTasks').values.toList();
+List<dynamic> all_pre_tasks({Box? box}) {
+  box ??= Hive.box('preTasks');
+  return box.values.toList();
 }

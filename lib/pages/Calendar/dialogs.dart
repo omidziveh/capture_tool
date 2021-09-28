@@ -256,23 +256,26 @@ import '../../glass/glass_button.dart';
 
 final formKey = GlobalKey<FormState>();
 
+String boxListMenuValue = 'لیست کارها';
+String preTaskValue = '';
+
 void eventCreateBottomSheet(
   BuildContext context,
   DateTime eventStartTime,
   DateTime eventFinishTime,
 ) {
-
   String eventTitle;
   String eventDescription;
   //List<String> eventGoals = [];
 
+
   showModalBottomSheet(
     isScrollControlled: true,
+    enableDrag: true,
     context: context,
     builder: (context) {
       return DraggableScrollableSheet(
-        initialChildSize: 0.4,
-        minChildSize: 0.1,
+        initialChildSize: 0.7,
         expand: false,
         builder: (context, controller) {
           return StatefulBuilder(builder: (context, setState) {
@@ -388,10 +391,90 @@ void eventCreateBottomSheet(
                   ],
                 ),
               ),
+              SizedBox(
+                height: 100,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    DropdownButton<String>(
+                      //value: preTaskValue,
+                      // iconSize: 24,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          preTaskValue = newValue!;
+                        });
+                      },
+                      items: preTaskListMenu(),
+                    ),
+                    DropdownButton<String>(
+                      value: boxListMenuValue,
+                      // iconSize: 24,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          boxListMenuValue = newValue!;
+                        });
+                      },
+                      items: boxListMenu(),
+                    ),
+                    Text(
+                      'انتخاب از لیست ها: ',
+                      textDirection: TextDirection.rtl,
+                    ),
+                  ],
+                ),
+              ),
+
             ]);
           });
         },
       );
     },
   );
+}
+
+List<DropdownMenuItem<String>> preTaskListMenu() {
+  if(boxListMenuValue == 'لیست کارها'){
+    List<dynamic> preTasks = all_pre_tasks();
+    return preTasks.map((e) => DropdownMenuItem<String>(
+      value: e.title,
+      child: Text(
+        e.title.toString(),
+        textDirection: TextDirection.rtl,
+      ),
+    )).toList();
+  }
+  if(boxListMenuValue == 'بازگشت هفتگی'){
+    List<dynamic> preTasks = all_pre_tasks(box: Hive.box('weeklyReturn'));
+    return preTasks.map((e) => DropdownMenuItem<String>(
+      value: e.title,
+      child: Text(
+        e.title.toString(),
+        textDirection: TextDirection.rtl,
+      ),
+    )).toList();
+  }
+  else{
+    List<dynamic> preTasks = all_pre_tasks(box: Hive.box('monthlyReturn'));
+    return preTasks.map((e) => DropdownMenuItem<String>(
+      value: e.title,
+      child: Text(
+        e.title.toString(),
+        textDirection: TextDirection.rtl,
+      ),
+    )).toList();
+  }
+}
+
+List<DropdownMenuItem<String>> boxListMenu() {
+  List<String> choices = ['لیست کارها', 'بازگشت هفتگی', 'بازگشت ماهانه'];
+  return choices
+      .map((e) => DropdownMenuItem<String>(
+          value: e.toString(),
+          child: Center(
+            child: Text(
+              e.toString(),
+              textDirection: TextDirection.rtl,
+            ),
+          )))
+      .toList();
 }
