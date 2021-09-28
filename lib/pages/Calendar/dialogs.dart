@@ -279,7 +279,7 @@ void eventCreateBottomSheet(
     context: context,
     builder: (context) {
       return DraggableScrollableSheet(
-        initialChildSize: 0.7,
+        initialChildSize: 1,
         expand: false,
         builder: (context, controller) {
           return StatefulBuilder(builder: (context, setState) {
