@@ -241,6 +241,7 @@
 //   }
 // }
 
+import 'package:capture_tool/db/models/pre_task/pretask.dart';
 import 'package:capture_tool/db/models/pre_task/pretask_db.dart';
 import 'package:capture_tool/pages/Calendar/calendar.dart';
 import 'package:capture_tool/style.dart';
@@ -257,7 +258,7 @@ import '../../glass/glass_button.dart';
 final formKey = GlobalKey<FormState>();
 
 String boxListMenuValue = 'لیست کارها';
-String preTaskValue = '';
+late PreTask preTaskValue;
 
 void eventCreateBottomSheet(
   BuildContext context,
@@ -268,6 +269,9 @@ void eventCreateBottomSheet(
   String eventDescription;
   //List<String> eventGoals = [];
 
+
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   showModalBottomSheet(
     isScrollControlled: true,
@@ -396,12 +400,16 @@ void eventCreateBottomSheet(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    DropdownButton<String>(
+                    DropdownButton<PreTask>(
                       //value: preTaskValue,
                       // iconSize: 24,
-                      onChanged: (String? newValue) {
+                      onChanged: (PreTask? newValue) {
                         setState(() {
                           preTaskValue = newValue!;
+                          if (newValue != null) {
+                            titleController.text = newValue.title;
+                            descriptionController.text = newValue.description;
+                          }
                         });
                       },
                       items: preTaskListMenu(),
@@ -412,6 +420,7 @@ void eventCreateBottomSheet(
                       onChanged: (String? newValue) {
                         setState(() {
                           boxListMenuValue = newValue!;
+
                         });
                       },
                       items: boxListMenu(),
@@ -423,7 +432,23 @@ void eventCreateBottomSheet(
                   ],
                 ),
               ),
-
+              SizedBox(
+                height: 100,
+                child: TextField(
+                  controller: titleController,
+                  textDirection: TextDirection.rtl,
+                  maxLength: 50,
+                  maxLines: 1,
+                ),
+              ),
+              SizedBox(
+                height: 200,
+                child: TextField(
+                  controller: descriptionController,
+                  textDirection: TextDirection.rtl,
+                  maxLines: 5,
+                ),
+              )
             ]);
           });
         },
@@ -432,11 +457,11 @@ void eventCreateBottomSheet(
   );
 }
 
-List<DropdownMenuItem<String>> preTaskListMenu() {
+List<DropdownMenuItem<PreTask>> preTaskListMenu() {
   if(boxListMenuValue == 'لیست کارها'){
     List<dynamic> preTasks = all_pre_tasks();
-    return preTasks.map((e) => DropdownMenuItem<String>(
-      value: e.title,
+    return preTasks.map((e) => DropdownMenuItem<PreTask>(
+      value: e,
       child: Text(
         e.title.toString(),
         textDirection: TextDirection.rtl,
@@ -445,8 +470,8 @@ List<DropdownMenuItem<String>> preTaskListMenu() {
   }
   if(boxListMenuValue == 'بازگشت هفتگی'){
     List<dynamic> preTasks = all_pre_tasks(box: Hive.box('weeklyReturn'));
-    return preTasks.map((e) => DropdownMenuItem<String>(
-      value: e.title,
+    return preTasks.map((e) => DropdownMenuItem<PreTask>(
+      value: e,
       child: Text(
         e.title.toString(),
         textDirection: TextDirection.rtl,
@@ -455,8 +480,8 @@ List<DropdownMenuItem<String>> preTaskListMenu() {
   }
   else{
     List<dynamic> preTasks = all_pre_tasks(box: Hive.box('monthlyReturn'));
-    return preTasks.map((e) => DropdownMenuItem<String>(
-      value: e.title,
+    return preTasks.map((e) => DropdownMenuItem<PreTask>(
+      value: e,
       child: Text(
         e.title.toString(),
         textDirection: TextDirection.rtl,
