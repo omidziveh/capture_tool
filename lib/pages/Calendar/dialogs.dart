@@ -269,224 +269,238 @@ void eventCreateBottomSheet(
   String eventDescription;
   //List<String> eventGoals = [];
 
-
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
   showModalBottomSheet(
     isScrollControlled: true,
-    enableDrag: true,
     context: context,
     builder: (context) {
-      return DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        expand: false,
-        builder: (context, controller) {
-          return StatefulBuilder(builder: (context, setState) {
-            return ListView(children: [
-              SizedBox(
-                height: 80,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      eventStartTime.toPersianDateStr(),
-                      textDirection: TextDirection.rtl,
-                    ),
-                    Text('روز'),
-                  ],
-                ),
+      return StatefulBuilder(builder: (context, setState) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+              children: [
+            SizedBox(
+              height: 80,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    eventStartTime.toPersianDateStr(),
+                    textDirection: TextDirection.rtl,
+                  ),
+                  Text('روز'),
+                ],
               ),
-              SizedBox(
-                height: 80,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GlassButton(
-                      width: 60,
-                      height: 60,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            eventStartTime = eventStartTime
-                                .subtract(Duration(minutes: timeStep));
-                          });
-                        },
-                        icon: Icon(Icons.remove),
-                        splashColor: Colors.transparent,
-                      ),
-                      borderRadius: 15,
-                    ),
-                    Row(
-                      children: [
-                        Text(eventStartTime.hour.toString().toPersianDigit()),
-                        Text(":"),
-                        Text(eventStartTime.minute.toString().toPersianDigit())
-                      ],
-                    ),
-                    GlassButton(
-                      width: 60,
-                      height: 60,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            DateTime newStartTime =
-                                eventStartTime.add(Duration(minutes: timeStep));
-                            if (newStartTime.isBefore(eventFinishTime)) {
-                              eventStartTime = newStartTime;
-                            }
-                          });
-                        },
-                        icon: Icon(Icons.add),
-                        splashColor: Colors.transparent,
-                      ),
-                      borderRadius: 15,
-                    ),
-                    Text('زمان شروع'),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 80,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GlassButton(
-                      width: 60,
-                      height: 60,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            DateTime newFinishTime = eventFinishTime
-                                .subtract(Duration(minutes: timeStep));
-                            if (newFinishTime.isAfter(eventStartTime)) {
-                              eventFinishTime = newFinishTime;
-                            }
-                          });
-                        },
-                        icon: Icon(Icons.remove),
-                        splashColor: Colors.transparent,
-                      ),
-                      borderRadius: 15,
-                    ),
-                    Row(
-                      children: [
-                        Text(eventFinishTime.hour.toString().toPersianDigit()),
-                        Text(":"),
-                        Text(eventFinishTime.minute.toString().toPersianDigit())
-                      ],
-                    ),
-                    GlassButton(
-                      width: 60,
-                      height: 60,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            eventFinishTime = eventFinishTime
-                                .add(Duration(minutes: timeStep));
-                          });
-                        },
-                        icon: Icon(Icons.add),
-                        splashColor: Colors.transparent,
-                      ),
-                      borderRadius: 15,
-                    ),
-                    Text('زمان پایان'),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    DropdownButton<PreTask>(
-                      //value: preTaskValue,
-                      // iconSize: 24,
-                      onChanged: (PreTask? newValue) {
+            ),
+            SizedBox(
+              height: 80,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GlassButton(
+                    width: 60,
+                    height: 60,
+                    child: IconButton(
+                      onPressed: () {
                         setState(() {
-                          preTaskValue = newValue!;
-                          if (newValue != null) {
-                            titleController.text = newValue.title;
-                            descriptionController.text = newValue.description;
+                          eventStartTime = eventStartTime
+                              .subtract(Duration(minutes: timeStep));
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                      splashColor: Colors.transparent,
+                    ),
+                    borderRadius: 15,
+                  ),
+                  Row(
+                    children: [
+                      Text(eventStartTime.hour.toString().toPersianDigit()),
+                      Text(":"),
+                      Text(eventStartTime.minute.toString().toPersianDigit())
+                    ],
+                  ),
+                  GlassButton(
+                    width: 60,
+                    height: 60,
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          DateTime newStartTime =
+                              eventStartTime.add(Duration(minutes: timeStep));
+                          if (newStartTime.isBefore(eventFinishTime)) {
+                            eventStartTime = newStartTime;
                           }
                         });
                       },
-                      items: preTaskListMenu(),
+                      icon: Icon(Icons.add),
+                      splashColor: Colors.transparent,
                     ),
-                    DropdownButton<String>(
-                      value: boxListMenuValue,
-                      // iconSize: 24,
-                      onChanged: (String? newValue) {
+                    borderRadius: 15,
+                  ),
+                  Text('زمان شروع'),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 80,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GlassButton(
+                    width: 60,
+                    height: 60,
+                    child: IconButton(
+                      onPressed: () {
                         setState(() {
-                          boxListMenuValue = newValue!;
-
+                          DateTime newFinishTime = eventFinishTime
+                              .subtract(Duration(minutes: timeStep));
+                          if (newFinishTime.isAfter(eventStartTime)) {
+                            eventFinishTime = newFinishTime;
+                          }
                         });
                       },
-                      items: boxListMenu(),
+                      icon: Icon(Icons.remove),
+                      splashColor: Colors.transparent,
                     ),
-                    Text(
-                      'انتخاب از لیست ها: ',
+                    borderRadius: 15,
+                  ),
+                  Row(
+                    children: [
+                      Text(eventFinishTime.hour.toString().toPersianDigit()),
+                      Text(":"),
+                      Text(eventFinishTime.minute.toString().toPersianDigit())
+                    ],
+                  ),
+                  GlassButton(
+                    width: 60,
+                    height: 60,
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          eventFinishTime =
+                              eventFinishTime.add(Duration(minutes: timeStep));
+                        });
+                      },
+                      icon: Icon(Icons.add),
+                      splashColor: Colors.transparent,
+                    ),
+                    borderRadius: 15,
+                  ),
+                  Text('زمان پایان'),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  DropdownButton<PreTask>(
+                    //value: preTaskValue,
+                    // iconSize: 24,
+                    onChanged: (PreTask? newValue) {
+                      setState(() {
+                        preTaskValue = newValue!;
+                        if (newValue != null) {
+                          titleController.text = newValue.title;
+                          descriptionController.text = newValue.description;
+                        }
+                      });
+                    },
+                    items: preTaskListMenu(),
+                  ),
+                  DropdownButton<String>(
+                    value: boxListMenuValue,
+                    // iconSize: 24,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        boxListMenuValue = newValue!;
+                      });
+                    },
+                    items: boxListMenu(),
+                  ),
+                  Text(
+                    'انتخاب از لیست ها: ',
+                    textDirection: TextDirection.rtl,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: TextField(
+                      controller: titleController,
                       textDirection: TextDirection.rtl,
+                      maxLength: 35,
                     ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    'عنوان: ',
+                    textDirection: TextDirection.rtl,
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 100,
-                child: TextField(
-                  controller: titleController,
-                  textDirection: TextDirection.rtl,
-                  maxLength: 50,
-                  maxLines: 1,
-                ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black, width: 0.7)),
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: TextField(
+                controller: descriptionController,
+                textDirection: TextDirection.rtl,
+                maxLines: 5,
               ),
-              SizedBox(
-                height: 200,
-                child: TextField(
-                  controller: descriptionController,
-                  textDirection: TextDirection.rtl,
-                  maxLines: 5,
-                ),
-              )
-            ]);
-          });
-        },
-      );
+            ),
+          ]),
+        );
+      });
     },
   );
 }
 
 List<DropdownMenuItem<PreTask>> preTaskListMenu() {
-  if(boxListMenuValue == 'لیست کارها'){
+  if (boxListMenuValue == 'لیست کارها') {
     List<dynamic> preTasks = all_pre_tasks();
-    return preTasks.map((e) => DropdownMenuItem<PreTask>(
-      value: e,
-      child: Text(
-        e.title.toString(),
-        textDirection: TextDirection.rtl,
-      ),
-    )).toList();
+    return preTasks
+        .map((e) => DropdownMenuItem<PreTask>(
+              value: e,
+              child: Text(
+                e.title.toString(),
+                textDirection: TextDirection.rtl,
+              ),
+            ))
+        .toList();
   }
-  if(boxListMenuValue == 'بازگشت هفتگی'){
+  if (boxListMenuValue == 'بازگشت هفتگی') {
     List<dynamic> preTasks = all_pre_tasks(box: Hive.box('weeklyReturn'));
-    return preTasks.map((e) => DropdownMenuItem<PreTask>(
-      value: e,
-      child: Text(
-        e.title.toString(),
-        textDirection: TextDirection.rtl,
-      ),
-    )).toList();
-  }
-  else{
+    return preTasks
+        .map((e) => DropdownMenuItem<PreTask>(
+              value: e,
+              child: Text(
+                e.title.toString(),
+                textDirection: TextDirection.rtl,
+              ),
+            ))
+        .toList();
+  } else {
     List<dynamic> preTasks = all_pre_tasks(box: Hive.box('monthlyReturn'));
-    return preTasks.map((e) => DropdownMenuItem<PreTask>(
-      value: e,
-      child: Text(
-        e.title.toString(),
-        textDirection: TextDirection.rtl,
-      ),
-    )).toList();
+    return preTasks
+        .map((e) => DropdownMenuItem<PreTask>(
+              value: e,
+              child: Text(
+                e.title.toString(),
+                textDirection: TextDirection.rtl,
+              ),
+            ))
+        .toList();
   }
 }
 
