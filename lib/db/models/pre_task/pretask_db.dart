@@ -40,6 +40,15 @@ void go_to_monthly(String id, [Box? startBox]) {
   Hive.box('monthlyReturn').put(item.id, item);
 }
 
+void go_to_capture(String id, [Box? startBox]) {
+  startBox ??= Hive.box('preTasks');
+
+  /// Remove item from startBox box and Add the item to preTasks box
+  var item = startBox.get(id);
+  startBox.delete(id);
+  Hive.box('preTasks').put(item.id, item);
+}
+
 void add_pretask(String title, double importance,
     {String description = '', state = 1}) {
   /// get title, importance, description and state then create a uuid and add
@@ -64,6 +73,9 @@ void update_pretask(String id,
   /// <id> of id and change the values that changed
 
   startBox ??= Hive.box('preTasks');
+
+  startBox.put('', null);
+  startBox.delete('');
 
   var preTask = startBox.get(id);
   if (title != null) {

@@ -17,6 +17,11 @@ class PreTaskListView extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: ListView.separated(
               itemBuilder: (BuildContext context, int index) {
+                if (index == this.box.length) {
+                  return Container(
+                    height: 100,
+                  );
+                }
                 return ShowTile(
                   this.box.getAt(index),
                   this.box,
@@ -28,7 +33,7 @@ class PreTaskListView extends StatelessWidget {
                   thickness: 1,
                 );
               },
-              itemCount: this.box.length,
+              itemCount: this.box.length + 1,
             ),
           );
         });

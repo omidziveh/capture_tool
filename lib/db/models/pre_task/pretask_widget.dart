@@ -11,6 +11,23 @@ class ShowTile extends StatelessWidget {
   Box box;
   ShowTile(this.preTask, this.box);
 
+  actions() {
+    print(this.box.name);
+    if (this.box.name == 'pretasks') {
+      return [monthOption(preTask, this.box), weekOption(preTask, this.box)];
+    }
+    if (this.box.name == 'weeklyreturn') {
+      return [monthOption(preTask, this.box), captureOption(preTask, this.box)];
+    }
+    if (this.box.name == 'monthlyreturn') {
+      return [weekOption(preTask, this.box), captureOption(preTask, this.box)];
+    }
+  }
+
+  secondAction() {
+    return [deleteOption(preTask, this.box)];
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -23,15 +40,8 @@ class ShowTile extends StatelessWidget {
         child: tile(
           title: this.preTask.title,
           importance: this.preTask.importance,
-          actions: [
-            GestureDetector(
-              onTap: () {
-                print('tap');
-              },
-              child: Container(),
-            ),
-          ],
-          secondActions: [weekOption(preTask, box)],
+          actions: secondAction(),
+          secondActions: actions(),
         ),
       ),
     );
@@ -147,10 +157,10 @@ Widget weekOption(PreTask preTask, Box startBox) {
 
 Widget captureOption(PreTask preTask, Box startBox) {
   return PreTaskOption(
-    Colors.green,
+    Colors.pink,
     Icons.toc_rounded,
     () {
-      go_to_weekly(preTask.id, startBox);
+      go_to_capture(preTask.id, startBox);
     },
   );
 }

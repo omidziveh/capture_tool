@@ -1,3 +1,4 @@
+import 'package:capture_tool/db/models/pre_task/pretask.dart';
 import 'package:capture_tool/default_appbar.dart';
 import 'package:capture_tool/glass/glass_bottom_menu.dart';
 import 'package:capture_tool/glass/glass_button.dart';
@@ -16,6 +17,9 @@ class WeekReturn extends StatelessWidget {
     return Scaffold(
       appBar: defaultAppBar('بازگشت هفتگی', context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      body: PreTaskListView(
+        Hive.box('weeklyReturn'),
+      ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
