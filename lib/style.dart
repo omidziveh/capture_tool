@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
 TextStyle NavBarTextStyle =
-    TextStyle(fontFamily: 'IranSans', fontSize: 11, color: Colors.black);
+    TextStyle(fontFamily: 'BKoodak', fontSize: 11, color: Colors.black);
 TextStyle AppBarTextStyle = TextStyle(
-    fontFamily: 'IranSans',
-    fontSize: 32,
+    fontFamily: 'BKoodak',
+    fontSize: 38,
     color: Colors.black,
     fontWeight: FontWeight.bold);
 TextStyle addTaskDialogButton = TextStyle(
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
   fontSize: 16,
   color: Colors.black,
 );
 TextStyle addTaskDialogTextField = TextStyle(
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
   fontSize: 12,
   color: Colors.black,
 );
 TextStyle addTaskDialogTitle =
-    TextStyle(fontFamily: 'IranSans', fontSize: 14, color: Colors.black);
+    TextStyle(fontFamily: 'BKoodak', fontSize: 14, color: Colors.black);
 TextStyle addTaskDialogError = TextStyle(
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
   color: Colors.black,
   decoration: TextDecoration.none,
 );
@@ -37,30 +37,42 @@ Icon deactiveImportanceIcon = Icon(
 
 TextStyle captureToolPreTaskTitle = TextStyle(
   color: Colors.black,
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
 );
 
 TextStyle calendarWeekStyle = TextStyle(
   color: Colors.white,
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
 );
 
 TextStyle calendarMonthStyle = TextStyle(
   color: Colors.black,
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
 );
 
 TextStyle calendarTimeStyle = TextStyle(
   color: Colors.black,
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
   fontSize: 13,
 );
 
 TextStyle hintStyle = TextStyle(
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
 );
 
 TextStyle preTaskButtonStyle = TextStyle(
   color: Colors.black,
-  fontFamily: 'IranSans',
+  fontFamily: 'BKoodak',
+);
+
+TextStyle profileTextStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'BKoodak',
+  fontSize: 18,
+);
+
+TextStyle selectTextStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'BKoodak',
+  fontSize: 16,
 );

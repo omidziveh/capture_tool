@@ -10,7 +10,7 @@ import 'default_appbar.dart';
 import 'pages/Calendar/calendar.dart';
 import 'pages/week_return.dart';
 import 'pages/month_return.dart';
-import 'pages/profile.dart';
+import 'pages/profile/profile.dart';
 
 import 'glass/glass_bottom_menu.dart';
 import 'glass/glass_button.dart';

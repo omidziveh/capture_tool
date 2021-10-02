@@ -7,8 +7,6 @@ import 'package:hive/hive.dart';
 import 'LinkedScrollController.dart';
 import 'time_column.dart';
 
-int timeStep = Hive.box('Calendar').get('timeStep');
-
 class Calendar extends StatefulWidget {
   @override
   State<Calendar> createState() => _CalendarState();
@@ -20,7 +18,6 @@ class _CalendarState extends State<Calendar> {
   DateTime startDate = DateTime.now();
   PageController cellsController = PageController(initialPage: 1000);
   PageController daysController = PageController(initialPage: 1000);
-
 
   @override
   void initState() {
@@ -41,18 +38,18 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width * 0.85,
-            child: PageView.builder(
-              itemCount: 2000,
-              reverse: true,
-              controller: this.cellsController,
-              itemBuilder: (BuildContext context, int index) {
-                return CalendarPage(time, _controllers, index);
-              },
-            ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width * 0.85,
+          child: PageView.builder(
+            itemCount: 2000,
+            reverse: true,
+            controller: this.cellsController,
+            itemBuilder: (BuildContext context, int index) {
+              return CalendarPage(time, _controllers, index);
+            },
           ),
+        ),
         Column(
           children: [
             Container(
@@ -63,10 +60,13 @@ class _CalendarState extends State<Calendar> {
               height: MediaQuery.of(context).size.height * 0.8,
               width: MediaQuery.of(context).size.width * 0.15,
               child: ListView.builder(
-                itemCount: 25 * 60 ~/ timeStep,
+                itemCount: 25 * 60 ~/ Hive.box('Calendar').get('timeStep'),
                 controller: time,
                 itemBuilder: (context, index) {
-                  return TimeCell(index: index, controllers: _controllers,);
+                  return TimeCell(
+                    index: index,
+                    controllers: _controllers,
+                  );
                 },
               ),
             ),
@@ -75,9 +75,4 @@ class _CalendarState extends State<Calendar> {
       ],
     );
   }
-
-
 }
-
-
-

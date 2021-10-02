@@ -10,7 +10,6 @@ import 'LinkedScrollController.dart';
 import 'calendar.dart';
 
 double lastPos = 0;
-int timeStep = Hive.box('Calendar').get('timeStep');
 
 class CalendarPage extends StatefulWidget {
   ScrollController time;
@@ -35,6 +34,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    int timeStep = Hive.box('Calendar').get('timeStep');
     return Column(
       children: [
         SizedBox(
@@ -55,29 +55,33 @@ class _CalendarPageState extends State<CalendarPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
-                  width: 70,
-                  child: Column(
-                    children: [
-                      Text('${weekDays[JDate(2).weekDay]}', textAlign: TextAlign.center),
-                      Text('${day(JDate(2))}', textAlign: TextAlign.center),
-                    ],
-                  )
-                ),
+                    width: 70,
+                    child: Column(
+                      children: [
+                        Text('${weekDays[JDate(2).weekDay]}',
+                            textAlign: TextAlign.center),
+                        Text('${day(JDate(2))}', textAlign: TextAlign.center),
+                      ],
+                    )),
                 Container(
                   width: 70,
                   child: Column(
                     children: [
-                      Text('${weekDays[JDate(1).weekDay]}', textAlign: TextAlign.center),
+                      Text('${weekDays[JDate(1).weekDay]}',
+                          textAlign: TextAlign.center),
                       Text('${day(JDate(1))}', textAlign: TextAlign.center),
                     ],
                   ),
                 ),
                 Container(
                   width: 70,
-                  color: (JDate(0) == Jalali.now())?Colors.red:Colors.transparent,
+                  color: (JDate(0) == Jalali.now())
+                      ? Colors.red
+                      : Colors.transparent,
                   child: Column(
                     children: [
-                      Text('${weekDays[JDate(0).weekDay]}', textAlign: TextAlign.center),
+                      Text('${weekDays[JDate(0).weekDay]}',
+                          textAlign: TextAlign.center),
                       Text('${day(JDate(0))}', textAlign: TextAlign.center),
                     ],
                   ),
@@ -98,7 +102,8 @@ class _CalendarPageState extends State<CalendarPage> {
               itemBuilder: (BuildContext context, int index) {
                 return EventPlaceHolder(
                   index: index,
-                  pageStartDate: DateTime.now().add(Duration(days: 3 * (widget.index - 1000))),
+                  pageStartDate: DateTime.now()
+                      .add(Duration(days: 3 * (widget.index - 1000))),
                 );
               },
             ),

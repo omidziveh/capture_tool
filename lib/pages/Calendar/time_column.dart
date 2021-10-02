@@ -8,8 +8,6 @@ import 'package:persian_number_utility/persian_number_utility.dart';
 import 'LinkedScrollController.dart';
 import 'package:capture_tool/style.dart';
 
-int timeStep = Hive.box('Calendar').get('timeStep');
-
 class TimeCell extends StatefulWidget {
   int index;
   LinkedScrollControllerGroup controllers;
@@ -20,7 +18,7 @@ class TimeCell extends StatefulWidget {
   _TimeCellState createState() => _TimeCellState();
 }
 
-class _TimeCellState extends State<TimeCell> with TickerProviderStateMixin{
+class _TimeCellState extends State<TimeCell> with TickerProviderStateMixin {
   Timer? timer;
 
   @override
@@ -45,7 +43,8 @@ class _TimeCellState extends State<TimeCell> with TickerProviderStateMixin{
       alignment: Alignment.centerLeft,
       child: SizedBox(
         height: 50,
-        child: (this.widget.index > (24 * 60 / timeStep))
+        child: (this.widget.index >
+                (24 * 60 / Hive.box('Calendar').get('timeStep')))
             ? Container(color: Colors.transparent)
             : Container(
                 //color: Colors.black38,
@@ -57,17 +56,29 @@ class _TimeCellState extends State<TimeCell> with TickerProviderStateMixin{
                       child: Column(
                         children: [
                           Container(
-                            height: (widget.now.minute % timeStep).toDouble() * (50 / timeStep) + 7,
+                            height: (widget.now.minute %
+                                            Hive.box('Calendar')
+                                                .get('timeStep'))
+                                        .toDouble() *
+                                    (50 /
+                                        Hive.box('Calendar').get('timeStep')) +
+                                7,
                             color: Colors.transparent,
                           ),
                           Container(
-                            color: widget.index == timeIndex() ? Colors.redAccent : Colors.transparent,
+                            color: widget.index == timeIndex()
+                                ? Colors.redAccent
+                                : Colors.transparent,
                             height: 3,
                           ),
                         ],
                       ),
                     ),
-                    FittedBox(child: Text(time(this.widget.index),style: calendarTimeStyle,)),
+                    FittedBox(
+                        child: Text(
+                      time(this.widget.index),
+                      style: calendarTimeStyle,
+                    )),
                   ],
                 ),
               ),
@@ -77,7 +88,9 @@ class _TimeCellState extends State<TimeCell> with TickerProviderStateMixin{
 
   time(int index) {
     List<String> duration =
-        Duration(minutes: timeStep * index).toString().split(':');
+        Duration(minutes: Hive.box('Calendar').get('timeStep') * index)
+            .toString()
+            .split(':');
     String hour = duration[0];
     String minute = duration[1];
 
@@ -85,6 +98,7 @@ class _TimeCellState extends State<TimeCell> with TickerProviderStateMixin{
   }
 
   timeIndex() {
-    return (widget.now.hour * 60 + widget.now.minute) ~/ timeStep;
+    return (widget.now.hour * 60 + widget.now.minute) ~/
+        Hive.box('Calendar').get('timeStep');
   }
 }

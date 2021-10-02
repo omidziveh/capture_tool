@@ -67,6 +67,9 @@ flutter:
       fonts:
         - asset: fonts/IranianSans.ttf
         - asset: fonts/IranianSansBold.ttf
+    - family: BKoodak
+      fonts:
+        - asset: fonts/BKoodak.ttf
 
 
   assets:

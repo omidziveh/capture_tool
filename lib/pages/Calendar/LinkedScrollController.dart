@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 
-int timeStep = Hive.box('Calendar').get('timeStep');
-
 class LinkedScrollControllerGroup {
   LinkedScrollControllerGroup() {
     _offsetNotifier = _LinkedScrollControllerGroupOffsetNotifier(this);
@@ -18,9 +16,9 @@ class LinkedScrollControllerGroup {
   /// The current scroll offset of the group.
   double get offset {
     assert(
-    _attachedControllers.isNotEmpty,
-    'LinkedScrollControllerGroup does not have any scroll controllers '
-        'attached.',
+      _attachedControllers.isNotEmpty,
+      'LinkedScrollControllerGroup does not have any scroll controllers '
+      'attached.',
     );
     return _attachedControllers.first.offset;
   }
@@ -29,7 +27,8 @@ class LinkedScrollControllerGroup {
     DateTime _now = DateTime.now();
     double hour = _now.hour.toDouble();
     double minute = _now.minute.toDouble();
-    double _index = (hour * 60.0 + minute) / timeStep.toDouble();
+    double _index = (hour * 60.0 + minute) /
+        Hive.box('Calendar').get('timeStep').toDouble();
     return max(_index * 50.0 - 100.0, 0.0);
   }
 
@@ -39,7 +38,7 @@ class LinkedScrollControllerGroup {
         ? initialPosition()
         : _attachedControllers.first.position.pixels;
     final controller =
-    _LinkedScrollController(this, initialScrollOffset: initialScrollOffset);
+        _LinkedScrollController(this, initialScrollOffset: initialScrollOffset);
     _allControllers.add(controller);
     controller.addListener(_offsetNotifier.notifyListeners);
     return controller;
@@ -60,10 +59,10 @@ class LinkedScrollControllerGroup {
 
   /// Animates the scroll position of all linked controllers to [offset].
   Future<void> animateTo(
-      double offset, {
-        required Curve curve,
-        required Duration duration,
-      }) async {
+    double offset, {
+    required Curve curve,
+    required Duration duration,
+  }) async {
     final animations = <Future<void>>[];
     for (final controller in _attachedControllers) {
       animations
@@ -118,7 +117,7 @@ class _LinkedScrollController extends ScrollController {
   _LinkedScrollController(this._controllers,
       {required double initialScrollOffset})
       : super(
-      initialScrollOffset: initialScrollOffset, keepScrollOffset: false);
+            initialScrollOffset: initialScrollOffset, keepScrollOffset: false);
 
   @override
   void dispose() {
@@ -129,13 +128,13 @@ class _LinkedScrollController extends ScrollController {
   @override
   void attach(ScrollPosition position) {
     assert(
-    position is _LinkedScrollPosition,
-    '_LinkedScrollControllers can only be used with'
+        position is _LinkedScrollPosition,
+        '_LinkedScrollControllers can only be used with'
         ' _LinkedScrollPositions.');
     final _LinkedScrollPosition linkedPosition =
-    position as _LinkedScrollPosition;
+        position as _LinkedScrollPosition;
     assert(linkedPosition.owner == this,
-    '_LinkedScrollPosition cannot change controllers once created.');
+        '_LinkedScrollPosition cannot change controllers once created.');
     super.attach(position);
   }
 
@@ -191,17 +190,17 @@ class _LinkedScrollController extends ScrollController {
 // When a new activity begins, the set of peer activities is cleared.
 class _LinkedScrollPosition extends ScrollPositionWithSingleContext {
   _LinkedScrollPosition(
-      this.owner, {
-        required ScrollPhysics physics,
-        required ScrollContext context,
-        double? initialPixels,
-        ScrollPosition? oldPosition,
-      }) : super(
-    physics: physics,
-    context: context,
-    initialPixels: initialPixels,
-    oldPosition: oldPosition,
-  ) {
+    this.owner, {
+    required ScrollPhysics physics,
+    required ScrollContext context,
+    double? initialPixels,
+    ScrollPosition? oldPosition,
+  }) : super(
+          physics: physics,
+          context: context,
+          initialPixels: initialPixels,
+          oldPosition: oldPosition,
+        ) {
     assert(owner != null);
   }
 
@@ -288,7 +287,7 @@ class _LinkedScrollPosition extends ScrollPositionWithSingleContext {
       beginActivity(_LinkedScrollActivity(this));
     }
     final _LinkedScrollActivity activity =
-    this.activity as _LinkedScrollActivity;
+        this.activity as _LinkedScrollActivity;
     activity.link(driver);
     return activity;
   }

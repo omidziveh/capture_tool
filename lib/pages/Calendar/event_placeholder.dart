@@ -1,10 +1,6 @@
 import 'package:capture_tool/pages/Calendar/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:shamsi_date/extensions.dart';
-import 'package:shamsi_date/shamsi_date.dart';
-
-int timeStep = Hive.box('Calendar').get('timeStep');
 
 class EventPlaceHolder extends StatefulWidget {
   int index;
@@ -22,14 +18,16 @@ class EventPlaceHolder extends StatefulWidget {
 class _EventPlaceHolderState extends State<EventPlaceHolder> {
   @override
   Widget build(BuildContext context) {
-    if ((this.widget.index >= (24 * 3 * 60 ~/ timeStep))) {
+    if ((this.widget.index >=
+        (24 * 3 * 60 ~/ Hive.box('Calendar').get('timeStep')))) {
       return Container(color: Colors.transparent);
     } else {
       return GestureDetector(
         onTap: () {
           DateTime _date =
               widget.pageStartDate.add(Duration(days: 2 - widget.index % 3));
-          createShortEvent(context, _date, widget.index);
+          createShortEvent(context, _date, widget.index,
+              Hive.box('Calendar').get('timeStep'));
         },
         child: Container(
           decoration: BoxDecoration(
@@ -40,7 +38,8 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
   }
 }
 
-void createShortEvent(BuildContext context, DateTime date, int index) {
+void createShortEvent(
+    BuildContext context, DateTime date, int index, timeStep) {
   int dateYear = date.year;
   int dateMonth = date.month;
   int dateDay = date.day;
