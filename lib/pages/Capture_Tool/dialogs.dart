@@ -1,4 +1,6 @@
+import 'package:capture_tool/pages/Capture_Tool/textfield.dart';
 import 'package:capture_tool/style.dart';
+import 'package:capture_tool/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hive/hive.dart';
@@ -7,8 +9,8 @@ import '../../glass/glass_button.dart';
 import '../../db/models/pre_task/pretask.dart';
 import '../../db/models/pre_task/pretask_db.dart';
 
-final formKey = GlobalKey<FormState>();
 double button_size = 40;
+ValueNotifier isValid = ValueNotifier(1);
 
 void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
   TextEditingController _nameController =
@@ -73,7 +75,6 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
           return Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: Container(
-              // height: 500,
               decoration: BoxDecoration(
                 color: Colors.transparent,
               ),
@@ -84,167 +85,126 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
                     borderRadius: BorderRadius.circular(15),
                     color: Colors.white,
                   ),
-                  child: Form(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    key: formKey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Center(
-                            child: FittedBox(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 5, bottom: 10),
-                                child: Text(
-                                  (preTask == null) ? 'اضافه کردن کار' : 'کار',
-                                  style: addTaskDialogTitle,
-                                ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Center(
+                          child: FittedBox(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 5, bottom: 10),
+                              child: Text(
+                                (preTask == null) ? 'اضافه کردن کار' : 'کار',
+                                style: addTaskDialogTitle,
                               ),
                             ),
                           ),
-                          Divider(
-                            color: Colors.black,
-                            thickness: 1,
+                        ),
+                        Divider(
+                          color: Colors.black,
+                          thickness: 1,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: ValueListenableBuilder(
+                                valueListenable: isValid,
+                                builder: (context, val, _) {
+                                  return DefaultTextFormField(
+                                    error: isValid.value == 0
+                                        ? 'لطفا عنوان را وارد کنید'
+                                        : null,
+                                    hintText: 'عنوان',
+                                    maxLength: 35,
+                                    enabled: (mode == 0) ? false : true,
+                                    controller: _nameController,
+                                    textDeirection: TextDirection.rtl,
+                                    focusNode: _nameFocusNode,
+                                    onChanged: (String val) {
+                                      setState(() {
+                                        if (preTask != null) {
+                                          if (val != preTask.title) {
+                                            mode = 3;
+
+                                            /// Switch to updating state
+                                          }
+                                          if (val == preTask.title) {
+                                            mode = 2;
+
+                                            /// Switch to viewing state
+                                          }
+                                        }
+                                      });
+                                    },
+                                  );
+                                }),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextFormField(
-                                maxLength: 35,
-                                enabled: (mode == 0) ? false : true,
-
-                                /// disabled on deleted pretasks
-                                onFieldSubmitted: (_) {
-                                  _nameFocusNode.unfocus();
-                                  _descriptionFocusNode.requestFocus();
-                                },
-                                onChanged: (String val) {
-                                  setState(() {
-                                    if (preTask != null) {
-                                      if (val != preTask.title) {
-                                        mode = 3;
-
-                                        /// Switch to updating state
-                                      }
-                                      if (val == preTask.title) {
-                                        mode = 2;
-
-                                        /// Switch to viewing state
-                                      }
-                                    }
-                                  });
-                                },
-                                focusNode: _nameFocusNode,
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
-                                controller: _nameController,
-                                cursorColor: Colors.black,
-                                validator: (var value) {
-                                  if (value == '') {
-                                    return 'لطفا عنوان را وارد کنید.';
-                                  }
-                                },
-                                style: addTaskDialogTextField,
-                                decoration: InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(color: Colors.black),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  focusColor: Colors.black,
-                                  hintStyle: hintStyle,
-                                  hintText: 'عنوان',
-                                  errorStyle: addTaskDialogError,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              enabled: (mode == 0) ? false : true,
-
-                              /// disabled on deleted pretasks
-
-                              focusNode: _descriptionFocusNode,
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              controller: _descriptionController,
-                              cursorColor: Colors.black,
-                              maxLines: 5,
-                              onChanged: (String val) {
-                                setState(() {
-                                  if (preTask != null) {
-                                    if (val != preTask.description) {
-                                      mode = 3;
-                                    }
-                                    if (val == preTask.description) {
-                                      mode = 2;
-                                    }
-                                  }
-                                });
-                              },
-                              style: addTaskDialogTextField,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                focusColor: Colors.black,
-                                hintStyle: hintStyle,
-                                hintText: 'توضیحات',
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: RatingBar(
-                              allowHalfRating: false,
-                              direction: Axis.horizontal,
-                              glow: false,
-                              initialRating:
-                                  (preTask == null) ? 0.0 : preTask.importance,
-                              itemCount: 3,
-                              ratingWidget: RatingWidget(
-                                empty: Icon(Icons.star_rounded,
-                                    color: Colors.black38),
-                                full: Icon(Icons.star_rounded,
-                                    color: Colors.black),
-                                half: Container(),
-                              ),
-                              onRatingUpdate: (double val) {
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DefaultTextFormField(
+                            enabled: (mode == 0) ? false : true,
+                            focusNode: _descriptionFocusNode,
+                            controller: _descriptionController,
+                            maxLines: 5,
+                            onChanged: (String val) {
+                              setState(() {
                                 if (preTask != null) {
-                                  if (preTask.importance != val) {
+                                  if (val != preTask.description) {
                                     mode = 3;
                                   }
-                                  if (preTask.importance == val) {
+                                  if (val == preTask.description) {
                                     mode = 2;
                                   }
                                 }
-                                setState(() {
-                                  importance = val;
-                                });
-                              },
-                            ),
+                              });
+                            },
+                            hintText: 'توضیحات',
                           ),
-                          bottomHandler(
-                            context,
-                            mode,
-                            preTask: preTask,
-                            title: _nameController.text,
-                            importance: importance,
-                            description: _descriptionController.text,
-                          )
-                        ],
-                      ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: RatingBar(
+                            allowHalfRating: false,
+                            direction: Axis.horizontal,
+                            glow: false,
+                            initialRating:
+                                (preTask == null) ? 0.0 : preTask.importance,
+                            itemCount: 3,
+                            ratingWidget: RatingWidget(
+                              empty: Icon(Icons.star_rounded,
+                                  color: Colors.black38),
+                              full:
+                                  Icon(Icons.star_rounded, color: Colors.black),
+                              half: Container(),
+                            ),
+                            onRatingUpdate: (double val) {
+                              if (preTask != null) {
+                                if (preTask.importance != val) {
+                                  mode = 3;
+                                }
+                                if (preTask.importance == val) {
+                                  mode = 2;
+                                }
+                              }
+                              setState(() {
+                                importance = val;
+                              });
+                            },
+                          ),
+                        ),
+                        bottomHandler(
+                          context,
+                          mode,
+                          preTask: preTask,
+                          title: _nameController.text,
+                          importance: importance,
+                          description: _descriptionController.text,
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -320,8 +280,10 @@ Widget addBottom(
             splashColor: Colors.transparent,
             icon: Icon(Icons.send_rounded),
             onPressed: () {
-              if (formKey.currentState!.validate()) {
-                print('Added');
+              if (title == '') {
+                isValid.value = 0;
+              } else {
+                isValid.value = 1;
                 add_pretask(title, importance, description: description);
                 Navigator.pop(context);
               }
@@ -416,11 +378,16 @@ Widget updateBottom(BuildContext context, PreTask preTask,
             icon: Icon(Icons.done),
             onPressed: () {
               print("Update");
-              update_pretask(preTask.id,
-                  title: title,
-                  description: description,
-                  importance: importance);
-              Navigator.pop(context);
+              if (preTask.title == '' || title == '') {
+                isValid.value = 0;
+              } else {
+                isValid.value = 1;
+                update_pretask(preTask.id,
+                    title: title,
+                    description: description,
+                    importance: importance);
+                Navigator.pop(context);
+              }
             },
           ),
           borderRadius: 15),

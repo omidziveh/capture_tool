@@ -60,6 +60,12 @@ class _AppState extends State<App> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    _bottom_menu_controller.reverse();
+    super.dispose();
+  }
+
+  @override
   int _index = 1;
   int bottom_button_width = 70;
   double popup_menu_height = 0;

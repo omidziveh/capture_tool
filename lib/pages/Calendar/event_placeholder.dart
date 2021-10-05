@@ -1,3 +1,4 @@
+import 'package:capture_tool/db/models/event/event.dart';
 import 'package:capture_tool/pages/Calendar/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -18,9 +19,12 @@ class EventPlaceHolder extends StatefulWidget {
 class _EventPlaceHolderState extends State<EventPlaceHolder> {
   @override
   Widget build(BuildContext context) {
+    double height = 12 * (60 / Hive.box('Calendar').get('timeStep'));
     if ((this.widget.index >=
         (24 * 3 * 60 ~/ Hive.box('Calendar').get('timeStep')))) {
       return Container(color: Colors.transparent);
+
+      /// end container
     } else {
       return GestureDetector(
         onTap: () {
@@ -31,11 +35,63 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
         },
         child: Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12, width: 0.5)),
+            border: Border.all(color: Colors.black12, width: 0.5),
+            color: isEvent(
+              widget.index,
+              widget.pageStartDate.add(Duration(days: 2 - widget.index % 3)),
+              events(),
+            )
+                ? Colors.red
+                : Colors.blue,
+          ),
         ),
       );
     }
   }
+}
+
+events() {
+  Box box = Hive.box('events');
+  int timeStep = Hive.box('Calendar').get('timeStep');
+  List answer = [];
+  for (int i = 0; i < box.length; i++) {
+    Event event = box.getAt(i);
+    answer.add(event);
+  }
+  return answer;
+}
+
+isEvent(index, DateTime date, List all_events) {
+  var timeStep = Hive.box('Calendar').get('timeStep');
+  for (Event event in all_events) {
+    if ((timeStep * (index ~/ 3)) % 60 == event.startDate.minute) {
+      // print('MINUTE');
+      if ((timeStep * (index ~/ 3)) ~/ 60 == event.startDate.hour) {
+        print('HOUR');
+        print('${date.day} and ${event.startDate.day}');
+        if (date.weekday == event.startDate.weekday) {
+          print('DAY');
+          if (date.month == event.startDate.month) {
+            print('INDEX IS $index');
+            return true;
+          }
+        }
+      }
+    }
+  }
+  // for (Event event in events()) {
+  // }
+  // List<int> startTime = [
+  //   int.parse(_startDuration[0]),
+  //   int.parse(_startDuration[1]),
+  // ];
+  // for (Event event in events()) {
+  //   if (int.parse(event.startDate.toString().split(':')[0]) == startTime[0] &&
+  //       int.parse(event.startDate.toString().split(':')[1]) == startTime[1]) {
+  //     return true;
+  //   }
+  // }
+  return false;
 }
 
 void createShortEvent(

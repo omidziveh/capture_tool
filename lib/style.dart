@@ -12,7 +12,7 @@ TextStyle addTaskDialogButton = TextStyle(
   fontSize: 16,
   color: Colors.black,
 );
-TextStyle addTaskDialogTextField = TextStyle(
+TextStyle defaultTextFormFieldStyle = TextStyle(
   fontFamily: 'BKoodak',
   fontSize: 12,
   color: Colors.black,

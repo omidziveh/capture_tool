@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:shamsi_date/extensions.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
@@ -40,7 +41,8 @@ class _CalendarPageState extends State<CalendarPage> {
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.2 * 0.6,
           width: MediaQuery.of(context).size.width,
-          child: Container(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10),
             child: Align(
               child: Text(month(), style: calendarMonthStyle),
               alignment: Alignment.bottomRight,
@@ -94,19 +96,23 @@ class _CalendarPageState extends State<CalendarPage> {
           height: MediaQuery.of(context).size.height * 0.8,
           width: MediaQuery.of(context).size.width,
           child: GestureDetector(
-            child: GridView.builder(
-              controller: controller,
-              itemCount: 3 * 25 * 60 ~/ timeStep,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, mainAxisExtent: 50),
-              itemBuilder: (BuildContext context, int index) {
-                return EventPlaceHolder(
-                  index: index,
-                  pageStartDate: DateTime.now()
-                      .add(Duration(days: 3 * (widget.index - 1000))),
-                );
-              },
-            ),
+            child: ValueListenableBuilder(
+                valueListenable: Hive.box('events').listenable(),
+                builder: (context, val, _) {
+                  return GridView.builder(
+                    controller: controller,
+                    itemCount: 3 * 25 * 60 ~/ timeStep,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, mainAxisExtent: 50),
+                    itemBuilder: (BuildContext context, int index) {
+                      return EventPlaceHolder(
+                        index: index,
+                        pageStartDate: DateTime.now()
+                            .add(Duration(days: 3 * (widget.index - 1000))),
+                      );
+                    },
+                  );
+                }),
           ),
         ),
       ],

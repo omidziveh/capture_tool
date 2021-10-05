@@ -1,15 +1,12 @@
+import 'package:capture_tool/button.dart';
+import 'package:capture_tool/db/models/event/event_db.dart';
 import 'package:capture_tool/db/models/pre_task/pretask.dart';
 import 'package:capture_tool/db/models/pre_task/pretask_db.dart';
 import 'package:capture_tool/default_appbar.dart';
-import 'package:capture_tool/glass/glass_widget.dart';
-import 'package:capture_tool/pages/Calendar/calendar.dart';
-import 'package:capture_tool/style.dart';
+import 'package:capture_tool/pages/Capture_Tool/textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:shamsi_date/shamsi_date.dart';
-import 'package:shamsi_date/extensions.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 
 import '../../glass/glass_button.dart';
@@ -41,41 +38,42 @@ class _AddEventState extends State<AddEvent> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController goalController = TextEditingController();
+  ValueNotifier<int> isValid = ValueNotifier(1);
 
   Widget build(BuildContext context) {
     setDefaultPreTask();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: defaultAppBar('اضافه کردن رویداد', context),
-      body: Container(
-        color: Colors.white,
-        child: ListView(
-          physics: BouncingScrollPhysics(),
-          children: [
-            Padding(padding: EdgeInsets.only(top: 10)),
-            SizedBox(
-              height: 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    widget.eventStartTime.toPersianDateStr(),
-                    textDirection: TextDirection.rtl,
-                  ),
-                  Text('روز'),
-                ],
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Container(
+          color: Colors.white,
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            children: [
+              Padding(padding: EdgeInsets.only(top: 10)),
+              SizedBox(
+                height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      widget.eventStartTime.toPersianDateStr(),
+                      textDirection: TextDirection.rtl,
+                    ),
+                    Text('روز'),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 80,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GlassButton(
-                    width: 60,
-                    height: 60,
-                    child: IconButton(
-                      onPressed: () {
+              SizedBox(
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ColoredButton(
+                      icon: Icon(Icons.remove),
+                      onTap: () {
                         setState(() {
                           widget.eventStartTime = widget.eventStartTime
                               .subtract(Duration(
@@ -83,27 +81,21 @@ class _AddEventState extends State<AddEvent> {
                                       Hive.box('Calendar').get('timeStep')));
                         });
                       },
-                      icon: Icon(Icons.remove),
-                      splashColor: Colors.transparent,
                     ),
-                    borderRadius: 15,
-                  ),
-                  Row(
-                    children: [
-                      Text(widget.eventStartTime.hour
-                          .toString()
-                          .toPersianDigit()),
-                      Text(":"),
-                      Text(widget.eventStartTime.minute
-                          .toString()
-                          .toPersianDigit())
-                    ],
-                  ),
-                  GlassButton(
-                    width: 60,
-                    height: 60,
-                    child: IconButton(
-                      onPressed: () {
+                    Row(
+                      children: [
+                        Text(widget.eventStartTime.hour
+                            .toString()
+                            .toPersianDigit()),
+                        Text(":"),
+                        Text(widget.eventStartTime.minute
+                            .toString()
+                            .toPersianDigit())
+                      ],
+                    ),
+                    ColoredButton(
+                      icon: Icon(Icons.add),
+                      onTap: () {
                         setState(() {
                           DateTime newStartTime = widget.eventStartTime.add(
                               Duration(
@@ -114,25 +106,19 @@ class _AddEventState extends State<AddEvent> {
                           }
                         });
                       },
-                      icon: Icon(Icons.add),
-                      splashColor: Colors.transparent,
                     ),
-                    borderRadius: 15,
-                  ),
-                  Text('زمان شروع'),
-                ],
+                    Text('زمان شروع'),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 80,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GlassButton(
-                    width: 60,
-                    height: 60,
-                    child: IconButton(
-                      onPressed: () {
+              SizedBox(
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ColoredButton(
+                      icon: Icon(Icons.remove),
+                      onTap: () {
                         setState(() {
                           DateTime newFinishTime = widget.eventFinishTime
                               .subtract(Duration(
@@ -143,27 +129,21 @@ class _AddEventState extends State<AddEvent> {
                           }
                         });
                       },
-                      icon: Icon(Icons.remove),
-                      splashColor: Colors.transparent,
                     ),
-                    borderRadius: 15,
-                  ),
-                  Row(
-                    children: [
-                      Text(widget.eventFinishTime.hour
-                          .toString()
-                          .toPersianDigit()),
-                      Text(":"),
-                      Text(widget.eventFinishTime.minute
-                          .toString()
-                          .toPersianDigit())
-                    ],
-                  ),
-                  GlassButton(
-                    width: 60,
-                    height: 60,
-                    child: IconButton(
-                      onPressed: () {
+                    Row(
+                      children: [
+                        Text(widget.eventFinishTime.hour
+                            .toString()
+                            .toPersianDigit()),
+                        Text(":"),
+                        Text(widget.eventFinishTime.minute
+                            .toString()
+                            .toPersianDigit())
+                      ],
+                    ),
+                    ColoredButton(
+                      icon: Icon(Icons.add),
+                      onTap: () {
                         setState(() {
                           widget.eventFinishTime = widget.eventFinishTime.add(
                               Duration(
@@ -171,166 +151,79 @@ class _AddEventState extends State<AddEvent> {
                                       Hive.box('Calendar').get('timeStep')));
                         });
                       },
-                      icon: Icon(Icons.add),
-                      splashColor: Colors.transparent,
                     ),
-                    borderRadius: 15,
-                  ),
-                  Text('زمان پایان'),
-                ],
+                    Text('زمان پایان'),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  DropdownButton<PreTask>(
-                    value: preTaskValue,
-                    // iconSize: 24,
-                    onChanged: (PreTask? newValue) {
-                      setState(() {
-                        preTaskValue = newValue;
-                        if (newValue != null) {
-                          titleController.text = newValue.title;
-                          descriptionController.text = newValue.description;
-                        }
-                      });
-                    },
-                    items: preTaskListMenu(),
-                  ),
-                  DropdownButton<String>(
-                    value: boxListMenuValue,
-                    // iconSize: 24,
-                    onChanged: (String? newValue) {
-                      setDefaultPreTask();
-                      setState(() {
-                        boxListMenuValue = newValue!;
-                      });
-                    },
-                    items: boxListMenu(),
-                  ),
-                  Text(
-                    'انتخاب از لیست ها: ',
-                    textDirection: TextDirection.rtl,
-                  ),
-                ],
+              SizedBox(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    DropdownButton<PreTask>(
+                      borderRadius: BorderRadius.circular(15),
+                      value: preTaskValue,
+                      // iconSize: 24,
+                      onChanged: (PreTask? newValue) {
+                        setState(() {
+                          preTaskValue = newValue;
+                          if (newValue != null) {
+                            titleController.text = newValue.title;
+                            descriptionController.text = newValue.description;
+                          }
+                        });
+                      },
+                      items: preTaskListMenu(),
+                    ),
+                    DropdownButton<String>(
+                      value: boxListMenuValue,
+                      // iconSize: 24,
+                      onChanged: (String? newValue) {
+                        setDefaultPreTask();
+                        setState(() {
+                          boxListMenuValue = newValue!;
+                        });
+                      },
+                      items: boxListMenu(),
+                    ),
+                    Text(
+                      'انتخاب از لیست ها: ',
+                      textDirection: TextDirection.rtl,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Form(
-              key: _formKey,
-              child: Table(
-                columnWidths: {0: FractionColumnWidth(.7)},
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: [
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(0, 0, 0, 0.2),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: TextFormField(
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'لطفا عنوان را وارد کنید';
-                              }
-                            },
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                ),
-                              ),
-                            ),
-                            controller: titleController,
-                            textDirection: TextDirection.rtl,
-                            maxLength: 35,
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          'عنوان:   ',
-                          textDirection: TextDirection.rtl,
-                        ),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(0, 0, 0, 0.2),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: TextFormField(
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            maxLines: 3,
-                            controller: descriptionController,
-                            textDirection: TextDirection.rtl,
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          'توضیحات: ',
-                          textDirection: TextDirection.rtl,
-                        ),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(0, 0, 0, 0.2),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: TextFormField(
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            maxLines: 3,
-                            controller: goalController,
-                            textDirection: TextDirection.rtl,
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          'اهداف: ',
-                          textDirection: TextDirection.rtl,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              Divider(color: Colors.black, thickness: 2),
+              Padding(padding: EdgeInsets.only(top: 5)),
+              ValueListenableBuilder(
+                  valueListenable: isValid,
+                  builder: (context, val, _) {
+                    return DefaultTextFormField(
+                      error:
+                          isValid.value == 0 ? 'لطفا عنوان را وارد کنید' : null,
+                      hintText: 'عنوان',
+                      controller: titleController,
+                      maxLength: 35,
+                    );
+                  }),
+              Padding(padding: EdgeInsets.only(top: 5)),
+              DefaultTextFormField(
+                hintText: 'توضیحات',
+                maxLines: 3,
+                controller: descriptionController,
               ),
-            ),
-            Container(
-              height: 100,
-            ),
-          ],
+              Padding(padding: EdgeInsets.only(top: 25)),
+              DefaultTextFormField(
+                hintText: 'اهداف',
+                maxLines: 3,
+                controller: goalController,
+              ),
+              Container(
+                height: 100,
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -339,34 +232,33 @@ class _AddEventState extends State<AddEvent> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 18.0),
-            child: GlassButton(
-              borderRadius: 15,
-              child: IconButton(
-                splashColor: Colors.transparent,
-                icon: Icon(Icons.close_rounded),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              height: 60,
-              width: 60,
+            child: ColoredButton(
+              icon: Icon(Icons.close_rounded),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 18.0),
-            child: GlassButton(
-              borderRadius: 15,
-              child: IconButton(
-                splashColor: Colors.transparent,
-                icon: Icon(Icons.send_rounded),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-              height: 60,
-              width: 60,
+            child: ColoredButton(
+              icon: Icon(Icons.send_rounded),
+              onTap: () {
+                if (titleController.text == '') {
+                  isValid.value = 0;
+                } else {
+                  isValid.value = 1;
+                  addEvent(
+                    titleController.text,
+                    widget.eventStartTime,
+                    widget.eventFinishTime,
+                    descriptionController.text,
+                    goalController.text,
+                  );
+                  print('LENGTH OF EVENTS BOX IS ${Hive.box('events').length}');
+                  Navigator.pop(context);
+                }
+              },
             ),
           ),
         ],

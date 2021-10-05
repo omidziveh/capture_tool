@@ -1,5 +1,4 @@
 import 'package:capture_tool/db/models/pre_task/pretask_widget.dart';
-import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -16,6 +15,7 @@ class PreTaskListView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ListView.separated(
+              physics: BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 if (index == this.box.length) {
                   return Container(
