@@ -244,6 +244,7 @@ class _AddEventState extends State<AddEvent> {
             child: ColoredButton(
               icon: Icon(Icons.send_rounded),
               onTap: () {
+                print(titleController.text);
                 if (titleController.text == '') {
                   isValid.value = 0;
                 } else {

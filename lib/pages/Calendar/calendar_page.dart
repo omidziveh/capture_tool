@@ -1,3 +1,4 @@
+import 'package:capture_tool/db/models/event/event.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -99,13 +100,16 @@ class _CalendarPageState extends State<CalendarPage> {
             child: ValueListenableBuilder(
                 valueListenable: Hive.box('events').listenable(),
                 builder: (context, val, _) {
+                  var events = allEvents();
                   return GridView.builder(
+                    physics: BouncingScrollPhysics(),
                     controller: controller,
                     itemCount: 3 * 25 * 60 ~/ timeStep,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3, mainAxisExtent: 50),
                     itemBuilder: (BuildContext context, int index) {
                       return EventPlaceHolder(
+                        events: events,
                         index: index,
                         pageStartDate: DateTime.now()
                             .add(Duration(days: 3 * (widget.index - 1000))),

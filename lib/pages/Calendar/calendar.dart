@@ -1,3 +1,4 @@
+import 'package:capture_tool/pages/Calendar/event_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 //import 'package:linked_scroll_controller/linked_scroll_controller.dart';
@@ -60,6 +61,7 @@ class _CalendarState extends State<Calendar> {
               height: MediaQuery.of(context).size.height * 0.8,
               width: MediaQuery.of(context).size.width * 0.15,
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: 25 * 60 ~/ Hive.box('Calendar').get('timeStep'),
                 controller: time,
                 itemBuilder: (context, index) {

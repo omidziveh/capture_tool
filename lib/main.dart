@@ -35,7 +35,6 @@ void main() async {
     theme: light,
     darkTheme: dark,
     themeMode: ThemeMode.light,
-    debugShowCheckedModeBanner: false,
     // themeMode: Hive.box('theme').get('isDark', defaultValue: false),
     home: App(),
   ));
