@@ -24,7 +24,7 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
     double height = 12 * (60 / Hive.box('Calendar').get('timeStep'));
     if ((this.widget.index >=
         (24 * 3 * 60 ~/ Hive.box('Calendar').get('timeStep')))) {
-      return Container(color: Colors.transparent);
+      return Container(color: Colors.transparent, height: 100);
 
       /// end container
     } else {
@@ -36,7 +36,7 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
               Hive.box('Calendar').get('timeStep'));
         },
         child: Container(
-          child: isEvent(
+          child: eventInTime(
             widget.index,
             widget.pageStartDate.add(Duration(days: 2 - widget.index % 3)),
             widget.events,
@@ -51,10 +51,50 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
   }
 }
 
-eventTile(Event event) {
+startEndEventDrawer(Event event) {
+  return Container(
+    height: 10,
+    child: Text(event.title),
+    decoration: BoxDecoration(
+      color: Colors.blue,
+      borderRadius: BorderRadius.circular(15),
+    ),
+  );
+}
+
+startEventDrawer(Event event) {
   return Container(
     child: Text(event.title),
+    decoration: BoxDecoration(
+      color: Colors.blue,
+      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+    ),
   );
+}
+
+endEventDrawer(Event event) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.blue,
+      borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
+    ),
+  );
+}
+
+midEventDrawer(Event event) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.blue,
+    ),
+  );
+}
+
+drawEvent(Event event, mode) {
+  /// mode: 0 -> startEnd, 1 -> start, 2 -> mid, 3 -> end
+  if (mode == 0) return startEndEventDrawer(event);
+  if (mode == 1) return startEventDrawer(event);
+  if (mode == 2) return midEventDrawer(event);
+  if (mode == 3) return endEventDrawer(event);
 }
 
 allEvents() {
@@ -72,6 +112,9 @@ allEvents() {
         .difference(event.startDate)
         .compareTo(Duration(minutes: timeStep));
     if (diff <= 0) {
+      if (event.title == 'TITLE') {
+        print('TITLE');
+      }
       events['startEndEvents']!.add(Event(
         title: event.title,
         description: event.description,
@@ -124,79 +167,32 @@ allEvents() {
   return events;
 }
 
-isEvent(index, DateTime date, Map<String, List<Event>> all_events) {
+searchInEventBox(List<Event>? events, cellDate, timeStep, mode) {
+  for (int i = 0; i < events!.length; i++) {
+    Event event = events[i];
+    if (event.startDate.compareTo(cellDate) >= 0 &&
+        event.finishDate.compareTo(cellDate.add(Duration(minutes: timeStep))) <=
+            0) {
+      return drawEvent(event, mode);
+    }
+  }
+  return null;
+}
+
+eventInTime(index, DateTime date, Map<String, List<Event>> all_events) {
   var timeStep = Hive.box('Calendar').get('timeStep');
   DateTime cellDate = DateTime(date.year, date.month, date.day);
   cellDate = cellDate.add(Duration(minutes: timeStep * (index ~/ 3)));
-  for (int i = 0; i < all_events['startEndEvents']!.length; i++) {
-    Event event = all_events['startEndEvents']![i];
-    if (event.startDate.compareTo(cellDate) == 0) {
-      return Container(
-        child: Text(event.title),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.circular(15),
-        ),
-      );
+  print(all_events.length);
+
+  for (int i = 0; i < all_events.length; i++) {
+    String eventTitle = all_events.keys.toList()[i];
+    if (searchInEventBox(all_events[eventTitle], cellDate, timeStep, i) !=
+        null) {
+      return searchInEventBox(all_events[eventTitle], cellDate, timeStep, i);
     }
   }
-  for (int i = 0; i < all_events['startEvents']!.length; i++) {
-    Event event = all_events['startEvents']![i];
-    if (event.startDate.compareTo(cellDate) == 0) {
-      return Container(
-        child: Text(event.title),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-        ),
-      );
-    }
-  }
-  for (int i = 0; i < all_events['endEvents']!.length; i++) {
-    Event event = all_events['endEvents']![i];
-    if (event.startDate.compareTo(cellDate) == 0) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
-        ),
-      );
-    }
-  }
-  for (int i = 0; i < all_events['midEvents']!.length; i++) {
-    Event event = all_events['midEvents']![i];
-    if (event.startDate.compareTo(cellDate) == 0) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-        ),
-      );
-    }
-  }
-  // for (Event event in all_events['startEndEvents']) {}
-  // for (Event event in all_events) {
-  //   if ((timeStep * (index ~/ 3)) % 60 == event.startDate.minute) {
-  //     if ((timeStep * (index ~/ 3)) ~/ 60 == event.startDate.hour) {
-  //       if (date.weekday == event.startDate.weekday) {
-  //         if (date.month == event.startDate.month) {
-  //           return eventTile(event);
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  // for (Event event in events()) {
-  // }
-  // List<int> startTime = [
-  //   int.parse(_startDuration[0]),
-  //   int.parse(_startDuration[1]),
-  // ];
-  // for (Event event in events()) {
-  //   if (int.parse(event.startDate.toString().split(':')[0]) == startTime[0] &&
-  //       int.parse(event.startDate.toString().split(':')[1]) == startTime[1]) {
-  //     return true;
-  //   }
-  // }
+
   return null;
 }
 
