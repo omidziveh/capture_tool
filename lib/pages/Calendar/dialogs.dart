@@ -1,4 +1,5 @@
 import 'package:capture_tool/button.dart';
+import 'package:capture_tool/db/models/event/event.dart';
 import 'package:capture_tool/db/models/event/event_db.dart';
 import 'package:capture_tool/db/models/pre_task/pretask.dart';
 import 'package:capture_tool/db/models/pre_task/pretask_db.dart';
@@ -16,31 +17,38 @@ final formKey = GlobalKey<FormState>();
 String boxListMenuValue = 'لیست کارها';
 late PreTask? preTaskValue;
 
-class AddEvent extends StatefulWidget {
-  DateTime eventStartTime;
-  DateTime eventFinishTime;
+class EventDialog extends StatefulWidget {
+  late DateTime _eventStartTime;
+  late DateTime _eventFinishTime;
+  late String _eventTitle;
+  late String _eventDescription;
+  late String _eventGoals;
+  late Event? _event;
 
-  AddEvent({
-    required this.eventStartTime,
-    required this.eventFinishTime,
-  });
+  EventDialog(
+      {DateTime? eventStartTime, DateTime? eventFinishTime, Event? event}) {
+    this._eventStartTime = (event == null ? eventStartTime : event.startDate)!;
+    this._eventFinishTime =
+        (event == null ? eventFinishTime : event.finishDate)!;
+    this._eventTitle = event == null ? '' : event.title;
+    this._eventDescription = event == null ? '' : event.description;
+    this._eventGoals = event == null ? '' : event.goals;
+  }
 
   @override
-  _AddEventState createState() => _AddEventState();
+  _EventDialogState createState() => _EventDialogState();
 }
 
-class _AddEventState extends State<AddEvent> {
-  final _formKey = GlobalKey<FormState>();
-  late String eventTitle;
-  late String eventDescription;
-  //List<String> eventGoals = [];
-
+class _EventDialogState extends State<EventDialog> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController goalController = TextEditingController();
   ValueNotifier<int> isValid = ValueNotifier(1);
 
   Widget build(BuildContext context) {
+    titleController.text = widget._eventTitle;
+    descriptionController.text = widget._eventDescription;
+    goalController.text = widget._eventGoals;
     setDefaultPreTask();
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -59,7 +67,7 @@ class _AddEventState extends State<AddEvent> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      widget.eventStartTime.toPersianDateStr(),
+                      widget._eventStartTime.toPersianDateStr(),
                       textDirection: TextDirection.rtl,
                     ),
                     Text('روز'),
@@ -75,7 +83,7 @@ class _AddEventState extends State<AddEvent> {
                       icon: Icon(Icons.remove),
                       onTap: () {
                         setState(() {
-                          widget.eventStartTime = widget.eventStartTime
+                          widget._eventStartTime = widget._eventStartTime
                               .subtract(Duration(
                                   minutes:
                                       Hive.box('Calendar').get('timeStep')));
@@ -84,11 +92,11 @@ class _AddEventState extends State<AddEvent> {
                     ),
                     Row(
                       children: [
-                        Text(widget.eventStartTime.hour
+                        Text(widget._eventStartTime.hour
                             .toString()
                             .toPersianDigit()),
                         Text(":"),
-                        Text(widget.eventStartTime.minute
+                        Text(widget._eventStartTime.minute
                             .toString()
                             .toPersianDigit())
                       ],
@@ -97,12 +105,12 @@ class _AddEventState extends State<AddEvent> {
                       icon: Icon(Icons.add),
                       onTap: () {
                         setState(() {
-                          DateTime newStartTime = widget.eventStartTime.add(
+                          DateTime newStartTime = widget._eventStartTime.add(
                               Duration(
                                   minutes:
                                       Hive.box('Calendar').get('timeStep')));
-                          if (newStartTime.isBefore(widget.eventFinishTime)) {
-                            widget.eventStartTime = newStartTime;
+                          if (newStartTime.isBefore(widget._eventFinishTime)) {
+                            widget._eventStartTime = newStartTime;
                           }
                         });
                       },
@@ -120,23 +128,23 @@ class _AddEventState extends State<AddEvent> {
                       icon: Icon(Icons.remove),
                       onTap: () {
                         setState(() {
-                          DateTime newFinishTime = widget.eventFinishTime
+                          DateTime newFinishTime = widget._eventFinishTime
                               .subtract(Duration(
                                   minutes:
                                       Hive.box('Calendar').get('timeStep')));
-                          if (newFinishTime.isAfter(widget.eventStartTime)) {
-                            widget.eventFinishTime = newFinishTime;
+                          if (newFinishTime.isAfter(widget._eventStartTime)) {
+                            widget._eventFinishTime = newFinishTime;
                           }
                         });
                       },
                     ),
                     Row(
                       children: [
-                        Text(widget.eventFinishTime.hour
+                        Text(widget._eventFinishTime.hour
                             .toString()
                             .toPersianDigit()),
                         Text(":"),
-                        Text(widget.eventFinishTime.minute
+                        Text(widget._eventFinishTime.minute
                             .toString()
                             .toPersianDigit())
                       ],
@@ -145,7 +153,7 @@ class _AddEventState extends State<AddEvent> {
                       icon: Icon(Icons.add),
                       onTap: () {
                         setState(() {
-                          widget.eventFinishTime = widget.eventFinishTime.add(
+                          widget._eventFinishTime = widget._eventFinishTime.add(
                               Duration(
                                   minutes:
                                       Hive.box('Calendar').get('timeStep')));
@@ -199,12 +207,16 @@ class _AddEventState extends State<AddEvent> {
               ValueListenableBuilder(
                   valueListenable: isValid,
                   builder: (context, val, _) {
-                    return DefaultTextFormField(
-                      error:
-                          isValid.value == 0 ? 'لطفا عنوان را وارد کنید' : null,
-                      hintText: 'عنوان',
-                      controller: titleController,
-                      maxLength: 35,
+                    return Hero(
+                      tag: 'EventDialog',
+                      child: DefaultTextFormField(
+                        error: isValid.value == 0
+                            ? 'لطفا عنوان را وارد کنید'
+                            : null,
+                        hintText: 'عنوان',
+                        controller: titleController,
+                        maxLength: 35,
+                      ),
                     );
                   }),
               Padding(padding: EdgeInsets.only(top: 5)),
@@ -251,8 +263,8 @@ class _AddEventState extends State<AddEvent> {
                   isValid.value = 1;
                   addEvent(
                     titleController.text,
-                    widget.eventStartTime,
-                    widget.eventFinishTime,
+                    widget._eventStartTime,
+                    widget._eventFinishTime,
                     descriptionController.text,
                     goalController.text,
                   );

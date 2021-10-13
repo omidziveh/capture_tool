@@ -51,40 +51,91 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
   }
 }
 
+BorderSide eventBorderSide = BorderSide(color: Colors.black, width: 2);
+
 startEndEventDrawer(Event event) {
-  return Container(
-    height: 10,
-    child: Text(event.title),
-    decoration: BoxDecoration(
-      color: Colors.blue,
-      borderRadius: BorderRadius.circular(15),
-    ),
-  );
+  return Builder(builder: (context) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EventDialog(
+                        event: event,
+                      )));
+        },
+        child: Hero(
+          tag: 'EventDialog',
+          child: Container(
+            height: 10,
+            child: Text(event.title),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black,
+                width: 2,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  });
 }
 
 startEventDrawer(Event event) {
-  return Container(
-    child: Text(event.title),
-    decoration: BoxDecoration(
-      color: Colors.blue,
-      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
+    child: Container(
+      alignment: Alignment.centerRight,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Text(
+          event.title,
+        ),
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: eventBorderSide,
+          right: eventBorderSide,
+          left: eventBorderSide,
+        ),
+      ),
     ),
   );
 }
 
 endEventDrawer(Event event) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.blue,
-      borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(color: Colors.black, width: 2),
+          left: BorderSide(color: Colors.black, width: 2),
+          right: BorderSide(color: Colors.black, width: 2),
+        ),
+        // borderRadius: BorderRadius.vertical(bottom: Radius.circular(5)),
+      ),
     ),
   );
 }
 
 midEventDrawer(Event event) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.blue,
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+    child: Container(
+      decoration: BoxDecoration(
+        border: Border(
+          left: eventBorderSide,
+          right: eventBorderSide,
+        ),
+        color: Colors.white,
+      ),
     ),
   );
 }
@@ -112,9 +163,6 @@ allEvents() {
         .difference(event.startDate)
         .compareTo(Duration(minutes: timeStep));
     if (diff <= 0) {
-      if (event.title == 'TITLE') {
-        print('TITLE');
-      }
       events['startEndEvents']!.add(Event(
         title: event.title,
         description: event.description,
@@ -183,8 +231,6 @@ eventInTime(index, DateTime date, Map<String, List<Event>> all_events) {
   var timeStep = Hive.box('Calendar').get('timeStep');
   DateTime cellDate = DateTime(date.year, date.month, date.day);
   cellDate = cellDate.add(Duration(minutes: timeStep * (index ~/ 3)));
-  print(all_events.length);
-
   for (int i = 0; i < all_events.length; i++) {
     String eventTitle = all_events.keys.toList()[i];
     if (searchInEventBox(all_events[eventTitle], cellDate, timeStep, i) !=
@@ -226,7 +272,7 @@ void createShortEvent(
   Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (BuildContext context) => AddEvent(
+          builder: (BuildContext context) => EventDialog(
               eventStartTime: eventStartTime,
               eventFinishTime: eventFinishTime)));
 }

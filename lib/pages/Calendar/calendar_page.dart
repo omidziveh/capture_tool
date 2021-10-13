@@ -54,42 +54,49 @@ class _CalendarPageState extends State<CalendarPage> {
           height: MediaQuery.of(context).size.height * 0.2 * 0.4,
           width: MediaQuery.of(context).size.width,
           child: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                      width: 70,
+                      child: Column(
+                        children: [
+                          Text('${weekDays[JDate(2).weekDay]}',
+                              textAlign: TextAlign.center),
+                          Text('${day(JDate(2))}', textAlign: TextAlign.center),
+                        ],
+                      )),
+                  Container(
                     width: 70,
                     child: Column(
                       children: [
-                        Text('${weekDays[JDate(2).weekDay]}',
+                        Text('${weekDays[JDate(1).weekDay]}',
                             textAlign: TextAlign.center),
-                        Text('${day(JDate(2))}', textAlign: TextAlign.center),
+                        Text('${day(JDate(1))}', textAlign: TextAlign.center),
                       ],
-                    )),
-                Container(
-                  width: 70,
-                  child: Column(
-                    children: [
-                      Text('${weekDays[JDate(1).weekDay]}',
-                          textAlign: TextAlign.center),
-                      Text('${day(JDate(1))}', textAlign: TextAlign.center),
-                    ],
+                    ),
                   ),
-                ),
-                Container(
-                  width: 70,
-                  color: (JDate(0) == Jalali.now())
-                      ? Colors.red
-                      : Colors.transparent,
-                  child: Column(
-                    children: [
-                      Text('${weekDays[JDate(0).weekDay]}',
-                          textAlign: TextAlign.center),
-                      Text('${day(JDate(0))}', textAlign: TextAlign.center),
-                    ],
+                  Container(
+                    width: 70,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                            color: (JDate(0) == Jalali.now())
+                                ? Colors.black
+                                : Colors.transparent,
+                            width: 2)),
+                    child: Column(
+                      children: [
+                        Text('${weekDays[JDate(0).weekDay]}',
+                            textAlign: TextAlign.center),
+                        Text('${day(JDate(0))}', textAlign: TextAlign.center),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

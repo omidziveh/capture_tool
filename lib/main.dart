@@ -19,6 +19,7 @@ import 'db/db.dart';
 
 import 'pages/Capture_Tool/dialogs.dart';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -52,6 +53,9 @@ class _AppState extends State<App> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     _bottom_menu_controller = AnimationController(
       duration: Duration(milliseconds: 200),
       vsync: this,
@@ -61,6 +65,12 @@ class _AppState extends State<App> with TickerProviderStateMixin {
   @override
   void dispose() {
     _bottom_menu_controller.reverse();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     super.dispose();
   }
 
