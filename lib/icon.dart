@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+
+Icon captureToolIcon = Icon(captureToolIconData);
+Icon calendarIcon = Icon(calendarIconData);
+Icon profileIcon = Icon(profileIconData);
+Icon monthlyReturnIcon = Icon(monthlyReturnIconData);
+Icon weeklyReturnIcon = Icon(weeklyReturnIconData);
+Icon sendIcon = Icon(sendIconData);
+Icon closeIcon = Icon(closeIconData);
+Icon addIcon = Icon(addIconData);
+Icon removeIcon = Icon(removeIconData);
+Icon deleteIcon = Icon(deleteIconData);
+Icon activeImportanceIcon = Icon(Icons.star_rounded, color: Colors.black);
+Icon deactiveImportanceIcon = Icon(Icons.star_rounded, color: Colors.black26);
+Icon goalIcon = Icon(goalIconData);
+Icon doneIcon = Icon(doneIconData);
+Icon backIcon = Icon(backIconData);
+
+IconData captureToolIconData = Icons.list_rounded;
+IconData calendarIconData = Icons.calendar_today_rounded;
+IconData profileIconData = Icons.person_rounded;
+IconData monthlyReturnIconData = Icons.archive_rounded;
+IconData weeklyReturnIconData = Icons.pending_actions_rounded;
+IconData sendIconData = Icons.send_rounded;
+IconData closeIconData = Icons.close;
+IconData addIconData = Icons.add;
+IconData removeIconData = Icons.remove;
+IconData deleteIconData = Icons.delete;
+IconData goalIconData = Icons.flag_rounded;
+IconData doneIconData = Icons.done_outline_rounded;
+IconData backIconData = Icons.arrow_back_ios_rounded;

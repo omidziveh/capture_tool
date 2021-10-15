@@ -2,6 +2,7 @@ import 'package:capture_tool/db/models/pre_task/pretask.dart';
 import 'package:capture_tool/default_appbar.dart';
 import 'package:capture_tool/glass/glass_button.dart';
 import 'package:capture_tool/db/models/pre_task/preTaskListView.dart';
+import 'package:capture_tool/icon.dart';
 import 'package:capture_tool/pages/week_return.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -29,10 +30,7 @@ class MonthReturn extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: Colors.black,
-                ),
+                icon: backIcon,
                 splashColor: Colors.transparent,
               ),
               borderRadius: 15),
@@ -51,7 +49,7 @@ class MonthReturn extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              icon: Icon(Icons.pending_actions_rounded),
+              icon: weeklyReturnIcon,
               color: Colors.black,
               splashColor: Colors.transparent,
             ),

@@ -25,16 +25,6 @@ TextStyle addTaskDialogError = TextStyle(
   decoration: TextDecoration.none,
 );
 
-Icon activeImportanceIcon = Icon(
-  Icons.star_rounded,
-  color: Colors.black,
-);
-
-Icon deactiveImportanceIcon = Icon(
-  Icons.star_rounded,
-  color: Colors.black26,
-);
-
 TextStyle captureToolPreTaskTitle = TextStyle(
   color: Colors.black,
   fontFamily: 'BKoodak',

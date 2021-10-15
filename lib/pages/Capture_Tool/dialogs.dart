@@ -1,3 +1,5 @@
+import 'package:capture_tool/button.dart';
+import 'package:capture_tool/icon.dart';
 import 'package:capture_tool/pages/Capture_Tool/textfield.dart';
 import 'package:capture_tool/style.dart';
 import 'package:capture_tool/validators.dart';
@@ -175,10 +177,8 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
                                 (preTask == null) ? 0.0 : preTask.importance,
                             itemCount: 3,
                             ratingWidget: RatingWidget(
-                              empty: Icon(Icons.star_rounded,
-                                  color: Colors.black38),
-                              full:
-                                  Icon(Icons.star_rounded, color: Colors.black),
+                              empty: deactiveImportanceIcon,
+                              full: activeImportanceIcon,
                               half: Container(),
                             ),
                             onRatingUpdate: (double val) {
@@ -262,34 +262,26 @@ Widget addBottom(
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
-      GlassButton(
-          width: button_size,
-          height: button_size,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.close),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          borderRadius: 15),
-      GlassButton(
-          width: button_size,
-          height: button_size,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.send_rounded),
-            onPressed: () {
-              if (title == '') {
-                isValid.value = 0;
-              } else {
-                isValid.value = 1;
-                add_pretask(title, importance, description: description);
-                Navigator.pop(context);
-              }
-            },
-          ),
-          borderRadius: 15),
+      ColoredButton(
+        size: button_size,
+        icon: closeIcon,
+        onTap: () => Navigator.pop(context),
+        radius: 10,
+      ),
+      ColoredButton(
+        size: button_size,
+        icon: sendIcon,
+        onTap: () {
+          if (title == '') {
+            isValid.value = 0;
+          } else {
+            isValid.value = 1;
+            add_pretask(title, importance, description: description);
+            Navigator.pop(context);
+          }
+        },
+        radius: 10,
+      ),
     ],
   );
 }
@@ -301,54 +293,41 @@ Widget viewBottom(
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
-      GlassButton(
-        width: button_size,
-        height: button_size,
-        child: IconButton(
-          splashColor: Colors.transparent,
-          icon: Icon(Icons.delete),
-          onPressed: () {
-            delete_pretask(preTask.id);
-            Navigator.pop(context);
-          },
-        ),
-        borderRadius: 15,
+      ColoredButton(
+        size: button_size,
+        icon: deleteIcon,
+        onTap: () {
+          delete_pretask(preTask.id);
+          Navigator.pop(context);
+        },
+        radius: 10,
       ),
-      GlassButton(
-          width: button_size,
-          height: button_size,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.pending_actions_outlined),
-            onPressed: () {
-              go_to_weekly(preTask.id);
-              Navigator.pop(context);
-            },
-          ),
-          borderRadius: 15),
-      GlassButton(
-          width: button_size,
-          height: button_size,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.archive_outlined),
-            onPressed: () {
-              go_to_monthly(preTask.id);
-              Navigator.pop(context);
-            },
-          ),
-          borderRadius: 15),
-      GlassButton(
-          width: button_size,
-          height: button_size,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.assistant_photo),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          borderRadius: 15),
+      ColoredButton(
+        size: button_size,
+        icon: weeklyReturnIcon,
+        onTap: () {
+          go_to_weekly(preTask.id);
+          Navigator.pop(context);
+        },
+        radius: 10,
+      ),
+      ColoredButton(
+        size: button_size,
+        icon: monthlyReturnIcon,
+        onTap: () {
+          go_to_monthly(preTask.id);
+          Navigator.pop(context);
+        },
+        radius: 10,
+      ),
+      ColoredButton(
+        size: button_size,
+        icon: goalIcon,
+        onTap: () {
+          Navigator.pop(context);
+        },
+        radius: 10,
+      ),
     ],
   );
 }
@@ -358,39 +337,29 @@ Widget updateBottom(BuildContext context, PreTask preTask,
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
-      GlassButton(
-        width: button_size,
-        height: button_size,
-        child: IconButton(
-          splashColor: Colors.transparent,
-          icon: Icon(Icons.close),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        borderRadius: 15,
+      ColoredButton(
+        size: button_size,
+        icon: closeIcon,
+        onTap: () {
+          Navigator.pop(context);
+        },
+        radius: 10,
       ),
-      GlassButton(
-          width: button_size,
-          height: button_size,
-          child: IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(Icons.done),
-            onPressed: () {
-              print("Update");
-              if (preTask.title == '' || title == '') {
-                isValid.value = 0;
-              } else {
-                isValid.value = 1;
-                update_pretask(preTask.id,
-                    title: title,
-                    description: description,
-                    importance: importance);
-                Navigator.pop(context);
-              }
-            },
-          ),
-          borderRadius: 15),
+      ColoredButton(
+        size: button_size,
+        icon: sendIcon,
+        onTap: () {
+          if (preTask.title == '' || title == '') {
+            isValid.value = 0;
+          } else {
+            isValid.value = 1;
+            update_pretask(preTask.id,
+                title: title, description: description, importance: importance);
+            Navigator.pop(context);
+          }
+        },
+        radius: 10,
+      ),
     ],
   );
 }

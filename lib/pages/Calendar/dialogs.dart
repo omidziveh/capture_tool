@@ -4,6 +4,7 @@ import 'package:capture_tool/db/models/event/event_db.dart';
 import 'package:capture_tool/db/models/pre_task/pretask.dart';
 import 'package:capture_tool/db/models/pre_task/pretask_db.dart';
 import 'package:capture_tool/default_appbar.dart';
+import 'package:capture_tool/icon.dart';
 import 'package:capture_tool/pages/Capture_Tool/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -82,7 +83,7 @@ class _EventDialogState extends State<EventDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ColoredButton(
-                      icon: Icon(Icons.remove),
+                      icon: removeIcon,
                       onTap: () {
                         setState(() {
                           widget._eventStartTime = widget._eventStartTime
@@ -104,7 +105,7 @@ class _EventDialogState extends State<EventDialog> {
                       ],
                     ),
                     ColoredButton(
-                      icon: Icon(Icons.add),
+                      icon: addIcon,
                       onTap: () {
                         setState(() {
                           DateTime newStartTime = widget._eventStartTime.add(
@@ -127,7 +128,7 @@ class _EventDialogState extends State<EventDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ColoredButton(
-                      icon: Icon(Icons.remove),
+                      icon: removeIcon,
                       onTap: () {
                         setState(() {
                           DateTime newFinishTime = widget._eventFinishTime
@@ -152,7 +153,7 @@ class _EventDialogState extends State<EventDialog> {
                       ],
                     ),
                     ColoredButton(
-                      icon: Icon(Icons.add),
+                      icon: addIcon,
                       onTap: () {
                         setState(() {
                           widget._eventFinishTime = widget._eventFinishTime.add(
@@ -176,7 +177,6 @@ class _EventDialogState extends State<EventDialog> {
                           DropdownButton<PreTask>(
                             borderRadius: BorderRadius.circular(15),
                             value: preTaskValue,
-                            // iconSize: 24,
                             onChanged: (PreTask? newValue) {
                               setState(() {
                                 preTaskValue = newValue;
@@ -191,7 +191,6 @@ class _EventDialogState extends State<EventDialog> {
                           ),
                           DropdownButton<String>(
                             value: boxListMenuValue,
-                            // iconSize: 24,
                             onChanged: (String? newValue) {
                               setDefaultPreTask();
                               setState(() {
@@ -243,7 +242,7 @@ class _EventDialogState extends State<EventDialog> {
                   Padding(
                     padding: const EdgeInsets.only(left: 18.0),
                     child: ColoredButton(
-                      icon: Icon(Icons.close_rounded),
+                      icon: closeIcon,
                       onTap: () {
                         Navigator.pop(context);
                       },
@@ -252,7 +251,7 @@ class _EventDialogState extends State<EventDialog> {
                   Padding(
                     padding: const EdgeInsets.only(right: 18.0),
                     child: ColoredButton(
-                      icon: Icon(Icons.send_rounded),
+                      icon: sendIcon,
                       onTap: () {
                         if (titleController.text == '') {
                           isValid.value = 0;

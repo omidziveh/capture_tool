@@ -1,5 +1,6 @@
 import 'package:capture_tool/db/models/pre_task/pretask.dart';
 import 'package:capture_tool/db/models/pre_task/pretask_db.dart';
+import 'package:capture_tool/icon.dart';
 import 'package:capture_tool/pages/Capture_Tool/dialogs.dart';
 import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +126,7 @@ class PreTaskOption extends StatelessWidget {
 Widget deleteOption(PreTask preTask, Box startBox) {
   return PreTaskOption(
     Colors.red,
-    Icons.delete,
+    deleteIconData,
     () {
       print('deleted');
       delete_pretask(preTask.id, startBox);
@@ -136,7 +137,7 @@ Widget deleteOption(PreTask preTask, Box startBox) {
 Widget monthOption(PreTask preTask, Box startBox) {
   return PreTaskOption(
     Colors.blue,
-    Icons.archive_outlined,
+    monthlyReturnIconData,
     () {
       print('go to monthly');
       go_to_monthly(preTask.id, startBox);
@@ -147,7 +148,7 @@ Widget monthOption(PreTask preTask, Box startBox) {
 Widget weekOption(PreTask preTask, Box startBox) {
   return PreTaskOption(
     Colors.green,
-    Icons.pending_actions_rounded,
+    weeklyReturnIconData,
     () {
       print('go to weekly');
       go_to_weekly(preTask.id, startBox);
@@ -158,7 +159,7 @@ Widget weekOption(PreTask preTask, Box startBox) {
 Widget captureOption(PreTask preTask, Box startBox) {
   return PreTaskOption(
     Colors.pink,
-    Icons.toc_rounded,
+    captureToolIconData,
     () {
       go_to_capture(preTask.id, startBox);
     },

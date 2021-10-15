@@ -1,4 +1,5 @@
 import 'package:capture_tool/glass/glass_widget.dart';
+import 'package:capture_tool/icon.dart';
 import 'package:capture_tool/pages/Capture_Tool/capture_tool.dart';
 import 'package:capture_tool/pages/Capture_Tool/dialogs.dart';
 import 'package:capture_tool/pages/Capture_Tool/popup_menu.dart';
@@ -118,7 +119,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                   height: 50,
                   borderRadius: 10,
                   child: IconButton(
-                    icon: Icon(Icons.pending_actions_rounded),
+                    icon: weeklyReturnIcon,
                     onPressed: () {
                       setState(() {
                         popupMenuHeight = 0;
@@ -138,7 +139,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                   height: 50,
                   borderRadius: 10,
                   child: IconButton(
-                    icon: Icon(Icons.archive_outlined),
+                    icon: monthlyReturnIcon,
                     onPressed: () {
                       setState(() {
                         _bottomMenuController.reverse();
@@ -203,9 +204,9 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                         'ناحیه کاربری',
                       ],
                       icons: [
-                        Icons.calendar_today_outlined,
-                        Icons.menu,
-                        Icons.person_outline_rounded,
+                        calendarIconData,
+                        captureToolIconData,
+                        profileIconData,
                       ],
                       onChange: (int index) {
                         setState(() {
@@ -233,10 +234,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                     height: 70,
                     child: IconButton(
                       splashColor: Colors.transparent,
-                      icon: Icon(
-                        Icons.add_rounded,
-                        color: Colors.black,
-                      ),
+                      icon: addIcon,
                       onPressed: () {
                         _index == 0
                             ? null
