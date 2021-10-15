@@ -111,12 +111,21 @@ class PreTaskOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: IconSlideAction(
-          icon: this.icon,
-          color: this.color,
-          onTap: this.onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: this.color == Colors.white
+              ? Border.all(color: Colors.black, width: 1)
+              : null,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: IconSlideAction(
+            foregroundColor: Colors.black,
+            icon: this.icon,
+            color: this.color,
+            onTap: this.onTap,
+          ),
         ),
       ),
     );
@@ -136,7 +145,7 @@ Widget deleteOption(PreTask preTask, Box startBox) {
 
 Widget monthOption(PreTask preTask, Box startBox) {
   return PreTaskOption(
-    Colors.blue,
+    Colors.white,
     monthlyReturnIconData,
     () {
       print('go to monthly');
@@ -147,7 +156,7 @@ Widget monthOption(PreTask preTask, Box startBox) {
 
 Widget weekOption(PreTask preTask, Box startBox) {
   return PreTaskOption(
-    Colors.green,
+    Colors.white,
     weeklyReturnIconData,
     () {
       print('go to weekly');
@@ -158,7 +167,7 @@ Widget weekOption(PreTask preTask, Box startBox) {
 
 Widget captureOption(PreTask preTask, Box startBox) {
   return PreTaskOption(
-    Colors.pink,
+    Colors.white,
     captureToolIconData,
     () {
       go_to_capture(preTask.id, startBox);
