@@ -53,31 +53,24 @@ class _EventPlaceHolderState extends State<EventPlaceHolder> {
 
 BorderSide eventBorderSide = BorderSide(color: Colors.black, width: 2);
 
-startEndEventDrawer(Event event) {
+eventCell(Event event, Border border, EdgeInsets padding,
+    [bool showText = true]) {
   return Builder(builder: (context) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: padding,
       child: GestureDetector(
         onTap: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => EventDialog(
-                        event: event,
-                      )));
+                  builder: (context) => EventDialog(event: event)));
         },
-        child: Hero(
-          tag: 'EventDialog',
-          child: Container(
-            height: 10,
-            child: Text(event.title),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.black,
-                width: 2,
-              ),
-            ),
+        child: Container(
+          height: 10,
+          child: showText ? Text(event.title) : null,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: border,
           ),
         ),
       ),
@@ -85,67 +78,38 @@ startEndEventDrawer(Event event) {
   });
 }
 
-startEventDrawer(Event event) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
-    child: Container(
-      alignment: Alignment.centerRight,
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Text(
-          event.title,
-        ),
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: eventBorderSide,
-          right: eventBorderSide,
-          left: eventBorderSide,
-        ),
-      ),
-    ),
-  );
-}
-
-endEventDrawer(Event event) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: Colors.black, width: 2),
-          left: BorderSide(color: Colors.black, width: 2),
-          right: BorderSide(color: Colors.black, width: 2),
-        ),
-        // borderRadius: BorderRadius.vertical(bottom: Radius.circular(5)),
-      ),
-    ),
-  );
-}
-
-midEventDrawer(Event event) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-    child: Container(
-      decoration: BoxDecoration(
-        border: Border(
-          left: eventBorderSide,
-          right: eventBorderSide,
-        ),
-        color: Colors.white,
-      ),
-    ),
-  );
-}
-
 drawEvent(Event event, mode) {
   /// mode: 0 -> startEnd, 1 -> start, 2 -> mid, 3 -> end
-  if (mode == 0) return startEndEventDrawer(event);
-  if (mode == 1) return startEventDrawer(event);
-  if (mode == 2) return midEventDrawer(event);
-  if (mode == 3) return endEventDrawer(event);
+  if (mode == 0)
+    return eventCell(
+      event,
+      Border.all(color: Colors.black, width: 2),
+      EdgeInsets.all(5),
+    );
+  if (mode == 1)
+    return eventCell(
+      event,
+      Border(
+          left: eventBorderSide, right: eventBorderSide, top: eventBorderSide),
+      EdgeInsets.fromLTRB(5, 5, 5, 0),
+    );
+  if (mode == 2)
+    return eventCell(
+      event,
+      Border(left: eventBorderSide, right: eventBorderSide),
+      EdgeInsets.fromLTRB(5, 0, 5, 0),
+      false,
+    );
+  if (mode == 3)
+    return eventCell(
+      event,
+      Border(
+          bottom: eventBorderSide,
+          left: eventBorderSide,
+          right: eventBorderSide),
+      EdgeInsets.fromLTRB(5, 0, 5, 5),
+      false,
+    );
 }
 
 allEvents() {

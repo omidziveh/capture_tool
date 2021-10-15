@@ -23,10 +23,11 @@ class EventDialog extends StatefulWidget {
   late String _eventTitle;
   late String _eventDescription;
   late String _eventGoals;
-  late Event? _event;
+  late var event;
 
   EventDialog(
       {DateTime? eventStartTime, DateTime? eventFinishTime, Event? event}) {
+    this.event = event;
     this._eventStartTime = (event == null ? eventStartTime : event.startDate)!;
     this._eventFinishTime =
         (event == null ? eventFinishTime : event.finishDate)!;
@@ -46,9 +47,10 @@ class _EventDialogState extends State<EventDialog> {
   ValueNotifier<int> isValid = ValueNotifier(1);
 
   Widget build(BuildContext context) {
-    titleController.text = widget._eventTitle;
-    descriptionController.text = widget._eventDescription;
-    goalController.text = widget._eventGoals;
+    titleController.text = widget._eventTitle == '' ? widget._eventTitle : '';
+    descriptionController.text =
+        widget._eventDescription == '' ? widget._eventDescription : '';
+    goalController.text = widget._eventGoals == '' ? widget._eventGoals : '';
     setDefaultPreTask();
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -164,44 +166,47 @@ class _EventDialogState extends State<EventDialog> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    DropdownButton<PreTask>(
-                      borderRadius: BorderRadius.circular(15),
-                      value: preTaskValue,
-                      // iconSize: 24,
-                      onChanged: (PreTask? newValue) {
-                        setState(() {
-                          preTaskValue = newValue;
-                          if (newValue != null) {
-                            titleController.text = newValue.title;
-                            descriptionController.text = newValue.description;
-                          }
-                        });
-                      },
-                      items: preTaskListMenu(),
+              widget.event != null
+                  ? Container()
+                  : SizedBox(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          DropdownButton<PreTask>(
+                            borderRadius: BorderRadius.circular(15),
+                            value: preTaskValue,
+                            // iconSize: 24,
+                            onChanged: (PreTask? newValue) {
+                              setState(() {
+                                preTaskValue = newValue;
+                                if (newValue != null) {
+                                  titleController.text = newValue.title;
+                                  descriptionController.text =
+                                      newValue.description;
+                                }
+                              });
+                            },
+                            items: preTaskListMenu(),
+                          ),
+                          DropdownButton<String>(
+                            value: boxListMenuValue,
+                            // iconSize: 24,
+                            onChanged: (String? newValue) {
+                              setDefaultPreTask();
+                              setState(() {
+                                boxListMenuValue = newValue!;
+                              });
+                            },
+                            items: boxListMenu(),
+                          ),
+                          Text(
+                            'انتخاب از لیست ها: ',
+                            textDirection: TextDirection.rtl,
+                          ),
+                        ],
+                      ),
                     ),
-                    DropdownButton<String>(
-                      value: boxListMenuValue,
-                      // iconSize: 24,
-                      onChanged: (String? newValue) {
-                        setDefaultPreTask();
-                        setState(() {
-                          boxListMenuValue = newValue!;
-                        });
-                      },
-                      items: boxListMenu(),
-                    ),
-                    Text(
-                      'انتخاب از لیست ها: ',
-                      textDirection: TextDirection.rtl,
-                    ),
-                  ],
-                ),
-              ),
               Divider(color: Colors.black, thickness: 2),
               Padding(padding: EdgeInsets.only(top: 5)),
               ValueListenableBuilder(
@@ -231,50 +236,58 @@ class _EventDialogState extends State<EventDialog> {
                 maxLines: 3,
                 controller: goalController,
               ),
-              Container(
-                height: 100,
+              Padding(padding: EdgeInsets.only(top: 10)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 18.0),
+                    child: ColoredButton(
+                      icon: Icon(Icons.close_rounded),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 18.0),
+                    child: ColoredButton(
+                      icon: Icon(Icons.send_rounded),
+                      onTap: () {
+                        if (titleController.text == '') {
+                          isValid.value = 0;
+                        } else {
+                          isValid.value = 1;
+                          if (widget.event == null) {
+                            addEvent(
+                              titleController.text,
+                              widget._eventStartTime,
+                              widget._eventFinishTime,
+                              descriptionController.text,
+                              goalController.text,
+                            );
+                            Navigator.pop(context);
+                          } else if (widget.event != null) {
+                            updateEvent(
+                              widget.event,
+                              id: widget.event.id,
+                              description: descriptionController.text,
+                              title: titleController.text,
+                              goals: goalController.text,
+                              startDate: widget._eventStartTime,
+                              finishDate: widget._eventFinishTime,
+                            );
+                            Navigator.pop(context);
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: ColoredButton(
-              icon: Icon(Icons.close_rounded),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 18.0),
-            child: ColoredButton(
-              icon: Icon(Icons.send_rounded),
-              onTap: () {
-                print(titleController.text);
-                if (titleController.text == '') {
-                  isValid.value = 0;
-                } else {
-                  isValid.value = 1;
-                  addEvent(
-                    titleController.text,
-                    widget._eventStartTime,
-                    widget._eventFinishTime,
-                    descriptionController.text,
-                    goalController.text,
-                  );
-                  print('LENGTH OF EVENTS BOX IS ${Hive.box('events').length}');
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -28,9 +28,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await init_db();
-
-  Hive.box('Calendar').put('timeStep', 15);
-  Hive.box('ID').put('id', 0);
+  if (Hive.box('Calendar').get('timeStep', defaultValue: 'null') == 'null') {
+    Hive.box('Calendar').put('timeStep', 15);
+  }
 
   runApp(MaterialApp(
     theme: light,
@@ -47,7 +47,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with TickerProviderStateMixin {
-  late AnimationController _bottom_menu_controller;
+  late AnimationController _bottomMenuController;
   bool _isPlaying = false;
 
   @override
@@ -56,7 +56,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    _bottom_menu_controller = AnimationController(
+    _bottomMenuController = AnimationController(
       duration: Duration(milliseconds: 200),
       vsync: this,
     );
@@ -64,7 +64,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _bottom_menu_controller.reverse();
+    _bottomMenuController.reverse();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -74,10 +74,9 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  @override
   int _index = 1;
-  int bottom_button_width = 70;
-  double popup_menu_height = 0;
+  int bottomButtonWidth = 70;
+  double popupMenuHeight = 0;
   List<String> names = [
     'تقویم',
     'لیست کارها',
@@ -89,14 +88,15 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     Profile(),
   ];
 
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (popup_menu_height == 100) {
+        if (popupMenuHeight == 100) {
           setState(() {
-            _bottom_menu_controller.reverse();
+            _bottomMenuController.reverse();
             _isPlaying = false;
-            popup_menu_height = 0;
+            popupMenuHeight = 0;
           });
           return false;
         }
@@ -111,7 +111,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             PopupMenu(
-              height: popup_menu_height,
+              height: popupMenuHeight,
               children: [
                 GlassButton(
                   width: 50,
@@ -121,8 +121,8 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                     icon: Icon(Icons.pending_actions_rounded),
                     onPressed: () {
                       setState(() {
-                        popup_menu_height = 0;
-                        _bottom_menu_controller.reverse();
+                        popupMenuHeight = 0;
+                        _bottomMenuController.reverse();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => WeekReturn()),
@@ -141,8 +141,8 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                     icon: Icon(Icons.archive_outlined),
                     onPressed: () {
                       setState(() {
-                        _bottom_menu_controller.reverse();
-                        popup_menu_height = 0;
+                        _bottomMenuController.reverse();
+                        popupMenuHeight = 0;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -162,7 +162,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
               children: [
                 AnimatedContainer(
                   duration: Duration(milliseconds: 200),
-                  width: bottom_button_width.toDouble(),
+                  width: bottomButtonWidth.toDouble(),
                   child: GlassButton(
                     height: 70,
                     width: 70,
@@ -170,16 +170,16 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                     child: IconButton(
                       icon: AnimatedIcon(
                         icon: AnimatedIcons.menu_close,
-                        progress: _bottom_menu_controller,
+                        progress: _bottomMenuController,
                       ),
                       splashColor: Colors.transparent,
                       onPressed: () {
                         setState(() {
                           _isPlaying = !_isPlaying;
                           _isPlaying
-                              ? _bottom_menu_controller.forward()
-                              : _bottom_menu_controller.reverse();
-                          popup_menu_height = popup_menu_height == 0 ? 100 : 0;
+                              ? _bottomMenuController.forward()
+                              : _bottomMenuController.reverse();
+                          popupMenuHeight = popupMenuHeight == 0 ? 100 : 0;
                         });
                       },
                     ),
@@ -212,12 +212,12 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                           print(index);
                           _index = index;
                           if (index == 0 || index == 2) {
-                            bottom_button_width = 0;
-                            popup_menu_height = 0;
+                            bottomButtonWidth = 0;
+                            popupMenuHeight = 0;
                             _isPlaying = false;
-                            _bottom_menu_controller.reverse();
+                            _bottomMenuController.reverse();
                           } else {
-                            bottom_button_width = 70;
+                            bottomButtonWidth = 70;
                           }
                         });
                       },
@@ -227,7 +227,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                 // Padding(padding: EdgeInsets.only(left: 5)),
                 AnimatedContainer(
                   duration: Duration(milliseconds: 200),
-                  width: bottom_button_width.toDouble(),
+                  width: bottomButtonWidth.toDouble(),
                   child: GlassButton(
                     width: 70,
                     height: 70,
