@@ -5,19 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "mc",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        },
-        {
-            "name": "omid",
+            "name": "profile",
 		    "request": "launch",
 		    "type": "dart",
 		    "flutterMode": "profile"
         },
         {
-            "name": "pro",
+            "name": "debug",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug"
