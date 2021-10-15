@@ -47,11 +47,15 @@ class _EventDialogState extends State<EventDialog> {
   TextEditingController goalController = TextEditingController();
   ValueNotifier<int> isValid = ValueNotifier(1);
 
+  @override
+  void initState() {
+    super.initState();
+    titleController.text = widget._eventTitle;
+    descriptionController.text = widget._eventDescription;
+    goalController.text = widget._eventGoals;
+  }
+
   Widget build(BuildContext context) {
-    titleController.text = widget._eventTitle == '' ? widget._eventTitle : '';
-    descriptionController.text =
-        widget._eventDescription == '' ? widget._eventDescription : '';
-    goalController.text = widget._eventGoals == '' ? widget._eventGoals : '';
     setDefaultPreTask();
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -211,16 +215,12 @@ class _EventDialogState extends State<EventDialog> {
               ValueListenableBuilder(
                   valueListenable: isValid,
                   builder: (context, val, _) {
-                    return Hero(
-                      tag: 'EventDialog',
-                      child: DefaultTextFormField(
-                        error: isValid.value == 0
-                            ? 'لطفا عنوان را وارد کنید'
-                            : null,
-                        hintText: 'عنوان',
-                        controller: titleController,
-                        maxLength: 35,
-                      ),
+                    return DefaultTextFormField(
+                      error:
+                          isValid.value == 0 ? 'لطفا عنوان را وارد کنید' : null,
+                      hintText: 'عنوان',
+                      controller: titleController,
+                      maxLength: 35,
                     );
                   }),
               Padding(padding: EdgeInsets.only(top: 5)),
@@ -236,57 +236,58 @@ class _EventDialogState extends State<EventDialog> {
                 controller: goalController,
               ),
               Padding(padding: EdgeInsets.only(top: 10)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 18.0),
-                    child: ColoredButton(
-                      icon: closeIcon,
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 18.0),
-                    child: ColoredButton(
-                      icon: sendIcon,
-                      onTap: () {
-                        if (titleController.text == '') {
-                          isValid.value = 0;
-                        } else {
-                          isValid.value = 1;
-                          if (widget.event == null) {
-                            addEvent(
-                              titleController.text,
-                              widget._eventStartTime,
-                              widget._eventFinishTime,
-                              descriptionController.text,
-                              goalController.text,
-                            );
-                            Navigator.pop(context);
-                          } else if (widget.event != null) {
-                            updateEvent(
-                              widget.event,
-                              id: widget.event.id,
-                              description: descriptionController.text,
-                              title: titleController.text,
-                              goals: goalController.text,
-                              startDate: widget._eventStartTime,
-                              finishDate: widget._eventFinishTime,
-                            );
-                            Navigator.pop(context);
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: ColoredButton(
+              icon: closeIcon,
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 18.0),
+            child: ColoredButton(
+              icon: sendIcon,
+              onTap: () {
+                if (titleController.text == '') {
+                  isValid.value = 0;
+                } else {
+                  isValid.value = 1;
+                  if (widget.event == null) {
+                    addEvent(
+                      titleController.text,
+                      widget._eventStartTime,
+                      widget._eventFinishTime,
+                      descriptionController.text,
+                      goalController.text,
+                    );
+                    Navigator.pop(context);
+                  } else if (widget.event != null) {
+                    updateEvent(
+                      widget.event,
+                      id: widget.event.id,
+                      description: descriptionController.text,
+                      title: titleController.text,
+                      goals: goalController.text,
+                      startDate: widget._eventStartTime,
+                      finishDate: widget._eventFinishTime,
+                    );
+                    Navigator.pop(context);
+                  }
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
