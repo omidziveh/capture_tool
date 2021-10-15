@@ -2,7 +2,7 @@
     package="com.example.capture_tool">
    <application
         android:label="capture_tool"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
