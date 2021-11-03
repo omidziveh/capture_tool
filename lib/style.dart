@@ -66,3 +66,8 @@ TextStyle selectTextStyle = TextStyle(
   fontFamily: 'BKoodak',
   fontSize: 16,
 );
+
+TextStyle eventDialogDefaultStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'BKoodak',
+);

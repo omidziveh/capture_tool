@@ -6,6 +6,7 @@ import 'package:capture_tool/db/models/pre_task/pretask_db.dart';
 import 'package:capture_tool/default_appbar.dart';
 import 'package:capture_tool/icon.dart';
 import 'package:capture_tool/pages/Capture_Tool/textfield.dart';
+import 'package:capture_tool/style.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -63,7 +64,6 @@ class _EventDialogState extends State<EventDialog> {
       body: Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Container(
-          color: Colors.white,
           child: ListView(
             physics: BouncingScrollPhysics(),
             children: [
@@ -76,8 +76,8 @@ class _EventDialogState extends State<EventDialog> {
                     Text(
                       widget._eventStartTime.toPersianDateStr(),
                       textDirection: TextDirection.rtl,
+                      style: eventDialogDefaultStyle,
                     ),
-                    Text('روز'),
                   ],
                 ),
               ),
@@ -99,13 +99,19 @@ class _EventDialogState extends State<EventDialog> {
                     ),
                     Row(
                       children: [
-                        Text(widget._eventStartTime.hour
-                            .toString()
-                            .toPersianDigit()),
-                        Text(":"),
-                        Text(widget._eventStartTime.minute
-                            .toString()
-                            .toPersianDigit())
+                        Text(
+                          widget._eventStartTime.hour
+                              .toString()
+                              .toPersianDigit(),
+                          style: eventDialogDefaultStyle,
+                        ),
+                        Text(":", style: eventDialogDefaultStyle),
+                        Text(
+                          widget._eventStartTime.minute
+                              .toString()
+                              .toPersianDigit(),
+                          style: eventDialogDefaultStyle,
+                        )
                       ],
                     ),
                     ColoredButton(
@@ -122,7 +128,16 @@ class _EventDialogState extends State<EventDialog> {
                         });
                       },
                     ),
-                    Text('زمان شروع'),
+                    SizedBox(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      child: Center(
+                        child: FittedBox(
+                          child:
+                              Text('زمان شروع', style: eventDialogDefaultStyle),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -147,13 +162,19 @@ class _EventDialogState extends State<EventDialog> {
                     ),
                     Row(
                       children: [
-                        Text(widget._eventFinishTime.hour
-                            .toString()
-                            .toPersianDigit()),
-                        Text(":"),
-                        Text(widget._eventFinishTime.minute
-                            .toString()
-                            .toPersianDigit())
+                        Text(
+                          widget._eventFinishTime.hour
+                              .toString()
+                              .toPersianDigit(),
+                          style: eventDialogDefaultStyle,
+                        ),
+                        Text(":", style: eventDialogDefaultStyle),
+                        Text(
+                          widget._eventFinishTime.minute
+                              .toString()
+                              .toPersianDigit(),
+                          style: eventDialogDefaultStyle,
+                        )
                       ],
                     ),
                     ColoredButton(
@@ -167,7 +188,16 @@ class _EventDialogState extends State<EventDialog> {
                         });
                       },
                     ),
-                    Text('زمان پایان'),
+                    SizedBox(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      child: Center(
+                        child: FittedBox(
+                          child: Text('زمان پایان',
+                              style: eventDialogDefaultStyle),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -179,6 +209,8 @@ class _EventDialogState extends State<EventDialog> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           DropdownButton<PreTask>(
+                            menuMaxHeight: 200,
+                            style: eventDialogDefaultStyle,
                             borderRadius: BorderRadius.circular(15),
                             value: preTaskValue,
                             onChanged: (PreTask? newValue) {
@@ -194,6 +226,7 @@ class _EventDialogState extends State<EventDialog> {
                             items: preTaskListMenu(),
                           ),
                           DropdownButton<String>(
+                            style: eventDialogDefaultStyle,
                             value: boxListMenuValue,
                             onChanged: (String? newValue) {
                               setDefaultPreTask();
@@ -206,6 +239,7 @@ class _EventDialogState extends State<EventDialog> {
                           Text(
                             'انتخاب از لیست ها: ',
                             textDirection: TextDirection.rtl,
+                            style: eventDialogDefaultStyle,
                           ),
                         ],
                       ),
