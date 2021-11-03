@@ -71,3 +71,13 @@ TextStyle eventDialogDefaultStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'BKoodak',
 );
+
+TextStyle calendarEventTextStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'BKoodak',
+);
+
+TextStyle calendarDateStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'BKoodak',
+);

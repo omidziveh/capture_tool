@@ -25,11 +25,13 @@ class EventDialog extends StatefulWidget {
   late String _eventTitle;
   late String _eventDescription;
   late String _eventGoals;
+  late bool _canDelete;
   late var event;
 
   EventDialog(
       {DateTime? eventStartTime, DateTime? eventFinishTime, Event? event}) {
     this.event = event;
+    this._canDelete = event == null ? false : true;
     this._eventStartTime = (event == null ? eventStartTime : event.startDate)!;
     this._eventFinishTime =
         (event == null ? eventFinishTime : event.finishDate)!;
@@ -208,33 +210,54 @@ class _EventDialogState extends State<EventDialog> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          DropdownButton<PreTask>(
-                            menuMaxHeight: 200,
-                            style: eventDialogDefaultStyle,
-                            borderRadius: BorderRadius.circular(15),
-                            value: preTaskValue,
-                            onChanged: (PreTask? newValue) {
-                              setState(() {
-                                preTaskValue = newValue;
-                                if (newValue != null) {
-                                  titleController.text = newValue.title;
-                                  descriptionController.text =
-                                      newValue.description;
-                                }
-                              });
-                            },
-                            items: preTaskListMenu(),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            child: DropdownButtonFormField<PreTask>(
+                              alignment: Alignment.centerRight,
+                              decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide:
+                                      BorderSide(width: 2, color: Colors.black),
+                                ),
+                              ),
+                              menuMaxHeight: 200,
+                              style: eventDialogDefaultStyle,
+                              value: preTaskValue,
+                              onChanged: (PreTask? newValue) {
+                                setState(() {
+                                  preTaskValue = newValue;
+                                  if (newValue != null) {
+                                    titleController.text = newValue.title;
+                                    descriptionController.text =
+                                        newValue.description;
+                                  }
+                                });
+                              },
+                              items: preTaskListMenu(),
+                            ),
                           ),
-                          DropdownButton<String>(
-                            style: eventDialogDefaultStyle,
-                            value: boxListMenuValue,
-                            onChanged: (String? newValue) {
-                              setDefaultPreTask();
-                              setState(() {
-                                boxListMenuValue = newValue!;
-                              });
-                            },
-                            items: boxListMenu(),
+                          Padding(padding: EdgeInsets.only(left: 10)),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            child: DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide:
+                                      BorderSide(width: 2, color: Colors.black),
+                                ),
+                              ),
+                              style: eventDialogDefaultStyle,
+                              value: boxListMenuValue,
+                              onChanged: (String? newValue) {
+                                setDefaultPreTask();
+                                setState(() {
+                                  boxListMenuValue = newValue!;
+                                });
+                              },
+                              items: boxListMenu(),
+                            ),
                           ),
                           Text(
                             'انتخاب از لیست ها: ',
@@ -287,6 +310,18 @@ class _EventDialogState extends State<EventDialog> {
               },
             ),
           ),
+          widget._canDelete
+              ? Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: ColoredButton(
+                    icon: Icon(Icons.delete),
+                    onTap: () {
+                      deleteEvent(widget.event.id);
+                      Navigator.pop(context);
+                    },
+                  ),
+                )
+              : Padding(padding: EdgeInsets.zero),
           Padding(
             padding: const EdgeInsets.only(right: 18.0),
             child: ColoredButton(

@@ -63,25 +63,36 @@ class _CalendarPageState extends State<CalendarPage> {
                       width: 70,
                       child: Column(
                         children: [
-                          Text('${weekDays[JDate(2).weekDay]}',
-                              textAlign: TextAlign.center),
-                          Text('${day(JDate(2))}', textAlign: TextAlign.center),
+                          Text(
+                            '${weekDays[JDate(2).weekDay]}',
+                            textAlign: TextAlign.center,
+                            style: calendarDateStyle,
+                          ),
+                          Text('${day(JDate(2))}',
+                              textAlign: TextAlign.center,
+                              style: calendarDateStyle),
                         ],
                       )),
                   Container(
                     width: 70,
                     child: Column(
                       children: [
-                        Text('${weekDays[JDate(1).weekDay]}',
-                            textAlign: TextAlign.center),
-                        Text('${day(JDate(1))}', textAlign: TextAlign.center),
+                        Text(
+                          '${weekDays[JDate(1).weekDay]}',
+                          textAlign: TextAlign.center,
+                          style: calendarDateStyle,
+                        ),
+                        Text(
+                          '${day(JDate(1))}',
+                          textAlign: TextAlign.center,
+                          style: calendarDateStyle,
+                        ),
                       ],
                     ),
                   ),
                   Container(
                     width: 70,
                     decoration: BoxDecoration(
-                        color: Colors.white,
                         border: Border.all(
                             color: (JDate(0) == Jalali.now())
                                 ? Colors.black
@@ -89,9 +100,16 @@ class _CalendarPageState extends State<CalendarPage> {
                             width: 2)),
                     child: Column(
                       children: [
-                        Text('${weekDays[JDate(0).weekDay]}',
-                            textAlign: TextAlign.center),
-                        Text('${day(JDate(0))}', textAlign: TextAlign.center),
+                        Text(
+                          '${weekDays[JDate(0).weekDay]}',
+                          textAlign: TextAlign.center,
+                          style: calendarDateStyle,
+                        ),
+                        Text(
+                          '${day(JDate(0))}',
+                          textAlign: TextAlign.center,
+                          style: calendarDateStyle,
+                        ),
                       ],
                     ),
                   ),

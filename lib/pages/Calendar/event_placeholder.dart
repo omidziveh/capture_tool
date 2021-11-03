@@ -3,6 +3,8 @@ import 'package:capture_tool/pages/Calendar/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import '../../style.dart';
+
 class EventPlaceHolder extends StatefulWidget {
   int index;
   DateTime pageStartDate;
@@ -66,8 +68,17 @@ eventCell(Event event, Border border, EdgeInsets padding,
                   builder: (context) => EventDialog(event: event)));
         },
         child: Container(
+          padding: EdgeInsets.only(right: 3),
           height: 10,
-          child: showText ? Text(event.title) : null,
+          child: showText
+              ? Text(
+                  event.title.length > 15
+                      ? '${event.title.substring(0, 15)}...'
+                      : event.title,
+                  textDirection: TextDirection.rtl,
+                  style: calendarEventTextStyle,
+                )
+              : null,
           decoration: BoxDecoration(
             color: Colors.white,
             border: border,

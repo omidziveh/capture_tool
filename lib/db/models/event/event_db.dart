@@ -22,6 +22,10 @@ void updateEvent(
   Hive.box('events').put(id, event);
 }
 
+void deleteEvent(String id) {
+  Hive.box('events').delete(id);
+}
+
 void addEvent(
   String title,
   DateTime startDate,
