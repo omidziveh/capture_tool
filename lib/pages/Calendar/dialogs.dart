@@ -62,7 +62,11 @@ class _EventDialogState extends State<EventDialog> {
     setDefaultPreTask();
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: defaultAppBar('اضافه کردن رویداد', context),
+      appBar: defaultAppBar(
+          titleController.text == ''
+              ? 'اضافه کردن رویداد'
+              : titleController.text,
+          context),
       body: Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Container(

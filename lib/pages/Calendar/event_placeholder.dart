@@ -191,15 +191,35 @@ allEvents() {
 }
 
 searchInEventBox(List<Event>? events, cellDate, timeStep, mode) {
+  List<Widget> cellEvents = [];
   for (int i = 0; i < events!.length; i++) {
     Event event = events[i];
     if (event.startDate.compareTo(cellDate) >= 0 &&
         event.finishDate.compareTo(cellDate.add(Duration(minutes: timeStep))) <=
             0) {
-      return drawEvent(event, mode);
+      cellEvents.add(drawEvent(event, mode));
     }
   }
-  return null;
+  if (cellEvents.length == 0) {
+    return null;
+  }
+  if (cellEvents.length == 1) {
+    return cellEvents[0];
+  }
+  if (cellEvents.length == 2) {
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      physics: NeverScrollableScrollPhysics(),
+      children: cellEvents,
+    );
+  }
+  return ListView(
+    scrollDirection: Axis.horizontal,
+    physics: NeverScrollableScrollPhysics(),
+    children: [
+      cellEvents[0],
+    ],
+  );
 }
 
 eventInTime(index, DateTime date, Map<String, List<Event>> all_events) {
