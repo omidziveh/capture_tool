@@ -32,9 +32,12 @@ class EventDialog extends StatefulWidget {
       {DateTime? eventStartTime, DateTime? eventFinishTime, Event? event}) {
     this.event = event;
     this._canDelete = event == null ? false : true;
-    this._eventStartTime = (event == null ? eventStartTime : event.startDate)!;
-    this._eventFinishTime =
-        (event == null ? eventFinishTime : event.finishDate)!;
+    this._eventStartTime = (event == null
+        ? eventStartTime
+        : Hive.box('events').get(event.id).startDate)!;
+    this._eventFinishTime = (event == null
+        ? eventFinishTime
+        : Hive.box('events').get(event.id).finishDate)!;
     this._eventTitle = event == null ? '' : event.title;
     this._eventDescription = event == null ? '' : event.description;
     this._eventGoals = event == null ? '' : event.goals;
@@ -49,6 +52,7 @@ class _EventDialogState extends State<EventDialog> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController goalController = TextEditingController();
   ValueNotifier<int> isValid = ValueNotifier(1);
+  String title = 'اضافه کردن رویداد';
 
   @override
   void initState() {
@@ -56,17 +60,16 @@ class _EventDialogState extends State<EventDialog> {
     titleController.text = widget._eventTitle;
     descriptionController.text = widget._eventDescription;
     goalController.text = widget._eventGoals;
+    if (titleController.text != '') {
+      title = titleController.text;
+    }
   }
 
   Widget build(BuildContext context) {
     setDefaultPreTask();
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: defaultAppBar(
-          titleController.text == ''
-              ? 'اضافه کردن رویداد'
-              : titleController.text,
-          context),
+      appBar: defaultAppBar(title, context),
       body: Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Container(

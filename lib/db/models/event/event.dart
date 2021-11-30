@@ -22,6 +22,8 @@ class Event {
   @HiveField(5)
   String goals;
 
+  int? size;
+
   Event({
     required this.id,
     required this.startDate,
