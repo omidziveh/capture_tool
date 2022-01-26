@@ -16,4 +16,5 @@ Future<void> init_db() async {
   await Hive.openBox('ID');
   await Hive.openBox('Calendar');
   await Hive.openBox('events');
+  // await Hive.box('events').clear();
 }

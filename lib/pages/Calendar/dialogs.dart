@@ -221,13 +221,13 @@ class _EventDialogState extends State<EventDialog> {
                             width: MediaQuery.of(context).size.width * 0.3,
                             child: DropdownButtonFormField<PreTask>(
                               alignment: Alignment.centerRight,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  borderSide:
-                                      BorderSide(width: 2, color: Colors.black),
-                                ),
-                              ),
+                              // decoration: InputDecoration(
+                              //   enabledBorder: OutlineInputBorder(
+                              //     borderRadius: BorderRadius.circular(5),
+                              //     borderSide:
+                              //         BorderSide(width: 2, color: Colors.black),
+                              //   ),
+                              // ),
                               menuMaxHeight: 200,
                               style: eventDialogDefaultStyle,
                               value: preTaskValue,
@@ -248,13 +248,13 @@ class _EventDialogState extends State<EventDialog> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.3,
                             child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  borderSide:
-                                      BorderSide(width: 2, color: Colors.black),
-                                ),
-                              ),
+                              // decoration: InputDecoration(
+                              //   enabledBorder: OutlineInputBorder(
+                              //     borderRadius: BorderRadius.circular(5),
+                              //     borderSide:
+                              //         BorderSide(width: 2, color: Colors.black),
+                              //   ),
+                              // ),
                               style: eventDialogDefaultStyle,
                               value: boxListMenuValue,
                               onChanged: (String? newValue) {
@@ -321,7 +321,7 @@ class _EventDialogState extends State<EventDialog> {
               ? Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: ColoredButton(
-                    icon: Icon(Icons.delete),
+                    icon: deleteIcon,
                     onTap: () {
                       deleteEvent(widget.event.id);
                       Navigator.pop(context);
@@ -345,6 +345,7 @@ class _EventDialogState extends State<EventDialog> {
                       widget._eventFinishTime,
                       descriptionController.text,
                       goalController.text,
+                      0,
                     );
                     Navigator.pop(context);
                   } else if (widget.event != null) {

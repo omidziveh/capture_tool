@@ -34,6 +34,7 @@ void main() async {
   }
 
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     theme: light,
     darkTheme: dark,
     themeMode: ThemeMode.light,

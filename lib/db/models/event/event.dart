@@ -22,7 +22,9 @@ class Event {
   @HiveField(5)
   String goals;
 
-  int? size;
+  @HiveField(6)
+  int showState;
+  /// 0: full, 1: start, 2: end, 3: hide
 
   Event({
     required this.id,
@@ -31,5 +33,6 @@ class Event {
     required this.title,
     required this.description,
     required this.goals,
+    this.showState=0,
   });
 }
