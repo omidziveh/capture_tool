@@ -201,8 +201,7 @@ void showPreTaskBottomSheet(BuildContext context, {var preTask, int mode = 1}) {
                           mode,
                           preTask: preTask,
                           title: _nameController.text,
-                          importance:
-                              importance == 0 ? preTask.importance : importance,
+                          importance: importance == 0.0 ? 0.0 : importance,
                           description: _descriptionController.text,
                         )
                       ],
